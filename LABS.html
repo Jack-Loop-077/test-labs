@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>حاضر — نظام حضور الطلاب</title>
-<meta name="theme-color" content="#0A4A45">
+<meta name="theme-color" content="#0C1D33">
 <script>try{var _t=localStorage.getItem("hadhir.theme");if(!_t)_t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=_t;}catch(e){}</script>
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230F766E'/%3E%3Cpath d='M18 33l10 10 18-20' stroke='%23fff' stroke-width='7' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231B3358'/%3E%3Cpath d='M18 33l10 10 18-20' stroke='%23fff' stroke-width='7' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -17,12 +17,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
 <style>
 :root{
-  --ink:#20303C; --mut:#64727D; --line:#E2E8EA; --surface:#F3F6F5; --card:#FFFFFF;
-  --prim:#0F766E; --prim-deep:#0A4A45; --prim-soft:#E3F1EF; --prim-line:#BBD9D5;
+  --ink:#1C2A3D; --mut:#5C6B7D; --line:#DDE2E9; --surface:#F2F4F8; --card:#FFFFFF;
+  --prim:#1B3358; --prim-deep:#0C1D33; --prim-soft:#E8ECF4; --prim-line:#C2CCDC;
+  --gold:#A9812F; --gold-deep:#7A5D20; --gold-soft:#F6EFDC; --gold-line:#E3D2A0;
   --ok:#16A34A; --ok-soft:#E6F5EB; --no:#DC2626; --no-soft:#FBEAEA; --ex:#D97706; --ex-soft:#FAF0DC;
   --r:14px; --r-s:10px;
-  --sh:0 1px 2px rgba(14,42,40,.06),0 10px 26px -14px rgba(14,42,40,.16);
-  --sh-s:0 1px 2px rgba(14,42,40,.08);
+  --sh:0 1px 2px rgba(12,29,51,.07),0 10px 26px -14px rgba(12,29,51,.2);
+  --sh-s:0 1px 2px rgba(12,29,51,.08);
   --nav-h:64px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -51,16 +52,15 @@ h1,h2,h3,.brand{font-family:'Alexandria','IBM Plex Sans Arabic',sans-serif}
 .topbar{
   position:sticky;top:0;z-index:40;
   background:
-    radial-gradient(circle at 12% -40%,rgba(255,255,255,.14),transparent 42%),
-    repeating-linear-gradient(45deg,rgba(255,255,255,.05) 0 14px,transparent 14px 28px),
-    repeating-linear-gradient(-45deg,rgba(255,255,255,.04) 0 14px,transparent 14px 28px),
-    var(--prim-deep);
-  color:#fff; padding:12px 16px calc(12px + 2px);
+    radial-gradient(circle at 12% -40%,rgba(255,255,255,.1),transparent 42%),
+    linear-gradient(180deg,var(--prim-deep),#132C4A);
+  color:#fff; padding:12px 16px calc(12px + 5px);
   padding-top:calc(12px + env(safe-area-inset-top));
   display:flex;align-items:center;gap:12px;
-  box-shadow:0 2px 14px rgba(10,74,69,.28);
+  box-shadow:0 2px 14px rgba(12,29,51,.3);
+  border-bottom:2px solid var(--gold);
 }
-.logo{width:34px;height:34px;border-radius:9px;background:var(--prim);display:grid;place-items:center;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.25);position:relative}
+.logo{width:34px;height:34px;border-radius:9px;background:var(--prim);display:grid;place-items:center;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.25),0 0 0 1.5px var(--gold);position:relative}
 .logo::after{content:"";position:absolute;inset:-4px;border-radius:12px;border:1.5px solid rgba(255,255,255,.5);opacity:0;animation:logoRing 1.1s .55s ease-out}
 .logo-check{stroke-dasharray:22;stroke-dashoffset:22;animation:logoDraw .55s .15s cubic-bezier(.65,0,.35,1) forwards}
 @keyframes logoDraw{to{stroke-dashoffset:0}}
@@ -138,8 +138,8 @@ main{max-width:1080px;margin-inline:auto;padding:16px 14px calc(var(--nav-h) + 2
 }
 .btn:active{transform:scale(.97)}
 .btn svg{width:17px;height:17px}
-.btn-p{background:var(--prim);color:#fff;box-shadow:0 4px 14px -6px rgba(15,118,110,.55)}
-.btn-p:hover{background:#0C635C}
+.btn-p{background:var(--prim);color:#fff;box-shadow:0 4px 14px -6px rgba(27,51,88,.55)}
+.btn-p:hover{background:#132A47}
 .btn-g{background:var(--card);border-color:var(--line);color:var(--ink)}
 .btn-g:hover{border-color:var(--prim-line);background:var(--prim-soft)}
 .btn-d{background:var(--no);color:#fff}
@@ -161,7 +161,7 @@ main{max-width:1080px;margin-inline:auto;padding:16px 14px calc(var(--nav-h) + 2
 
 /* ---------- Session ticket (signature) ---------- */
 .ticket{
-  background:linear-gradient(160deg,var(--prim-deep),#0E5F58 70%,#11746B);
+  background:linear-gradient(160deg,var(--prim-deep),#152D4D 65%,#1F3E66);
   color:#fff;border-radius:var(--r);padding:14px 16px;margin-bottom:14px;
   box-shadow:var(--sh);position:relative;overflow:hidden;
 }
@@ -285,13 +285,13 @@ main{max-width:1080px;margin-inline:auto;padding:16px 14px calc(var(--nav-h) + 2
 /* ---------- Auth & Setup ---------- */
 .gate{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:22px;
   background:
-    radial-gradient(circle at 85% 8%,rgba(15,118,110,.12),transparent 45%),
-    radial-gradient(circle at 10% 95%,rgba(15,118,110,.1),transparent 40%),
+    radial-gradient(circle at 85% 8%,rgba(27,51,88,.12),transparent 45%),
+    radial-gradient(circle at 10% 95%,rgba(169,129,47,.09),transparent 40%),
     var(--surface);
 }
 .gate-card{width:100%;max-width:410px;background:var(--card);border:1px solid var(--line);border-radius:20px;box-shadow:var(--sh);padding:26px 24px}
 .gate-card.wide{max-width:560px}
-.gate-logo{width:58px;height:58px;border-radius:16px;background:var(--prim-deep);display:grid;place-items:center;margin:0 auto 14px;box-shadow:0 10px 24px -10px rgba(10,74,69,.6)}
+.gate-logo{width:58px;height:58px;border-radius:16px;background:var(--prim-deep);display:grid;place-items:center;margin:0 auto 14px;box-shadow:0 10px 24px -10px rgba(12,29,51,.6)}
 .gate-card h1{text-align:center;font-size:23px;font-weight:800;color:var(--prim-deep)}
 .gate-card .sub{text-align:center;font-size:13px;color:var(--mut);margin:4px 0 18px}
 .err-box{display:none;background:var(--no-soft);color:#991B1B;border:1px solid #F3C6C6;border-radius:10px;padding:9px 12px;font-size:13px;font-weight:600;margin-bottom:12px}
@@ -325,8 +325,9 @@ main{max-width:1080px;margin-inline:auto;padding:16px 14px calc(var(--nav-h) + 2
 
 /* ═══ الوضع الداكن ═══ */
 [data-theme="dark"]{
-  --ink:#E7EEEC; --mut:#93A5A0; --line:#263230; --surface:#0E1413; --card:#171F1D;
-  --prim:#16A99C; --prim-deep:#083732; --prim-soft:#11332E; --prim-line:#1E4A44;
+  --ink:#E7ECF3; --mut:#93A0B0; --line:#263447; --surface:#0E141D; --card:#171F2B;
+  --prim:#4A76B0; --prim-deep:#0B1C30; --prim-soft:#16233A; --prim-line:#28436A;
+  --gold:#D9BA6E; --gold-deep:#B4923F; --gold-soft:#2A2412; --gold-line:#4A3F1F;
   --ok:#3BC873; --ok-soft:#0F2E1B; --no:#F17070; --no-soft:#3A1818; --ex:#F0A03C; --ex-soft:#382609;
   --sh:0 1px 2px rgba(0,0,0,.4),0 10px 26px -14px rgba(0,0,0,.6);
   --sh-s:0 1px 2px rgba(0,0,0,.45);
@@ -433,7 +434,7 @@ main > .view.active{animation:viewIn .18s ease-out}
 .avatar{flex:none}
 
 /* ألوان رمزية ثابتة لكل طالب حسب اسمه */
-.av0{background:#E3F1EF;color:#0A4A45}
+.av0{background:#E8ECF4;color:#0C1D33}
 .av1{background:#EDE9FE;color:#5B21B6}
 .av2{background:#FEF3C7;color:#92400E}
 .av3{background:#DBEAFE;color:#1E40AF}
@@ -457,7 +458,7 @@ body{background:radial-gradient(1100px 520px at 88% -12%, var(--prim-soft) 0%, t
 
 body.staff .adm{display:none!important}
 
-.card{border-radius:18px;box-shadow:0 1px 2px rgba(14,42,40,.05),0 14px 34px -22px rgba(14,42,40,.22)}
+.card{border-radius:18px;box-shadow:0 1px 2px rgba(12,29,51,.06),0 14px 34px -22px rgba(12,29,51,.24)}
 [data-theme="dark"] .card{box-shadow:0 1px 2px rgba(0,0,0,.35),0 16px 38px -24px rgba(0,0,0,.65)}
 .card h2{font-size:17px;gap:10px}
 .card h2 svg{width:32px;height:32px;padding:7px;border-radius:10px;background:var(--prim-soft);color:var(--prim)}
@@ -468,7 +469,7 @@ body.staff .adm{display:none!important}
 .inp:hover,.sel:hover{border-color:var(--prim-line)}
 .inp:focus,.sel:focus{background-color:var(--card);border-color:var(--prim)}
 
-.btn-p{background:linear-gradient(168deg, color-mix(in srgb, var(--prim) 82%, #fff) 0%, var(--prim) 42%, color-mix(in srgb, var(--prim) 82%, #000) 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.28), 0 5px 16px -7px rgba(15,118,110,.6)}
+.btn-p{background:linear-gradient(168deg, color-mix(in srgb, var(--prim) 82%, #fff) 0%, var(--prim) 42%, color-mix(in srgb, var(--prim) 82%, #000) 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.28), 0 5px 16px -7px rgba(27,51,88,.6)}
 .btn-p:hover{filter:brightness(1.06)}
 @media(hover:hover){.btn-p:hover,.btn-soft:hover{transform:translateY(-1px)}}
 
@@ -494,7 +495,7 @@ body.staff .adm{display:none!important}
 </div></div>
 <script>
 (function () {
-  var BTN = '<button onclick="location.reload()" style="margin-top:10px;background:#0F766E;color:#fff;border:none;border-radius:9px;padding:9px 22px;font:inherit;font-weight:600;cursor:pointer">إعادة التحميل</button>';
+  var BTN = '<button onclick="location.reload()" style="margin-top:10px;background:#1B3358;color:#fff;border:none;border-radius:9px;padding:9px 22px;font:inherit;font-weight:600;cursor:pointer">إعادة التحميل</button>';
   function show(msg) {
     var m = document.getElementById("bootMsg");
     if (!m || !document.getElementById("boot")) return;
@@ -750,6 +751,25 @@ body.staff .adm{display:none!important}
           <button class="btn btn-soft adm" id="btnRestore" style="flex-basis:100%">استعادة من نسخة JSON</button>
         </div>
         <input type="file" id="fileRestore" accept=".json,application/json" hidden>
+      </div>
+
+      <div class="card adm">
+        <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/><path d="M8 15l2 2 4-4"/></svg>التصدير الأسبوعي — للمشرف</h2>
+        <p class="hint" style="margin-bottom:10px">كل جلسة حضور اتوخذت بهذا المدى (تاريخ + مادة + مختبر + دراسة) تصدّر <b>كملف Excel منفصل بروحه</b> — مو ملف واحد مجمّع. هذا احتراز أمني: لو صار خلل بملف وحد، الباقي يبقى سالم، وتقدر ترسل كل جلسة لصاحبها براحتها.</p>
+        <div class="grid g2">
+          <div class="field"><label class="lbl">من تاريخ</label><input class="inp" type="date" id="wkFrom"></div>
+          <div class="field"><label class="lbl">إلى تاريخ</label><input class="inp" type="date" id="wkTo"></div>
+        </div>
+        <div class="chips" id="wkPresets" style="margin:8px 0 12px">
+          <span class="chip" data-wk="week">هذا الأسبوع</span>
+          <span class="chip" data-wk="lastweek">الأسبوع الماضي</span>
+          <span class="chip" data-wk="month">هذا الشهر</span>
+        </div>
+        <button class="btn btn-p" id="btnWeeklyExport" style="width:100%">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          تصدير كل جلسات المدى (ملف ZIP)
+        </button>
+        <p class="hint" id="wkStatus" style="margin-top:8px"></p>
       </div>
 
       <div class="card danger-card adm">
@@ -1358,9 +1378,12 @@ function renderRoster() {
     roster.forEach(s => {
       i++;
       const r = attRecords.get(s.id);
+      const byOther = r && r.recordedBy && user && r.recordedBy !== user.email;
       h += '<div class="roster-item" data-sid="' + esc(s.id) + '"' + (r ? ' data-st="' + r.status + '"' : "") +
         '><span class="num">' + i + '</span><div class="rname"><b>' + esc(s.name) +
-        '</b><span class="meta">' + esc([s.section ? "شعبة " + s.section : "", !s.lab ? "متنقّل — بدون مختبر" : "", s.acadStatus === "returned" ? "عائد" : ""].filter(Boolean).join(" • ")) + "</span></div>" +
+        '</b><span class="meta">' + esc([s.section ? "شعبة " + s.section : "", !s.lab ? "متنقّل — بدون مختبر" : "", s.acadStatus === "returned" ? "عائد" : ""].filter(Boolean).join(" • ")) +
+        (byOther ? '<span class="badge-host" style="background:rgba(217,119,6,.14);color:#B45309;border-color:rgba(217,119,6,.35)" title="سجّلها هذا الأستاذ — انتبه قبل لا تغيّرها">✎ سجّلها ' + esc(r.recordedByName || r.recordedBy) + '</span>' : "") +
+        "</span></div>" +
         segHTML(r, s.id) + "</div>";
     });
     if (hostedShow.length) {
@@ -1815,7 +1838,7 @@ const SYM_STYLE = { "حاضر": [XLC.ok, XLC.okBg], "غائب": [XLC.no, XLC.noB
   "✓": [XLC.ok, XLC.okBg], "✕": [XLC.no, XLC.noBg], "م": [XLC.ex, XLC.exBg],
   "تنبيه": [XLC.ex, XLC.exBg], "إنذار": ["FFC2410C", XLC.exBg], "إنذار نهائي": [XLC.no, XLC.noBg] };
 
-async function exportStyledXLSX(filename, sheets) {
+async function buildXLSXBlob(sheets) {
   const wb = new ExcelJS.Workbook();
   wb.creator = "حاضر"; wb.created = new Date();
   let logoId = null;
@@ -1952,12 +1975,112 @@ async function exportStyledXLSX(filename, sheets) {
     ws.pageSetup.printTitlesRow = "1:" + HR;
   });
   const buf = await wb.xlsx.writeBuffer();
-  const blob = new Blob([buf], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+  return new Blob([buf], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+}
+async function exportStyledXLSX(filename, sheets) {
+  const blob = await buildXLSXBlob(sheets);
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob); a.download = filename; a.click();
   URL.revokeObjectURL(a.href);
 }
 const stTxt = s => (STATUS[s] || {}).txt || s;
+/* ═══════════════ التصدير الأسبوعي — كل جلسة ملف Excel منفصل بروحه ═══════════════ */
+const SESS_COLS = [
+  { header: "اسم الطالب", key: "name", width: 28, align: "right" },
+  { header: "المرحلة", key: "stage", width: 16 },
+  { header: "الشعبة", key: "section", width: 9 },
+  { header: "الحالة", key: "status", width: 10 }
+];
+function sessionKey(r) { return r.date + "␟" + r.subjectId + "␟" + (r.lab || "") + "␟" + (r.shift || "صباحي"); }
+async function exportWeeklySessions(fromD, toD) {
+  const st = $("#wkStatus");
+  st.textContent = "…جاري جلب السجلات";
+  let recs;
+  try {
+    const snap = await getDocs(query(collection(db, "attendance"), where("date", ">=", fromD), where("date", "<=", toD)));
+    recs = snap.docs.map(d => d.data());
+  } catch (e) { st.textContent = "تعذّر الجلب: " + (e.code || e.message); return; }
+  if (!recs.length) { st.textContent = "ماكو سجلات حضور بهذا المدى."; return; }
+
+  const groups = new Map();
+  recs.forEach(r => {
+    const k = sessionKey(r);
+    if (!groups.has(k)) groups.set(k, []);
+    groups.get(k).push(r);
+  });
+
+  st.textContent = "…جاري بناء " + groups.size + " ملف منفصل";
+  await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js");
+  const zip = new JSZip();
+  const usedNames = new Set();
+  let i = 0;
+  for (const [, rows] of groups) {
+    i++;
+    const r0 = rows[0];
+    const subj = subjects.find(s => s.id === r0.subjectId);
+    const rowsSorted = rows.slice().sort((a, b) => (a.studentName || "").localeCompare(b.studentName || "", "ar"));
+    const c = { present: 0, absent: 0, excused: 0 };
+    rowsSorted.forEach(r => c[r.status] = (c[r.status] || 0) + 1);
+    const blob = await buildXLSXBlob([{
+      name: "الجلسة",
+      title: (subj ? subj.name : r0.subjectName || "مادة") + " — " + fmtDate(r0.date),
+      meta: "المختبر: " + (r0.lab || "—") + "  •  الدراسة: " + (r0.shift || "صباحي") + "  •  المرحلة: " + (r0.stage || "—") + "  •  " + rowsSorted.length + " طالب",
+      summary: [
+        { label: "الجلسات", value: rowsSorted.length },
+        { label: "حاضر", value: c.present || 0, fg: XLC.ok, bg: XLC.okBg },
+        { label: "غائب", value: c.absent || 0, fg: XLC.no, bg: XLC.noBg },
+        { label: "مجاز", value: c.excused || 0, fg: XLC.ex, bg: XLC.exBg }
+      ],
+      columns: SESS_COLS,
+      rows: rowsSorted.map(r => ({ name: r.studentName || "", stage: r.stage || "", section: r.section || "", status: stTxt(r.status) })),
+      tab: "FF0F766E"
+    }]);
+    let fname = "حاضر - " + r0.date + " - " + (subj ? subj.name : "مادة") + " - " + (r0.lab || "بدون مختبر") + " - " + (r0.shift || "صباحي") + ".xlsx";
+    fname = fname.replace(/[\\/?*\[\]:]/g, "-");
+    let base = fname, k = 2;
+    while (usedNames.has(fname)) fname = base.replace(".xlsx", "") + " (" + (k++) + ").xlsx";
+    usedNames.add(fname);
+    zip.file(fname, blob);
+    st.textContent = "…" + i + "/" + groups.size + " (" + fname.slice(0, 40) + "…)";
+  }
+  st.textContent = "…جاري ضغط الملف النهائي";
+  const zipBlob = await zip.generateAsync({ type: "blob" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(zipBlob);
+  a.download = "حاضر - تصدير أسبوعي " + fromD + " إلى " + toD + ".zip";
+  a.click(); URL.revokeObjectURL(a.href);
+  st.textContent = "✓ تم — " + groups.size + " جلسة منفصلة داخل ملف ZIP واحد";
+  audit("weekly_export", "تصدير أسبوعي: " + fromD + " إلى " + toD + " — " + groups.size + " جلسة");
+}
+function weekRange(kind) {
+  const now = new Date(); const d = new Date(now);
+  if (kind === "week" || kind === "lastweek") {
+    const dow = d.getDay(); // 0=Sun
+    d.setDate(d.getDate() - dow - (kind === "lastweek" ? 7 : 0));
+    const from = new Date(d); const to = new Date(d); to.setDate(to.getDate() + 6);
+    return [ymd(from), ymd(to)];
+  }
+  const from = new Date(now.getFullYear(), now.getMonth(), 1);
+  const to = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  return [ymd(from), ymd(to)];
+}
+function ymd(d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+$("#wkPresets").addEventListener("click", e => {
+  const c = e.target.closest("[data-wk]"); if (!c) return;
+  const [f, t] = weekRange(c.dataset.wk);
+  $("#wkFrom").value = f; $("#wkTo").value = t;
+});
+(function () { const [f, t] = weekRange("week"); $("#wkFrom").value = f; $("#wkTo").value = t; })();
+$("#btnWeeklyExport").onclick = async function () {
+  if (!requireAdmin()) return;
+  const f = $("#wkFrom").value, t = $("#wkTo").value;
+  if (!f || !t) { toast("حدد المدى أولاً", "err"); return; }
+  if (f > t) { toast("تاريخ البداية بعد النهاية؟", "err"); return; }
+  this.disabled = true;
+  try { await exportWeeklySessions(f, t); }
+  catch (e) { $("#wkStatus").textContent = "خطأ: " + (e.message || e); }
+  this.disabled = false;
+};
 const REC_COLS = [
   { header: "التاريخ", key: "date", width: 13 },
   { header: "اسم الطالب", key: "name", width: 28, align: "right" },
