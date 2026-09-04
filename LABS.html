@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>حاضر — نظام حضور الطلاب</title>
-<meta name="theme-color" content="#0C1D33">
+<meta name="theme-color" content="#0A4A45">
 <script>try{var _t=localStorage.getItem("hadhir.theme");if(!_t)_t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=_t;}catch(e){}</script>
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231B3358'/%3E%3Cpath d='M18 33l10 10 18-20' stroke='%23fff' stroke-width='7' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230F766E'/%3E%3Cpath d='M18 33l10 10 18-20' stroke='%23fff' stroke-width='7' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -17,13 +17,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
 <style>
 :root{
-  --ink:#1C2A3D; --mut:#5C6B7D; --line:#DDE2E9; --surface:#F2F4F8; --card:#FFFFFF;
-  --prim:#1B3358; --prim-deep:#0C1D33; --prim-soft:#E8ECF4; --prim-line:#C2CCDC;
-  --gold:#A9812F; --gold-deep:#7A5D20; --gold-soft:#F6EFDC; --gold-line:#E3D2A0;
+  --ink:#20303C; --mut:#64727D; --line:#E2E8EA; --surface:#F3F6F5; --card:#FFFFFF;
+  --prim:#0F766E; --prim-deep:#0A4A45; --prim-soft:#E3F1EF; --prim-line:#BBD9D5;
   --ok:#16A34A; --ok-soft:#E6F5EB; --no:#DC2626; --no-soft:#FBEAEA; --ex:#D97706; --ex-soft:#FAF0DC;
   --r:14px; --r-s:10px;
-  --sh:0 1px 2px rgba(12,29,51,.07),0 10px 26px -14px rgba(12,29,51,.2);
-  --sh-s:0 1px 2px rgba(12,29,51,.08);
+  --sh:0 1px 2px rgba(14,42,40,.06),0 10px 26px -14px rgba(14,42,40,.16);
+  --sh-s:0 1px 2px rgba(14,42,40,.08);
   --nav-h:64px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -52,20 +51,16 @@ h1,h2,h3,.brand{font-family:'Alexandria','IBM Plex Sans Arabic',sans-serif}
 .topbar{
   position:sticky;top:0;z-index:40;
   background:
-    radial-gradient(circle at 12% -40%,rgba(255,255,255,.1),transparent 42%),
-    linear-gradient(180deg,var(--prim-deep),#132C4A);
-  color:#fff; padding:12px 16px calc(12px + 5px);
+    radial-gradient(circle at 12% -40%,rgba(255,255,255,.14),transparent 42%),
+    repeating-linear-gradient(45deg,rgba(255,255,255,.05) 0 14px,transparent 14px 28px),
+    repeating-linear-gradient(-45deg,rgba(255,255,255,.04) 0 14px,transparent 14px 28px),
+    var(--prim-deep);
+  color:#fff; padding:12px 16px calc(12px + 2px);
   padding-top:calc(12px + env(safe-area-inset-top));
   display:flex;align-items:center;gap:12px;
-  box-shadow:0 2px 14px rgba(12,29,51,.3);
-  border-bottom:2px solid var(--gold);
+  box-shadow:0 2px 14px rgba(10,74,69,.28);
 }
-.logo{width:34px;height:34px;border-radius:9px;background:var(--prim);display:grid;place-items:center;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.25),0 0 0 1.5px var(--gold);position:relative}
-.logo::after{content:"";position:absolute;inset:-4px;border-radius:12px;border:1.5px solid rgba(255,255,255,.5);opacity:0;animation:logoRing 1.1s .55s ease-out}
-.logo-check{stroke-dasharray:22;stroke-dashoffset:22;animation:logoDraw .55s .15s cubic-bezier(.65,0,.35,1) forwards}
-@keyframes logoDraw{to{stroke-dashoffset:0}}
-@keyframes logoRing{0%{opacity:.9;transform:scale(.85)}100%{opacity:0;transform:scale(1.35)}}
-@media (prefers-reduced-motion:reduce){.logo-check{animation:none;stroke-dashoffset:0}.logo::after{animation:none;display:none}}
+.logo{width:34px;height:34px;border-radius:9px;background:var(--prim);display:grid;place-items:center;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.25)}
 .brand{font-weight:800;font-size:19px;letter-spacing:.2px;line-height:1.1}
 .brand small{display:block;font-family:'IBM Plex Sans Arabic';font-weight:500;font-size:11px;opacity:.75;letter-spacing:0}
 .top-sp{flex:1}
@@ -138,8 +133,8 @@ main{max-width:1080px;margin-inline:auto;padding:16px 14px calc(var(--nav-h) + 2
 }
 .btn:active{transform:scale(.97)}
 .btn svg{width:17px;height:17px}
-.btn-p{background:var(--prim);color:#fff;box-shadow:0 4px 14px -6px rgba(27,51,88,.55)}
-.btn-p:hover{background:#132A47}
+.btn-p{background:var(--prim);color:#fff;box-shadow:0 4px 14px -6px rgba(15,118,110,.55)}
+.btn-p:hover{background:#0C635C}
 .btn-g{background:var(--card);border-color:var(--line);color:var(--ink)}
 .btn-g:hover{border-color:var(--prim-line);background:var(--prim-soft)}
 .btn-d{background:var(--no);color:#fff}
@@ -161,7 +156,7 @@ main{max-width:1080px;margin-inline:auto;padding:16px 14px calc(var(--nav-h) + 2
 
 /* ---------- Session ticket (signature) ---------- */
 .ticket{
-  background:linear-gradient(160deg,var(--prim-deep),#152D4D 65%,#1F3E66);
+  background:linear-gradient(160deg,var(--prim-deep),#0E5F58 70%,#11746B);
   color:#fff;border-radius:var(--r);padding:14px 16px;margin-bottom:14px;
   box-shadow:var(--sh);position:relative;overflow:hidden;
 }
@@ -325,9 +320,8 @@ main{max-width:1080px;margin-inline:auto;padding:16px 14px calc(var(--nav-h) + 2
 
 /* ═══ الوضع الداكن ═══ */
 [data-theme="dark"]{
-  --ink:#E7ECF3; --mut:#93A0B0; --line:#263447; --surface:#0E141D; --card:#171F2B;
-  --prim:#4A76B0; --prim-deep:#0B1C30; --prim-soft:#16233A; --prim-line:#28436A;
-  --gold:#D9BA6E; --gold-deep:#B4923F; --gold-soft:#2A2412; --gold-line:#4A3F1F;
+  --ink:#E7EEEC; --mut:#93A5A0; --line:#263230; --surface:#0E1413; --card:#171F1D;
+  --prim:#16A99C; --prim-deep:#083732; --prim-soft:#11332E; --prim-line:#1E4A44;
   --ok:#3BC873; --ok-soft:#0F2E1B; --no:#F17070; --no-soft:#3A1818; --ex:#F0A03C; --ex-soft:#382609;
   --sh:0 1px 2px rgba(0,0,0,.4),0 10px 26px -14px rgba(0,0,0,.6);
   --sh-s:0 1px 2px rgba(0,0,0,.45);
@@ -340,6 +334,24 @@ main{max-width:1080px;margin-inline:auto;padding:16px 14px calc(var(--nav-h) + 2
 [data-theme="dark"] .danger-card{border-color:#4A2424!important;background:#1D1515}
 [data-theme="dark"] .danger-row + .danger-row{border-top-color:#33201F}
 [data-theme="dark"] :is(.btn-soft,.rdate,.avatar,.tag.t-stage){color:#8FD9CF}
+
+/* ألوان رمزية ثابتة لكل طالب حسب اسمه */
+.av0{background:#E3F1EF;color:#0A4A45}
+.av1{background:#EDE9FE;color:#5B21B6}
+.av2{background:#FEF3C7;color:#92400E}
+.av3{background:#DBEAFE;color:#1E40AF}
+.av4{background:#FCE7F3;color:#9D174D}
+.av5{background:#DCFCE7;color:#166534}
+.av6{background:#FFEDD5;color:#9A3412}
+.av7{background:#E0E7FF;color:#3730A3}
+[data-theme="dark"] .av0{background:#11332E;color:#8FD9CF}
+[data-theme="dark"] .av1{background:#2A1F45;color:#C4B5FD}
+[data-theme="dark"] .av2{background:#3A2A0C;color:#FCD34D}
+[data-theme="dark"] .av3{background:#152642;color:#93C5FD}
+[data-theme="dark"] .av4{background:#3D1230;color:#F9A8D4}
+[data-theme="dark"] .av5{background:#0F2E1B;color:#86EFAC}
+[data-theme="dark"] .av6{background:#3A200E;color:#FDBA74}
+[data-theme="dark"] .av7{background:#1E2447;color:#A5B4FC}
 
 .theme-btn{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:#fff;flex:none}
 .theme-btn svg{width:18px;height:18px}
