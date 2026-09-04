@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>تسجيل الدخول — حاضر (تجريبي)</title>
+<meta name="theme-color" content="#0A4A45">
+<script>try{var _t=localStorage.getItem("hadhir.theme");if(!_t)_t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=_t;}catch(e){}</script>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230F766E'/%3E%3Cpath d='M18 33l10 10 18-20' stroke='%23fff' stroke-width='7' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#134E4A; --mut:#5F716B; --line:#CCFBF1; --surface:#F0FDFA;
+  --prim:#0F766E; --prim-deep:#0A4A45; --prim-soft:#CCFBF1;
+  --gold:#A9812F; --gold-soft:#F6EFDC;
+  --no-soft:#FBEAEA; --card:#FFFFFF;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'IBM Plex Sans Arabic',system-ui,sans-serif;color:var(--ink);font-size:15px;line-height:1.6}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--prim);outline-offset:2px;border-radius:6px}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+.gate{min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:22px;gap:18px;
+  background:
+    radial-gradient(circle at 85% 8%,rgba(15,118,110,.12),transparent 45%),
+    radial-gradient(circle at 10% 95%,rgba(169,129,47,.09),transparent 40%),
+    var(--surface);
+  position:relative;overflow:hidden
+}
+.gate::before{content:"";position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(15,118,110,.03) 0%,transparent 70%);animation:gateBg 20s ease-in-out infinite}
+@keyframes gateBg{0%,100%{transform:translate(0,0)}50%{transform:translate(5%,5%)}}
+.card{
+  width:100%;max-width:440px;background:var(--card);border:1px solid var(--line);border-radius:24px;
+  box-shadow:0 1px 2px rgba(10,74,69,.07),0 10px 26px -14px rgba(10,74,69,.2);
+  padding:32px 28px;display:none;position:relative;z-index:1
+}
+.card.show{display:block;animation:cardEnter .4s cubic-bezier(.16,1,.3,1)}
+@keyframes cardEnter{from{transform:translateY(20px);opacity:0}to{transform:none;opacity:1}}
+.logo{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,var(--prim-deep),#0F766E);display:grid;place-items:center;margin:0 auto 20px;box-shadow:0 12px 28px -12px rgba(10,74,69,.5);position:relative}
+.logo::after{content:"";position:absolute;inset:-6px;border-radius:22px;border:2px solid var(--prim);opacity:0;animation:logoRing 1.2s .6s ease-out}
+@keyframes logoRing{0%{opacity:.8;transform:scale(.9)}100%{opacity:0;transform:scale(1.1)}}
+h1{font-family:'Alexandria',sans-serif;text-align:center;font-size:26px;font-weight:800;color:var(--prim-deep);letter-spacing:.5px;margin-bottom:4px}
+.sub{text-align:center;font-size:14px;color:var(--mut);margin:0 0 24px;line-height:1.7;font-weight:500}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.lbl{font-size:13px;font-weight:700;color:var(--mut);letter-spacing:.3px}
+.inp{
+  width:100%;background:var(--surface);border:2px solid var(--line);border-radius:12px;
+  padding:12px 16px;font-size:15px;min-height:48px;transition:border-color .2s,box-shadow .2s,background .2s;
+}
+.inp:focus{border-color:var(--prim);box-shadow:0 0 0 4px var(--prim-soft);outline:none;background:var(--card)}
+.btn{
+  width:100%;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  background:linear-gradient(135deg,var(--prim),#0D9488);color:#fff;border-radius:12px;padding:12px 20px;min-height:52px;
+  font-size:15px;font-weight:700;margin-top:12px;letter-spacing:.3px;
+  box-shadow:0 4px 16px -6px rgba(15,118,110,.5);transition:all .2s ease;
+}
+.btn:hover{background:linear-gradient(135deg,#0D9488,var(--prim));transform:translateY(-1px);box-shadow:0 6px 20px -6px rgba(15,118,110,.6)}
+.btn:active{transform:translateY(0)}
+.btn[disabled]{opacity:.5;pointer-events:none;transform:none}
+.err{display:none;background:var(--no-soft);color:#991B1B;border:1.5px solid #F3C6C6;border-radius:12px;padding:12px 16px;font-size:14px;font-weight:600;margin-bottom:16px}
+.err.show{display:block;animation:shake .4s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.spin{width:16px;height:16px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:rot .7s linear infinite}
+.bspin{width:44px;height:44px;border:4px solid var(--prim-soft);border-top-color:var(--prim);border-radius:50%;animation:rot .8s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+.foot{font-size:12px;color:var(--mut);text-align:center;margin-top:20px;font-weight:500}
+
+[data-theme="dark"]{
+  --ink:#CCFBF1; --mut:#5EEAD4; --line:#115E59; --surface:#042F2E; --card:#0F766E;
+  --prim:#2DD4BF; --prim-deep:#0A4A45; --prim-soft:#115E59; --gold:#D9BA6E; --gold-soft:#2A2412; --no-soft:#3A1818;
+}
+[data-theme="dark"] .err{background:#3A1818;border-color:#5E2222;color:#F5B5B5}
+</style>
+</head>
+<body>
+<div class="gate">
+  <div class="bspin" id="chk"></div>
+  <div id="chkMsg" style="display:none;max-width:420px;text-align:center;font-size:13.5px;font-weight:600;color:var(--ink);line-height:1.9"></div>
+  <script>
+  (function () {
+    var BTN = '<button onclick="location.reload()" style="margin-top:10px;background:#0F766E;color:#fff;border:none;border-radius:9px;padding:9px 22px;font:inherit;font-weight:600;cursor:pointer">إعادة التحميل</button>';
+    function live() { var c = document.getElementById("chk"); return c && c.style.display !== "none"; }
+    function show(msg) {
+      if (!live()) return;
+      var m = document.getElementById("chkMsg");
+      m.style.display = "block";
+      m.innerHTML = 'صار خطأ بالتحميل:<br><code style="direction:ltr;display:inline-block;max-width:86vw;overflow-wrap:anywhere;background:var(--card);border:1px solid #E2E8EA;border-radius:8px;padding:6px 10px;font-size:11px;margin:8px 0">' + String(msg).slice(0, 300) + '</code>' + BTN;
+    }
+    var t = setTimeout(function () {
+      if (!live()) return;
+      var m = document.getElementById("chkMsg");
+      m.style.display = "block";
+      m.innerHTML = 'التحميل متأخر أكثر من المعتاد…<br>تأكد من الإنترنت أو حدّث تحديثاً قوياً (Ctrl+F5).' + BTN;
+    }, 12000);
+    window.__bootDone = function () { clearTimeout(t); };
+    window.addEventListener("error", function (e) {
+      show((e.message || "خطأ غير معروف") + (e.filename ? " — " + String(e.filename).split("/").pop() : ""));
+    });
+    window.addEventListener("unhandledrejection", function (e) {
+      show((e.reason && (e.reason.message || e.reason)) || "رفض غير معالج");
+    });
+  })();
+  </script>
+
+  <div class="card" id="card">
+    <div class="logo"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+    <h1>حاضر</h1>
+    <p class="sub">نظام حضور الطلاب — نسخة تجريبية<br>سجّل دخولك للمتابعة</p>
+    <div class="err" id="aErr"></div>
+    <div class="field">
+      <label class="lbl" for="aEmail">البريد الإلكتروني</label>
+      <input class="inp" id="aEmail" type="email" dir="ltr" autocomplete="username" placeholder="example@university.edu">
+    </div>
+    <div class="field">
+      <label class="lbl" for="aPass">كلمة المرور</label>
+      <input class="inp" id="aPass" type="password" dir="ltr" autocomplete="current-password" placeholder="••••••••••••">
+    </div>
+    <button class="btn" id="btnLogin">تسجيل الدخول</button>
+  </div>
+
+  <p class="foot">نظام إدارة الحضور الأكاديمي — الإصدار التجريبي</p>
+</div>
+
+<script type="module">
+/* إعدادات Firebase — مشروع labs-a4765 */
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyDMUlwIrd2wb11xgiS-vKqeJEuTYPY9YmA",
+  authDomain: "test-labs-1cb92.firebaseapp.com",
+  projectId: "test-labs-1cb92",
+  storageBucket: "test-labs-1cb92.firebasestorage.app",
+  messagingSenderId: "602549047680",
+  appId: "1:602549047680:web:b915fe8aed877cc04bf165"
+};
+
+/* إيميل المشرف — يطابق نفس القيمة بملف LABS.html */
+const ADMIN_EMAIL = "hasanhasan12331233@gmail.com";
+/* أقصى مدة جلسة قبل تسجيل خروج إجباري (يومين) — احتراز أمني بسيط */
+const SESSION_MAX_MS = 2 * 24 * 60 * 60 * 1000;
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const $ = s => document.querySelector(s);
+const app = initializeApp(FIREBASE_CONFIG);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+function showGateError(msg) {
+  if (window.__bootDone) window.__bootDone();
+  $("#chk").style.display = "none";
+  $("#card").classList.add("show");
+  const e = $("#aErr"); e.textContent = msg; e.classList.add("show");
+}
+
+onAuthStateChanged(auth, async u => {
+  if (window.__bootDone) window.__bootDone();
+  if (!u) {
+    $("#chk").style.display = "none";
+    $("#card").classList.add("show");
+    setTimeout(() => $("#aEmail").focus(), 60);
+    return;
+  }
+  const isAdmin = (u.email || "").toLowerCase() === ADMIN_EMAIL.toLowerCase();
+  if (isAdmin) {
+    try { localStorage.setItem("hadhir.sessionStart", String(Date.now())); } catch {}
+    location.replace("LABS.html");
+    return;
+  }
+  /* حساب أستاذ — تحقّق من ملفه بقاعدة البيانات قبل الدخول */
+  try {
+    const snap = await getDoc(doc(db, "staff", u.uid));
+    if (!snap.exists() || snap.data().active !== true) {
+      await signOut(auth);
+      showGateError(snap.exists() ? "الحساب معطّل من قبل المشرف — راجعه لتفعيله." : "ما لكينا ملف صلاحيات لهذا الحساب — راجع المشرف.");
+      return;
+    }
+    let start = null; try { start = Number(localStorage.getItem("hadhir.sessionStart")); } catch {}
+    if (!start || isNaN(start)) { try { localStorage.setItem("hadhir.sessionStart", String(Date.now())); } catch {} }
+    else if (Date.now() - start > SESSION_MAX_MS) {
+      await signOut(auth);
+      try { localStorage.removeItem("hadhir.sessionStart"); } catch {}
+      showGateError("انتهت صلاحية الجلسة (يومين) — سجّل دخولك مجدداً.");
+      return;
+    }
+    location.replace("LABS.html");
+  } catch (err) {
+    await signOut(auth);
+    showGateError("تعذّر التحقق من الحساب — تأكد من الإنترنت وحاول مجدداً.");
+  }
+});
+
+const AUTH_ERR = {
+  "auth/invalid-email": "صيغة البريد الإلكتروني غير صحيحة.",
+  "auth/user-not-found": "لا يوجد حساب بهذا البريد — تأكد من البريد أو راجع المشرف.",
+  "auth/wrong-password": "كلمة السر غير صحيحة.",
+  "auth/invalid-credential": "البريد أو كلمة السر غير صحيحة.",
+  "auth/too-many-requests": "محاولات كثيرة — انتظر قليلاً ثم حاول مجدداً.",
+  "auth/network-request-failed": "لا يوجد اتصال بالإنترنت — تسجيل الدخول يحتاج اتصالاً."
+};
+async function doLogin() {
+  const btn = $("#btnLogin"), errB = $("#aErr");
+  errB.classList.remove("show");
+  btn.disabled = true; btn.innerHTML = '<span class="spin"></span> جارٍ الدخول…';
+  try {
+    await signInWithEmailAndPassword(auth, $("#aEmail").value.trim(), $("#aPass").value);
+    /* التحويل يصير تلقائياً من onAuthStateChanged */
+  } catch (e) {
+    errB.textContent = AUTH_ERR[e.code] || "تعذّر تسجيل الدخول (" + (e.code || e.message) + ")";
+    errB.classList.add("show");
+    btn.disabled = false; btn.textContent = "تسجيل الدخول";
+  }
+}
+$("#btnLogin").onclick = doLogin;
+$("#aPass").addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
+$("#aEmail").addEventListener("keydown", e => { if (e.key === "Enter") $("#aPass").focus(); });
+</script>
+</body>
+</html>
