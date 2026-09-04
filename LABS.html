@@ -246,7 +246,7 @@ main{max-width:1080px;margin-inline:auto;padding:16px 14px calc(var(--nav-h) + 2
 .st .smain b{display:block;font-size:14.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .st .smain .meta{display:flex;gap:5px;flex-wrap:wrap;margin-top:3px}
 .tag{font-size:10.5px;font-weight:700;border-radius:999px;padding:1px 9px;background:var(--surface);border:1px solid var(--line);color:var(--mut)}
-.tag.t-stage{background:var(--prim-soft);border-color:var(--prim-line);color:var(--prim-deep)}
+.tag.t-stage{background:var(--prim-soft);border-color:var(--prim-line);color:var(--prim-deep}
 .tag.t-lab{background:#EFF6FF;border-color:#BFDBFE;color:#1D4ED8}
 
 .toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
@@ -1103,16 +1103,22 @@ function startData() {
     onDataChange();
   }, e => toast("تعذّر تحميل الإعدادات: " + e.code, "err")));
 
-  unsubs.push(onSnapshot(collection(db, "students"), snap => {
-    students = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => coll.compare(a.name, b.name));
-    dataReady = true;
-    onDataChange();
-  }, e => toast("تعذّر تحميل الطلاب: " + e.code, "err")));
-
+  /* تحسين: تحميل المواد أولاً لأنها أصغر، ثم استخدامها لفلترة الطلاب */
   unsubs.push(onSnapshot(collection(db, "subjects"), snap => {
     subjects = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => coll.compare(a.name, b.name));
     onDataChange();
   }, e => toast("تعذّر تحميل المواد: " + e.code, "err")));
+
+  /* تحسين: فلترة الطلاب حسب نطاق الأستاذ لتقليل البيانات المحملة */
+  let studentsQuery = collection(db, "students");
+  if (!isAdmin() && staffProfile && staffProfile.allowedStages && staffProfile.allowedStages !== "all") {
+    studentsQuery = query(studentsQuery, where("stage", "in", staffProfile.allowedStages));
+  }
+  unsubs.push(onSnapshot(studentsQuery, snap => {
+    students = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => coll.compare(a.name, b.name));
+    dataReady = true;
+    onDataChange();
+  }, e => toast("تعذّر تحميل الطلاب: " + e.code, "err")));
 }
 function stopData() {
   unsubs.forEach(u => u()); unsubs = [];
@@ -1699,7 +1705,8 @@ async function loadRecords() {
   const f = $("#rFrom").value || todayStr(), t = $("#rTo").value || f;
   recLoading = true; renderRecords();
   try {
-    const q = query(collection(db, "attendance"),
+    /* تحسين: فلترة حسب نطاق الأستاذ لتقليل البيانات المحملة */
+    let q = query(collection(db, "attendance"),
       where("date", ">=", f), where("date", "<=", t), orderBy("date", "desc"), limit(3000));
     const snap = await getDocs(q);
     recRows = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -3094,7 +3101,20 @@ async function openStudentReport(sid, fbName) {
       return;
     }
     const map = new Map();
+    /* تجميع حسب (المادة + التاريخ) لتجنب احتساب الغيابات المكررة من أساتذة مختلفين في نفس اليوم */
+    const byDateSubject = new Map();
     recs.forEach(r => {
+      const k = (r.subjectId || r.subjectName) + "|" + r.date;
+      if (!byDateSubject.has(k)) byDateSubject.set(k, { subjectId: r.subjectId, subjectName: r.subjectName, date: r.date, status: r.status });
+      else {
+        const existing = byDateSubject.get(k);
+        /* إذا كان هناك سجل غياب، نحتفظ به (الأولوية للغياب) */
+        if (existing.status === "present" && r.status === "absent") existing.status = "absent";
+        if (existing.status === "present" && r.status === "excused") existing.status = "excused";
+      }
+    });
+    /* الآن نحسب الإحصائيات حسب المادة فقط (لكل يوم غياب واحد) */
+    byDateSubject.forEach(r => {
       const k = r.subjectId || r.subjectName;
       if (!map.has(k)) map.set(k, { subject: r.subjectName || "مادة", p: 0, a: 0, e: 0 });
       const g = map.get(k);
@@ -3215,7 +3235,20 @@ async function openSubjectReport(subId) {
   const n1w = settings.alertAbs1 || 3, stepw = settings.alertStep || 3;
   const tot = { p: 0, a: 0, e: 0 };
   const byDate = new Map(), byStudent = new Map();
+  /* تجميع حسب (التاريخ + الطالب) لتجنب احتساب الغيابات المكررة من أساتذة مختلفين في نفس اليوم */
+  const byDateStudent = new Map();
   recs.forEach(r => {
+    const k = r.date + "|" + r.studentId;
+    if (!byDateStudent.has(k)) byDateStudent.set(k, { date: r.date, studentId: r.studentId, studentName: r.studentName, stage: r.stage, section: r.section, lab: r.lab, status: r.status });
+    else {
+      const existing = byDateStudent.get(k);
+      /* إذا كان هناك سجل غياب، نحتفظ به (الأولوية للغياب) */
+      if (existing.status === "present" && r.status === "absent") existing.status = "absent";
+      if (existing.status === "present" && r.status === "excused") existing.status = "excused";
+    }
+  });
+  /* الآن نحسب الإحصائيات حسب السجلات الفريدة (لكل يوم غياب واحد لكل طالب) */
+  byDateStudent.forEach(r => {
     if (r.status === "present") tot.p++; else if (r.status === "absent") tot.a++; else if (r.status === "excused") tot.e++;
     if (!byDate.has(r.date)) byDate.set(r.date, { p: 0, a: 0, e: 0 });
     const gd = byDate.get(r.date); gd[r.status === "present" ? "p" : r.status === "absent" ? "a" : "e"]++;
