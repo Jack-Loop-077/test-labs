@@ -156,6 +156,9 @@ main{max-width:1080px;margin-inline:auto;padding:16px 14px calc(var(--nav-h) + 2
 .chip .x:hover{background:var(--no-soft);color:var(--no)}
 
 .empty{padding:34px 16px;text-align:center;color:var(--mut)}
+.empty svg{animation:emptyFloat 3s ease-in-out infinite}
+@keyframes emptyFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@media (prefers-reduced-motion:reduce){.empty svg{animation:none}}
 .empty svg{width:44px;height:44px;margin:0 auto 10px;opacity:.35}
 .empty p{font-size:13.5px}
 
@@ -307,6 +310,11 @@ main{max-width:1080px;margin-inline:auto;padding:16px 14px calc(var(--nav-h) + 2
 .bspin{width:44px;height:44px;border:4px solid var(--prim-soft);border-top-color:var(--prim);border-radius:50%;animation:rot .8s linear infinite}
 
 .sec-title{font-size:13px;font-weight:700;color:var(--mut);margin:4px 0 8px;display:flex;align-items:center;gap:6px}
+.rec-date-head{
+  position:sticky;top:var(--topbar-h, 62px);z-index:15;margin:15px -4px 8px;padding:7px 10px;
+  background:var(--surface);border-radius:10px;flex-wrap:wrap;box-shadow:0 0 0 0 transparent;transition:box-shadow .2s;
+}
+.rec-date-head.is-stuck{box-shadow:0 4px 10px -6px rgba(14,42,40,.25)}
 .list-add{display:flex;gap:8px;margin-bottom:10px}
 .list-add .inp{flex:1}
 .chips{display:flex;gap:7px;flex-wrap:wrap}
@@ -1016,6 +1024,12 @@ function loadScript(u) {
     document.head.appendChild(s);
   }));
 }
+function syncTopbarHeight() {
+  const tb = document.querySelector(".topbar");
+  if (tb) document.documentElement.style.setProperty("--topbar-h", tb.offsetHeight + "px");
+}
+syncTopbarHeight();
+window.addEventListener("resize", syncTopbarHeight);
 $("#modalClose").onclick = closeModal;
 modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
 
@@ -1799,13 +1813,25 @@ function renderRecords() {
       curD = r.date;
       const dc = { present: 0, absent: 0, excused: 0 };
       shown.forEach(x => { if (x.date === curD) dc[x.status] = (dc[x.status] || 0) + 1; });
-      h += '<p class="sec-title" style="margin:15px 0 8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">' + esc(fmtDate(curD)) +
+      const rel = curD === todayStr() ? "اليوم — " : curD === new Date(Date.now() - 864e5).toLocaleDateString("en-CA") ? "أمس — " : "";
+      h += '<p class="sec-title rec-date-head">' + rel + esc(fmtDate(curD)) +
         ' <span style="opacity:.55;font-weight:600">' + esc(curD) + '</span><span style="flex:1"></span>' +
         '<span style="color:var(--ok)">ح ' + dc.present + '</span><span style="color:var(--no)">غ ' + dc.absent + '</span><span style="color:var(--ex)">م ' + dc.excused + "</span></p>";
     }
     h += recHTML(r);
   });
   box.innerHTML = h;
+  observeStickyHeads(box);
+}
+let _stickyObs = null;
+function observeStickyHeads(box) {
+  if (_stickyObs) _stickyObs.disconnect();
+  const heads = box.querySelectorAll(".rec-date-head");
+  if (!heads.length) return;
+  _stickyObs = new IntersectionObserver(entries => {
+    entries.forEach(e => e.target.classList.toggle("is-stuck", e.intersectionRatio < 1));
+  }, { threshold: [1], rootMargin: "-" + (parseInt(getComputedStyle(document.documentElement).getPropertyValue("--topbar-h")) || 62) + "px 0px 0px 0px" });
+  heads.forEach(h => _stickyObs.observe(h));
 }
 
 $("#recBody").addEventListener("click", async e => {
