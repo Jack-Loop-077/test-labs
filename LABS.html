@@ -1709,20 +1709,25 @@ function openGuestPicker() {
 let recRows = [], recLoading = false, recStFilter = "";
 $("#rFrom").value = todayStr(); $("#rTo").value = todayStr();
 
-async function loadRecords() {
+let _recCacheKey = "", _recCacheAt = 0;
+async function loadRecords(force) {
   if (!db || !user) return;
   recStFilter = "";
   const f = $("#rFrom").value || todayStr(), t = $("#rTo").value || f;
+  const key = f + "_" + t;
+  /* لو نفس المدى ونفس البيانات محمّلة قبل أقل من دقيقة، لا تعيد القراءة من فايرستور — بس أعد الرسم */
+  if (!force && key === _recCacheKey && Date.now() - _recCacheAt < 60000) { renderRecords(); return; }
   recLoading = true; renderRecords();
   try {
     const q = query(collection(db, "attendance"),
       where("date", ">=", f), where("date", "<=", t), orderBy("date", "desc"), limit(3000));
     const snap = await getDocs(q); trackRead("docs", snap.size);
     recRows = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    _recCacheKey = key; _recCacheAt = Date.now();
   } catch (e) { toast("تعذّر تحميل السجل: " + e.code, "err"); recRows = []; }
   recLoading = false; renderRecords();
 }
-["rFrom", "rTo"].forEach(id => $("#" + id).addEventListener("change", loadRecords));
+["rFrom", "rTo"].forEach(id => $("#" + id).addEventListener("change", () => loadRecords(true)));
 ["rStage", "rSubject", "rSection", "rLab", "rShift"].forEach(id => $("#" + id).addEventListener("change", () => {
   if (id === "rStage") fillRSubject();
   renderRecords();
@@ -1737,7 +1742,7 @@ $("#rPresets").addEventListener("click", e => {
   else if (b.dataset.rp === "7") f = d(6);
   else if (b.dataset.rp === "month") f = t.slice(0, 8) + "01";
   $("#rFrom").value = f; $("#rTo").value = to;
-  loadRecords();
+  loadRecords(true);
 });
 
 function filteredRecords() {
@@ -3402,7 +3407,7 @@ $("#btnTermRange").onclick = () => {
   if (!t) { toast("حدد الفصل الحالي من الإدارة أولاً", "err"); return; }
   $("#rFrom").value = t.from;
   $("#rTo").value = t.to > todayStr() ? todayStr() : t.to;
-  loadRecords();
+  loadRecords(true);
 };
 
 const SYS_OPTS = ["فصلي", "سنوي", "كورسات", "بولوني"];
@@ -3606,12 +3611,15 @@ function fmtScope(list) {
   if (list === "all" || !list) return "الكل";
   return Array.isArray(list) && list.length ? list.join("، ") : "لا شي";
 }
-async function loadStaffList() {
+let _staffLoaded = false;
+async function loadStaffList(force) {
   const box = $("#staffList"); if (!box) return;
+  if (_staffLoaded && !force) { renderStaffList(); return; }
   box.innerHTML = '<div class="skel"></div><div class="skel"></div>';
   try {
     const snap = await getDocs(collection(db, "staff")); trackRead("docs", snap.size);
     staffRows = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    _staffLoaded = true;
     renderStaffList();
   } catch (e) { box.innerHTML = '<div class="empty"><p>تعذّر تحميل القائمة: ' + esc(e.code || e.message) + '</p></div>'; }
 }
@@ -3652,7 +3660,7 @@ async function deleteStaffAccount(s) {
     await deleteDoc(doc(db, "staff", s.id));
     audit("staff_delete", "حذف نهائي لحساب: " + s.name + " (" + s.email + ")");
     toast("انحذف الحساب — ما يكدر يدخل بعدها");
-    loadStaffList();
+    loadStaffList(true);
   } catch (e) { toast("تعذّر الحذف: " + (e.code || e.message), "err"); }
 }
 
@@ -3748,7 +3756,7 @@ function openStaffForm(existing) {
               }
             }
             closeModal();
-            loadStaffList();
+            loadStaffList(true);
           } catch (e) {
             const M = { "auth/email-already-in-use": "هذا البريد مستخدم لحساب ثاني", "auth/invalid-email": "صيغة البريد غلط", "auth/weak-password": "كلمة السر ضعيفة" };
             toast(M[e.code] || ("تعذّر الحفظ: " + (e.code || e.message)), "err");
@@ -3766,7 +3774,7 @@ async function toggleStaffActive(s) {
     await updateDoc(doc(db, "staff", s.id), { active: willActivate });
     audit(willActivate ? "staff_enable" : "staff_disable", (willActivate ? "تفعيل" : "تعطيل") + " أستاذ: " + s.name);
     toast(willActivate ? "تم التفعيل" : "تم التعطيل");
-    loadStaffList();
+    loadStaffList(true);
   } catch (e) { toast("تعذّر الحفظ: " + (e.code || e.message), "err"); }
 }
 $("#btnAddStaff").onclick = () => openStaffForm(null);
@@ -3901,7 +3909,7 @@ function openMergeDlg(g) {
             (dropped ? "، أُهمل " + dropped + " متعارضاً" : "") + "، حُذف " + dupes.length + " ملفاً مكرراً");
           closeModal();
           $("#dupList").innerHTML = "";
-          if (recRows.length) loadRecords();
+          if (recRows.length) loadRecords(true);
           toast("اكتمل الدمج: نُقل " + moved + " سجلاً" + (dropped ? "، أُهمل " + dropped + " متعارضاً" : ""));
         } catch (err) {
           toast("تعذّر الدمج: " + (err.code || err.message), "err");
