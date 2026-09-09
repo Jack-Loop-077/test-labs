@@ -117,7 +117,8 @@ main{max-width:1080px;margin-inline:auto;padding:16px 14px calc(var(--nav-h) + 4
 .grp-head{display:flex;align-items:center;gap:8px;margin:22px 2px 10px;padding-right:11px;border-right:3px solid var(--prim);font-size:13.5px;font-weight:800;color:var(--mut);scroll-margin-top:calc(var(--topbar-h, 62px) + 60px)}
 .grp-head:first-of-type{margin-top:2px}
 .quickjump{position:sticky;top:var(--topbar-h, 62px);z-index:20;background:var(--surface);padding:10px 0 8px;margin-bottom:4px}
-.quickjump .chip{text-decoration:none;font-size:12.5px}
+.quickjump .chip{text-decoration:none;font-size:12.5px;padding:7px 15px;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+.quickjump .chip.on{background:var(--prim);border-color:var(--prim);color:#fff}
 .grid{display:grid;gap:10px}
 .g2{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
 .g3{grid-template-columns:1fr 1fr 1fr}
@@ -650,12 +651,13 @@ body.staff .adm{display:none!important}
 
     <!-- ░░ الإدارة ░░ -->
     <section class="view" id="view-manage">
-      <div class="chips quickjump">
-        <a href="#grp-basic" class="chip">⚙️ الإعدادات</a>
-        <a href="#grp-adv" class="chip adm">🔄 المتقدمة</a>
-        <a href="#grp-sec" class="chip">🛡️ الأمان</a>
+      <div class="chips quickjump" id="mgTabs">
+        <button class="chip on" data-cat="overview">📊 نظرة عامة</button>
+        <button class="chip" data-cat="basic">⚙️ الإعدادات</button>
+        <button class="chip adm" data-cat="advanced">🔄 المتقدمة</button>
+        <button class="chip" data-cat="security">🛡️ الأمان</button>
       </div>
-      <div class="card" data-viewperm="viewOverview">
+      <div class="card" data-cat="overview" data-viewperm="viewOverview">
         <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>نظرة عامة</h2>
         <div class="summary" id="ovLocal"></div>
         <p class="sec-title">الطلاب حسب المرحلة</p>
@@ -677,8 +679,7 @@ body.staff .adm{display:none!important}
         </div>
       </div>
 
-      <div class="grp-head" id="grp-basic">⚙️ الإعدادات الأساسية</div>
-      <div class="card" data-viewperm="viewTerms">
+      <div class="card" data-cat="basic" data-viewperm="viewTerms">
         <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>الفصول الدراسية</h2>
         <div id="termList"></div>
         <label style="display:flex;align-items:center;gap:9px;font-size:13px;font-weight:600;margin-top:10px;cursor:pointer">
@@ -699,7 +700,7 @@ body.staff .adm{display:none!important}
         <button class="btn btn-p" id="btnAddTerm" style="width:100%;margin-top:10px">إضافة الفصل</button>
       </div>
 
-      <div class="card adm">
+      <div class="card adm" data-cat="basic">
         <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-5h6v5"/><path d="M9 9h.01M15 9h.01M9 13h.01M15 13h.01"/></svg>الترويسة الرسمية</h2>
         <p class="hint" style="margin-bottom:10px">تظهر أعلى <b>كل ملفات Excel</b> — الشعار والاسم يتحفظون مرة وحدة، وتعدّلهم من هنا وقت ما تريد.</p>
         <div class="grid g2">
@@ -716,7 +717,7 @@ body.staff .adm{display:none!important}
         <input type="file" id="orgLogoFile" accept="image/*" hidden>
       </div>
 
-      <div class="card" data-viewperm="viewWarnings">
+      <div class="card" data-cat="basic" data-viewperm="viewWarnings">
         <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10.3 21a2 2 0 0 0 3.4 0"/></svg>التنبيهات والإنذارات</h2>
         <p class="hint" style="margin-bottom:10px">كشف رسمي: صفوف الطلاب × أعمدة <b>كل مواد المرحلة</b> (بغض النظر عن المختبر)، وكل خلية تعرض المستوى الحالي فقط: تنبيه ← إنذار ← إنذار نهائي حسب عدد غياباته بالمادة — والخالي يبقى فارغاً.</p>
         <div class="grid g3">
@@ -732,7 +733,7 @@ body.staff .adm{display:none!important}
         <div id="wnSum" style="margin-top:12px"></div>
       </div>
 
-      <div class="card" data-viewperm="viewSubjects">
+      <div class="card" data-cat="basic" data-viewperm="viewSubjects">
         <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5V6a2 2 0 0 1 2-2h14v13.5M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-4.5H6.5A2.5 2.5 0 0 0 4 19.5z"/></svg>المواد الدراسية</h2>
         <div class="grid" style="grid-template-columns:2fr 1.4fr auto">
           <input class="inp" id="subName" placeholder="اسم المادة">
@@ -742,13 +743,12 @@ body.staff .adm{display:none!important}
         <div id="subList" style="margin-top:13px"></div>
       </div>
 
-      <div class="card" data-viewperm="viewLists">
+      <div class="card" data-cat="basic" data-viewperm="viewLists">
         <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>القوائم — المراحل والشعب والمختبرات</h2>
         <div id="listsBody"></div>
       </div>
 
-      <div class="grp-head" id="grp-adv">🔄 العمليات المتقدمة</div>
-      <div class="card adm">
+      <div class="card adm" data-cat="advanced">
         <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>الترحيل — نهاية السنة</h2>
         <p class="hint" style="margin-bottom:10px">صعّد دفعة كاملة مرحلة فوق، وآخر مرحلة تتخرج 🎓 — الخريجون يبقون بالنظام (فلتر «الخريجون» بتبويب الطلاب) بكل سجلاتهم، وتكدر ترجّع أي واحد فعالاً من تعديل بياناته — المؤجل والمرقّن قيدهم ما يُرحّلون.</p>
         <div class="grid g2">
@@ -759,21 +759,21 @@ body.staff .adm{display:none!important}
         <button class="btn btn-p" id="btnPromote" style="width:100%;margin-top:12px">معاينة وتنفيذ الترحيل</button>
       </div>
 
-      <div class="card adm">
+      <div class="card adm" data-cat="advanced">
         <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/><path d="M6 9v6M18 9a9 9 0 0 1-9 9"/></svg>دمج المكررين</h2>
         <p class="hint" style="margin-bottom:10px">يفحص الأسماء المتطابقة أو المتشابهة إملائياً (أ/ا، ة/ه، ى/ي، المسافات الزائدة) ويدمجها بملف واحد مع نقل كل سجلات الحضور إليه.</p>
         <button class="btn btn-g" id="btnDupScan" style="width:100%">فحص المكررين</button>
         <div id="dupList" style="margin-top:12px"></div>
       </div>
 
-      <div class="card adm">
+      <div class="card adm" data-cat="security">
         <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V7z"/><path d="M9.3 12.2l2 2 3.6-4.2"/></svg>سجل التدقيق</h2>
         <p class="hint" style="margin-bottom:10px">منو سوى شنو ومتى — للعمليات الحساسة: حذف، ترحيل، دمج، استعادة، استيراد، فك قفل… ويبقى محفوظاً حتى بعد «حذف كل البيانات».</p>
         <button class="btn btn-g" id="btnAuditLoad" style="width:100%">عرض آخر 50 عملية</button>
         <div id="auditList" style="margin-top:12px"></div>
       </div>
 
-      <div class="card" data-viewperm="viewBackup">
+      <div class="card" data-cat="security" data-viewperm="viewBackup">
         <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>النسخ الاحتياطي</h2>
         <p class="hint" id="bkStatus" style="margin-bottom:6px"></p>
         <p class="hint" style="margin-bottom:10px">صدّر نسخة كاملة من كل البيانات (الطلاب، المواد، سجل الحضور) واحتفظ بها.</p>
@@ -785,7 +785,7 @@ body.staff .adm{display:none!important}
         <input type="file" id="fileRestore" accept=".json,application/json" hidden>
       </div>
 
-      <div class="card adm">
+      <div class="card adm" data-cat="advanced">
         <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/><path d="M8 15l2 2 4-4"/></svg>التصدير الأسبوعي — للمشرف</h2>
         <p class="hint" style="margin-bottom:10px">كل جلسة حضور اتوخذت بهذا المدى (تاريخ + مادة + مختبر + دراسة) تصدّر <b>كملف Excel منفصل بروحه</b> — مو ملف واحد مجمّع. هذا احتراز أمني: لو صار خلل بملف وحد، الباقي يبقى سالم، وتقدر ترسل كل جلسة لصاحبها براحتها.</p>
         <div class="grid g2">
@@ -804,7 +804,7 @@ body.staff .adm{display:none!important}
         <p class="hint" id="wkStatus" style="margin-top:8px"></p>
       </div>
 
-      <div class="card danger-card adm">
+      <div class="card danger-card adm" data-cat="security">
         <h2 style="color:var(--no)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>منطقة الخطر</h2>
         <p class="hint" style="margin-bottom:4px">عمليات نهائية لا يمكن التراجع عنها — سوِّ نسخة احتياطية قبل أي خطوة.</p>
         <div class="danger-row">
@@ -817,15 +817,14 @@ body.staff .adm{display:none!important}
         </div>
       </div>
 
-      <div class="grp-head" id="grp-sec">🛡️ الأمان والحسابات</div>
-      <div class="card adm">
+      <div class="card adm" data-cat="security">
         <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>حسابات الأساتذة</h2>
         <p class="hint" style="margin-bottom:10px">تسوي حساب دخول حقيقي لكل أستاذ (بريد وكلمة سر)، وتحدد له المرحلة/المختبر المسؤول عنه وشنو يكدر يسوي بالضبط. تسجيل الحضور والسجل والتصدير عنده ينحصر تلقائياً بنطاقه.</p>
         <button class="btn btn-p" id="btnAddStaff" style="width:100%;margin-bottom:12px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>إضافة أستاذ</button>
         <div id="staffList"><div class="skel"></div></div>
       </div>
 
-      <div class="card">
+      <div class="card" data-cat="security">
         <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>الحساب</h2>
         <p class="hint" id="accEmail" dir="ltr" style="text-align:right;margin-bottom:10px"></p>
         <button class="btn btn-d" id="btnSignout" style="width:100%"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>تسجيل الخروج</button>
@@ -975,11 +974,31 @@ function applyPermGates(root = document) {
   root.querySelectorAll("[data-perm]").forEach(el => {
     if (!hasPerm(el.dataset.perm)) el.style.display = "none";
   });
-  root.querySelectorAll("[data-viewperm]").forEach(el => {
-    const ok = !!(staffProfile && staffProfile.perms && staffProfile.perms[el.dataset.viewperm]);
-    el.style.display = ok ? "" : "none";
+}
+/* هل مسموح لهذا الحساب يشوف هذي البطاقة (بغض النظر عن التبويب المفتوح) */
+function cardPermOk(el) {
+  if (isAdmin()) return true;
+  if (!el.dataset.viewperm) return true; /* بطاقات .adm بلا viewperm — الحماية عبر CSS العام */
+  return !!(staffProfile && staffProfile.perms && staffProfile.perms[el.dataset.viewperm]);
+}
+/* التبويب الحالي بصفحة الإدارة + دمج الصلاحية والتصنيف بمكان وحد */
+let curAdminTab = "overview";
+function refreshAdminCards() {
+  document.querySelectorAll('#view-manage .card[data-cat]').forEach(el => {
+    el.style.display = (el.dataset.cat === curAdminTab && cardPermOk(el)) ? "" : "none";
   });
 }
+$("#mgTabs").addEventListener("click", e => {
+  const b = e.target.closest("[data-cat]"); if (!b) return;
+  curAdminTab = b.dataset.cat;
+  $$("#mgTabs .chip").forEach(x => x.classList.toggle("on", x === b));
+  refreshAdminCards();
+  try { localStorage.setItem("hadhir.mgtab", curAdminTab); } catch {}
+});
+(function () {
+  let saved; try { saved = localStorage.getItem("hadhir.mgtab"); } catch {}
+  if (saved) { const b = document.querySelector('#mgTabs [data-cat="' + saved + '"]'); if (b) b.click(); }
+})();
 const todayStr = () => new Date().toLocaleDateString("en-CA");
 const fmtDate = d => { try { return new Date(d + "T00:00:00").toLocaleDateString("ar-IQ", {weekday:"short", day:"numeric", month:"short"}); } catch { return d; } };
 
@@ -1104,6 +1123,7 @@ onAuthStateChanged(auth, async u => {
   const b = $("#boot"); if (b) b.remove();
   if (window.__bootDone) window.__bootDone();
   applyPermGates();
+  refreshAdminCards();
   startData();
 });
 async function doSignout() {
@@ -1193,7 +1213,7 @@ $("#nav").addEventListener("click", e => {
   $$(".nav-btn").forEach(x => x.classList.toggle("on", x === b));
   $$("main > .view").forEach(v => v.classList.toggle("active", v.id === "view-" + curView));
   if (curView === "records") loadRecords();
-  if (curView === "manage") { loadServerStats(false); localSafetySnapshot(); if (isAdmin()) loadStaffList(); }
+  if (curView === "manage") { loadServerStats(false); localSafetySnapshot(); if (isAdmin()) loadStaffList(); refreshAdminCards(); }
   if (curView !== "students" && selMode) { selMode = false; selSet.clear(); renderStudents(); updateBulkBar(); }
 });
 $("#view-attend").classList.add("active");
