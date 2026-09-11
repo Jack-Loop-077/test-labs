@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>تسجيل الدخول — حاضر (تجريبي)</title>
+<title>تسجيل الدخول - حاضر (تجريبي)</title>
 <meta name="theme-color" content="#0A4A45">
 <script>try{var _t=localStorage.getItem("hadhir.theme");if(!_t)_t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=_t;}catch(e){}</script>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231B3358'/%3E%3Cpath d='M18 33l10 10 18-20' stroke='%23fff' stroke-width='7' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230F766E'/%3E%3Cpath d='M18 33l10 10 18-20' stroke='%23fff' stroke-width='7' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -98,7 +98,7 @@ h1{font-family:'Alexandria',sans-serif;text-align:center;font-size:23px;font-wei
     }, 12000);
     window.__bootDone = function () { clearTimeout(t); };
     window.addEventListener("error", function (e) {
-      show((e.message || "خطأ غير معروف") + (e.filename ? " — " + String(e.filename).split("/").pop() : ""));
+      show((e.message || "خطأ غير معروف") + (e.filename ? " - " + String(e.filename).split("/").pop() : ""));
     });
     window.addEventListener("unhandledrejection", function (e) {
       show((e.reason && (e.reason.message || e.reason)) || "رفض غير معالج");
@@ -109,7 +109,7 @@ h1{font-family:'Alexandria',sans-serif;text-align:center;font-size:23px;font-wei
   <div class="card" id="card">
     <div class="logo"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
     <h1>حاضر</h1>
-    <p class="sub">نظام حضور الطلاب — سجّل دخولك للمتابعة</p>
+    <p class="sub">نظام حضور الطلاب - سجّل دخولك للمتابعة</p>
     <div class="err" id="aErr"></div>
     <div class="field">
       <label class="lbl" for="aEmail">البريد الإلكتروني</label>
@@ -135,7 +135,7 @@ h1{font-family:'Alexandria',sans-serif;text-align:center;font-size:23px;font-wei
 </div>
 
 <script type="module">
-/* إعدادات Firebase — مشروع labs-a4765 */
+/* إعدادات Firebase - مشروع labs-a4765 */
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyDMUlwIrd2wb11xgiS-vKqeJEuTYPY9YmA",
   authDomain: "test-labs-1cb92.firebaseapp.com",
@@ -145,9 +145,9 @@ const FIREBASE_CONFIG = {
   appId: "1:602549047680:web:b915fe8aed877cc04bf165"
 };
 
-/* إيميل المشرف — يطابق نفس القيمة بملف LABS.html */
+/* إيميل المشرف - يطابق نفس القيمة بملف LABS.html */
 const ADMIN_EMAIL = "hasanhasan12331233@gmail.com";
-/* أقصى مدة جلسة قبل تسجيل خروج إجباري (يومين) — احتراز أمني بسيط */
+/* أقصى مدة جلسة قبل تسجيل خروج إجباري (يومين) - احتراز أمني بسيط */
 const SESSION_MAX_MS = 2 * 24 * 60 * 60 * 1000;
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -182,12 +182,12 @@ onAuthStateChanged(auth, async u => {
     location.replace("LABS.html");
     return;
   }
-  /* حساب أستاذ — تحقّق من ملفه بقاعدة البيانات قبل الدخول */
+  /* حساب أستاذ - تحقّق من ملفه بقاعدة البيانات قبل الدخول */
   try {
     const snap = await getDoc(doc(db, "staff", u.uid));
     if (!snap.exists() || snap.data().active !== true) {
       await signOut(auth);
-      showGateError(snap.exists() ? "الحساب معطّل من قبل المشرف — راجعه لتفعيله." : "ما لكينا ملف صلاحيات لهذا الحساب — راجع المشرف.");
+      showGateError(snap.exists() ? "الحساب معطّل من قبل المشرف - راجعه لتفعيله." : "ما لكينا ملف صلاحيات لهذا الحساب - راجع المشرف.");
       return;
     }
     let start = null; try { start = Number(localStorage.getItem("hadhir.sessionStart")); } catch {}
@@ -195,23 +195,23 @@ onAuthStateChanged(auth, async u => {
     else if (Date.now() - start > SESSION_MAX_MS) {
       await signOut(auth);
       try { localStorage.removeItem("hadhir.sessionStart"); } catch {}
-      showGateError("انتهت صلاحية الجلسة (يومين) — سجّل دخولك مجدداً.");
+      showGateError("انتهت صلاحية الجلسة (يومين) - سجّل دخولك مجدداً.");
       return;
     }
     location.replace("LABS.html");
   } catch (err) {
     await signOut(auth);
-    showGateError("تعذّر التحقق من الحساب — تأكد من الإنترنت وحاول مجدداً.");
+    showGateError("تعذّر التحقق من الحساب - تأكد من الإنترنت وحاول مجدداً.");
   }
 });
 
 const AUTH_ERR = {
   "auth/invalid-email": "صيغة البريد الإلكتروني غير صحيحة.",
-  "auth/user-not-found": "لا يوجد حساب بهذا البريد — تأكد من البريد أو راجع المشرف.",
+  "auth/user-not-found": "لا يوجد حساب بهذا البريد - تأكد من البريد أو راجع المشرف.",
   "auth/wrong-password": "كلمة السر غير صحيحة.",
   "auth/invalid-credential": "البريد أو كلمة السر غير صحيحة.",
-  "auth/too-many-requests": "محاولات كثيرة — انتظر قليلاً ثم حاول مجدداً.",
-  "auth/network-request-failed": "لا يوجد اتصال بالإنترنت — تسجيل الدخول يحتاج اتصالاً."
+  "auth/too-many-requests": "محاولات كثيرة - انتظر قليلاً ثم حاول مجدداً.",
+  "auth/network-request-failed": "لا يوجد اتصال بالإنترنت - تسجيل الدخول يحتاج اتصالاً."
 };
 async function doLogin() {
   const btn = $("#btnLogin"), errB = $("#aErr");

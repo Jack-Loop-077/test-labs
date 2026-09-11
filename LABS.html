@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>حاضر — نظام حضور الطلاب</title>
+<title>حاضر - نظام حضور الطلاب</title>
 <meta name="theme-color" content="#0A4A45">
 <script>try{var _t=localStorage.getItem("hadhir.theme");if(!_t)_t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=_t;}catch(e){}</script>
 <meta name="mobile-web-app-capable" content="yes">
@@ -135,7 +135,7 @@ main{max-width:1080px;margin-inline:auto;padding:16px 14px calc(var(--nav-h) + 4
 
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:7px;
-  border-radius:999px;padding:9px 18px;font-size:14px;font-weight:600;
+  border-radius:10px;padding:9px 18px;font-size:14px;font-weight:600;
   transition:transform .08s,box-shadow .15s,background .15s;min-height:42px;
   border:1.5px solid transparent;
 }
@@ -526,7 +526,7 @@ body.staff .adm{display:none!important}
   }, 12000);
   window.__bootDone = function () { clearTimeout(t); };
   window.addEventListener("error", function (e) {
-    show((e.message || "خطأ غير معروف") + (e.filename ? " — " + String(e.filename).split("/").pop() : ""));
+    show((e.message || "خطأ غير معروف") + (e.filename ? " - " + String(e.filename).split("/").pop() : ""));
   });
   window.addEventListener("unhandledrejection", function (e) {
     show((e.reason && (e.reason.message || e.reason)) || "رفض غير معالج");
@@ -540,7 +540,7 @@ body.staff .adm{display:none!important}
     <div class="logo"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path class="logo-check" d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
     <div class="brand">حاضر<small>نظام حضور الطلاب</small></div>
     <div class="top-sp"></div>
-    <div class="net" id="netChip"><span class="dot"></span>أوفلاين — يُحفظ محلياً</div>
+    <div class="net" id="netChip"><span class="dot"></span>أوفلاين - يُحفظ محلياً</div>
     <button class="theme-btn" id="btnTheme" aria-label="تبديل الوضع الليلي"></button>
     <button class="theme-btn" id="btnSignoutTop" aria-label="تسجيل الخروج" title="تسجيل الخروج">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
@@ -564,7 +564,7 @@ body.staff .adm{display:none!important}
             <div class="field"><label class="lbl">الدراسة</label><select class="sel" id="selShift"><option>صباحي</option><option>مسائي</option></select></div>
             <div class="field"><label class="lbl">التاريخ</label><input class="inp" type="date" id="selDate"></div>
           </div>
-          <p class="hint" style="margin-top:8px">غيّر التاريخ للرجوع وتعديل يوم سابق — المختبر هنا يخص هذي الجلسة تحديداً.</p>
+          <p class="hint" style="margin-top:8px">غيّر التاريخ للرجوع وتعديل يوم سابق - المختبر هنا يخص هذي الجلسة تحديداً.</p>
         </div>
       </div>
 
@@ -584,7 +584,7 @@ body.staff .adm{display:none!important}
           <button class="chip" data-rp="yest">أمس</button>
           <button class="chip" data-rp="7">آخر 7 أيام</button>
           <button class="chip" data-rp="month">هذا الشهر</button>
-          <button class="chip" id="btnTermRange">الفصل الحالي 🗓</button>
+          <button class="chip" id="btnTermRange">الفصل الحالي</button>
         </div>
         <div class="divider"></div>
         <p class="sec-title" style="margin-bottom:8px">تضييق النتائج</p>
@@ -628,7 +628,7 @@ body.staff .adm{display:none!important}
           <div class="field"><label class="lbl">المرحلة</label><select class="sel" id="stStage"></select></div>
           <div class="field"><label class="lbl">المختبر</label><select class="sel" id="stLab"></select></div>
           <div class="field"><label class="lbl">الدراسة</label><select class="sel" id="stShift"><option value="">كل الدراستين</option><option>صباحي</option><option>مسائي</option></select></div>
-          <div class="field"><label class="lbl">الحالة</label><select class="sel" id="stStatus"><option value="active">الفعّالون</option><option value="grad">الخريجون 🎓</option><option value="hold">مؤجل / مرقّن</option><option value="all">الكل</option></select></div>
+          <div class="field"><label class="lbl">الحالة</label><select class="sel" id="stStatus"><option value="active">الفعّالون</option><option value="grad">الخريجون</option><option value="hold">مؤجل / مرقّن</option><option value="all">الكل</option></select></div>
         </div>
         <button class="btn btn-g btn-sm" id="btnSelMode" style="width:100%;margin-top:10px">تحديد جماعي</button>
       </div>
@@ -646,10 +646,10 @@ body.staff .adm{display:none!important}
     <!-- ░░ الإدارة ░░ -->
     <section class="view" id="view-manage">
       <div class="chips quickjump" id="mgTabs">
-        <button class="chip on" data-cat="overview">📊 نظرة عامة</button>
-        <button class="chip" data-cat="basic">⚙️ الإعدادات</button>
-        <button class="chip adm" data-cat="advanced">🔄 المتقدمة</button>
-        <button class="chip" data-cat="security">🛡️ الأمان</button>
+        <button class="chip on" data-cat="overview">نظرة عامة</button>
+        <button class="chip" data-cat="basic">الإعدادات</button>
+        <button class="chip adm" data-cat="advanced">المتقدمة</button>
+        <button class="chip" data-cat="security">الأمان</button>
       </div>
       <div class="card" data-cat="overview" data-viewperm="viewOverview">
         <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></svg>نظرة عامة</h2>
@@ -662,7 +662,7 @@ body.staff .adm{display:none!important}
         <button class="btn btn-g btn-sm" id="btnOvRefresh" style="width:100%">تحديث إحصائيات الحضور</button>
         <p class="hint adm" id="readsMeter" style="margin-top:6px;text-align:center">0 قراءة مستند + 0 إحصائية مجمّعة (منذ فتح الصفحة)</p>
         <div class="divider"></div>
-        <button class="btn btn-soft btn-sm" id="btnCharts" style="width:100%">الرسوم البيانية — آخر 8 أسابيع</button>
+        <button class="btn btn-soft btn-sm" id="btnCharts" style="width:100%">الرسوم البيانية - آخر 8 أسابيع</button>
         <div id="chartsBox" style="display:none">
           <p class="sec-title" style="margin-top:14px">نسبة الحضور أسبوعياً</p>
           <div style="height:210px"><canvas id="chW"></canvas></div>
@@ -678,11 +678,11 @@ body.staff .adm{display:none!important}
         <div id="termList"></div>
         <label style="display:flex;align-items:center;gap:9px;font-size:13px;font-weight:600;margin-top:10px;cursor:pointer">
           <input type="checkbox" id="lockTermsChk" style="width:17px;height:17px;accent-color:var(--prim);flex:none">
-          🔒 قفل التعديل بالتواريخ خارج الفصل الحالي
+          قفل التعديل بالتواريخ خارج الفصل الحالي
         </label>
-        <p class="hint" style="margin-top:3px">أي تعديل حضور بتاريخ خارج الفصل الحالي يحتاج فك قفل مؤقت (10 دقائق) — حماية للسجل التاريخي من لمسة بالغلط.</p>
+        <p class="hint" style="margin-top:3px">أي تعديل حضور بتاريخ خارج الفصل الحالي يحتاج فك قفل مؤقت (10 دقائق) - حماية للسجل التاريخي من لمسة بالغلط.</p>
         <div class="divider"></div>
-        <p class="sec-title">نظام الدراسة حسب المرحلة — يُذكر بالكشوفات</p>
+        <p class="sec-title">نظام الدراسة حسب المرحلة - يُذكر بالكشوفات</p>
         <div id="sysList"></div>
         <div class="divider"></div>
         <p class="sec-title">إضافة فصل</p>
@@ -696,9 +696,9 @@ body.staff .adm{display:none!important}
 
       <div class="card adm" data-cat="basic">
         <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-5h6v5"/><path d="M9 9h.01M15 9h.01M9 13h.01M15 13h.01"/></svg>الترويسة الرسمية</h2>
-        <p class="hint" style="margin-bottom:10px">تظهر أعلى <b>كل ملفات Excel</b> — الشعار والاسم يتحفظون مرة وحدة، وتعدّلهم من هنا وقت ما تريد.</p>
+        <p class="hint" style="margin-bottom:10px">تظهر أعلى <b>كل ملفات Excel</b> - الشعار والاسم يتحفظون مرة وحدة، وتعدّلهم من هنا وقت ما تريد.</p>
         <div class="grid g2">
-          <div class="field"><label class="lbl">السطر الأول (الجامعة / الكلية)</label><input class="inp" id="orgL1" placeholder="جامعة … — كلية …"></div>
+          <div class="field"><label class="lbl">السطر الأول (الجامعة / الكلية)</label><input class="inp" id="orgL1" placeholder="جامعة … - كلية …"></div>
           <div class="field"><label class="lbl">السطر الثاني (القسم)</label><input class="inp" id="orgL2" placeholder="قسم …"></div>
         </div>
         <div style="display:flex;align-items:center;gap:9px;margin-top:12px;flex-wrap:wrap">
@@ -713,7 +713,7 @@ body.staff .adm{display:none!important}
 
       <div class="card" data-cat="basic" data-viewperm="viewWarnings">
         <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10.3 21a2 2 0 0 0 3.4 0"/></svg>التنبيهات والإنذارات</h2>
-        <p class="hint" style="margin-bottom:10px">كشف رسمي: صفوف الطلاب × أعمدة <b>كل مواد المرحلة</b> (بغض النظر عن المختبر)، وكل خلية تعرض المستوى الحالي فقط: تنبيه ← إنذار ← إنذار نهائي حسب عدد غياباته بالمادة — والخالي يبقى فارغاً.</p>
+        <p class="hint" style="margin-bottom:10px">كشف رسمي: صفوف الطلاب × أعمدة <b>كل مواد المرحلة</b> (بغض النظر عن المختبر)، وكل خلية تعرض المستوى الحالي فقط: تنبيه ← إنذار ← إنذار نهائي حسب عدد غياباته بالمادة - والخالي يبقى فارغاً.</p>
         <div class="grid g3">
           <div class="field"><label class="lbl">المرحلة</label><select class="sel" id="wnStage"></select></div>
           <div class="field"><label class="lbl">الشعبة</label><select class="sel" id="wnSection"></select></div>
@@ -738,13 +738,13 @@ body.staff .adm{display:none!important}
       </div>
 
       <div class="card" data-cat="basic" data-viewperm="viewLists">
-        <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>القوائم — المراحل والشعب والمختبرات</h2>
+        <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>القوائم - المراحل والشعب والمختبرات</h2>
         <div id="listsBody"></div>
       </div>
 
       <div class="card adm" data-cat="advanced">
-        <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>الترحيل — نهاية السنة</h2>
-        <p class="hint" style="margin-bottom:10px">صعّد دفعة كاملة مرحلة فوق، وآخر مرحلة تتخرج 🎓 — الخريجون يبقون بالنظام (فلتر «الخريجون» بتبويب الطلاب) بكل سجلاتهم، وتكدر ترجّع أي واحد فعالاً من تعديل بياناته — المؤجل والمرقّن قيدهم ما يُرحّلون.</p>
+        <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>الترحيل - نهاية السنة</h2>
+        <p class="hint" style="margin-bottom:10px">صعّد دفعة كاملة مرحلة فوق، وآخر مرحلة تتخرج - الخريجون يبقون بالنظام (فلتر «الخريجون» بتبويب الطلاب) بكل سجلاتهم، وتكدر ترجّع أي واحد فعالاً من تعديل بياناته - المؤجل والمرقّن قيدهم ما يُرحّلون.</p>
         <div class="grid g2">
           <div class="field"><label class="lbl">النوع</label><select class="sel" id="prMode"><option value="all">ترحيل الكل خطوة وحدة</option><option value="one">مرحلة محددة</option></select></div>
           <div class="field" id="prStageF"><label class="lbl">المرحلة</label><select class="sel" id="prStage"></select></div>
@@ -762,7 +762,7 @@ body.staff .adm{display:none!important}
 
       <div class="card adm" data-cat="security">
         <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 5-3.4 8.2-8 9-4.6-.8-8-4-8-9V7z"/><path d="M9.3 12.2l2 2 3.6-4.2"/></svg>سجل التدقيق</h2>
-        <p class="hint" style="margin-bottom:10px">منو سوى شنو ومتى — للعمليات الحساسة: حذف، ترحيل، دمج، استعادة، استيراد، فك قفل… ويبقى محفوظاً حتى بعد «حذف كل البيانات».</p>
+        <p class="hint" style="margin-bottom:10px">منو سوى شنو ومتى - للعمليات الحساسة: حذف، ترحيل، دمج، استعادة، استيراد، فك قفل… ويبقى محفوظاً حتى بعد «حذف كل البيانات».</p>
         <button class="btn btn-g" id="btnAuditLoad" style="width:100%">عرض آخر 50 عملية</button>
         <div id="auditList" style="margin-top:12px"></div>
       </div>
@@ -780,8 +780,8 @@ body.staff .adm{display:none!important}
       </div>
 
       <div class="card adm" data-cat="advanced">
-        <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/><path d="M8 15l2 2 4-4"/></svg>التصدير الأسبوعي — للمشرف</h2>
-        <p class="hint" style="margin-bottom:10px">كل جلسة حضور اتوخذت بهذا المدى (تاريخ + مادة + مختبر + دراسة) تصدّر <b>كملف Excel منفصل بروحه</b> — مو ملف واحد مجمّع. هذا احتراز أمني: لو صار خلل بملف وحد، الباقي يبقى سالم، وتقدر ترسل كل جلسة لصاحبها براحتها.</p>
+        <h2><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18M8 2v4M16 2v4"/><path d="M8 15l2 2 4-4"/></svg>التصدير الأسبوعي - للمشرف</h2>
+        <p class="hint" style="margin-bottom:10px">كل جلسة حضور اتوخذت بهذا المدى (تاريخ + مادة + مختبر + دراسة) تصدّر <b>كملف Excel منفصل بروحه</b> - مو ملف واحد مجمّع. هذا احتراز أمني: لو صار خلل بملف وحد، الباقي يبقى سالم، وتقدر ترسل كل جلسة لصاحبها براحتها.</p>
         <div class="grid g2">
           <div class="field"><label class="lbl">من تاريخ</label><input class="inp" type="date" id="wkFrom"></div>
           <div class="field"><label class="lbl">إلى تاريخ</label><input class="inp" type="date" id="wkTo"></div>
@@ -800,13 +800,13 @@ body.staff .adm{display:none!important}
 
       <div class="card danger-card adm" data-cat="security">
         <h2 style="color:var(--no)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>منطقة الخطر</h2>
-        <p class="hint" style="margin-bottom:4px">عمليات نهائية لا يمكن التراجع عنها — سوِّ نسخة احتياطية قبل أي خطوة.</p>
+        <p class="hint" style="margin-bottom:4px">عمليات نهائية لا يمكن التراجع عنها - سوِّ نسخة احتياطية قبل أي خطوة.</p>
         <div class="danger-row">
-          <div class="dmain"><b>حذف كل سجلات الحضور</b><p>يمسح السجل كاملاً — الطلاب والمواد تبقى (مفيد لبداية فصل جديد)</p></div>
+          <div class="dmain"><b>حذف كل سجلات الحضور</b><p>يمسح السجل كاملاً - الطلاب والمواد تبقى (مفيد لبداية فصل جديد)</p></div>
           <button class="btn btn-d btn-sm" id="btnWipeAtt">حذف</button>
         </div>
         <div class="danger-row">
-          <div class="dmain"><b>حذف كل البيانات</b><p>الطلاب + المواد + سجل الحضور — القوائم والحساب تبقى</p></div>
+          <div class="dmain"><b>حذف كل البيانات</b><p>الطلاب + المواد + سجل الحضور - القوائم والحساب تبقى</p></div>
           <button class="btn btn-d btn-sm" id="btnWipeAll">حذف</button>
         </div>
       </div>
@@ -849,7 +849,7 @@ body.staff .adm{display:none!important}
 
 <script type="module">
 /* ════════════════════════════════════════════════════════════════
-   حاضر — نظام حضور الطلاب — خريطة الملف (ملف واحد بلا بناء، حسب معيار الشحن المعتمد)
+   حاضر - نظام حضور الطلاب - خريطة الملف (ملف واحد بلا بناء، حسب معيار الشحن المعتمد)
    ────────────────────────────────────────────────────────────────
    1. إعدادات Firebase + المشرف + أدوات مساعدة عامة ($ , esc , debounce...)
    2. Modal / Toast / الوضع الليلي / حالة الاتصال
@@ -861,7 +861,7 @@ body.staff .adm{display:none!important}
    8. الإدارة: الفصول، الترويسة، التنبيهات، المواد، القوائم، الترحيل،
       سجل التدقيق، النسخ الاحتياطي (اليدوي + نسخة أمان محلية صامتة)، منطقة الخطر
    ════════════════════════════════════════════════════════════════ */
-/* إعدادات Firebase — مشروع labs-a4765 (مدمجة) */
+/* إعدادات Firebase - مشروع labs-a4765 (مدمجة) */
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyDMUlwIrd2wb11xgiS-vKqeJEuTYPY9YmA",
   authDomain: "test-labs-1cb92.firebaseapp.com",
@@ -885,7 +885,7 @@ import { getFirestore, initializeFirestore, persistentLocalCache, persistentMult
 
 /* ---------- أدوات عامة ---------- */
 const $  = s => document.querySelector(s);
-/* ═══ عدّاد قراءات شفاف — يبيّن فعلياً قد شنو نقرأ من فايرستور هذي الجلسة ═══ */
+/* ═══ عدّاد قراءات شفاف - يبيّن فعلياً قد شنو نقرأ من فايرستور هذي الجلسة ═══ */
 let _reads = { doc: 0, agg: 0, listeners: 0 };
 function trackRead(kind, n) {
   if (kind === "docs") _reads.doc += (n || 1);
@@ -893,14 +893,14 @@ function trackRead(kind, n) {
   else if (kind === "listener") _reads.listeners += 1;
   const el = $("#readsMeter"); if (el) el.textContent = _reads.doc + " قراءة مستند + " + _reads.agg + " إحصائية مجمّعة + " + _reads.listeners + " مستمع حي (منذ فتح الصفحة)";
 }
-/* ذاكرة تخزين مؤقت قصيرة لتقارير الطالب/المادة — تمنع إعادة القراءة لو فتحت نفس الكشف مرتين بدقيقة وحدة */
+/* ذاكرة تخزين مؤقت قصيرة لتقارير الطالب/المادة - تمنع إعادة القراءة لو فتحت نفس الكشف مرتين بدقيقة وحدة */
 const _reportCache = new Map();
 function cachedFetch(key, ttlMs, fn) {
   const hit = _reportCache.get(key);
   if (hit && Date.now() - hit.t < ttlMs) return Promise.resolve(hit.v);
   return fn().then(v => { _reportCache.set(key, { t: Date.now(), v }); return v; });
 }
-/* حلقة تقدّم دائرية — تُستخدم بكشوفات الطالب/المادة بدل رقم جاف */
+/* حلقة تقدّم دائرية - تُستخدم بكشوفات الطالب/المادة بدل رقم جاف */
 function ringSVG(pct, color, size = 78, label = "") {
   const r = (size - 8) / 2, c = 2 * Math.PI * r, off = c * (1 - Math.min(100, Math.max(0, pct)) / 100);
   return '<div style="flex:none;text-align:center">' +
@@ -918,7 +918,7 @@ function animateRings(root) {
   }));
 }
 const $$ = s => [...document.querySelectorAll(s)];
-/* أداة تأخير موحّدة لحقول البحث — تمنع إعادة الرسم على كل ضغطة حرف */
+/* أداة تأخير موحّدة لحقول البحث - تمنع إعادة الرسم على كل ضغطة حرف */
 function debounce(fn, ms = 200) {
   let t;
   return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
@@ -933,20 +933,20 @@ const avCls = name => {
 const isAdmin = () => !ADMIN_EMAIL || !!(user && (user.email || "").toLowerCase() === ADMIN_EMAIL.toLowerCase());
 function requireAdmin() {
   if (isAdmin()) return true;
-  toast("هذه العملية للمشرف فقط 🛡️", "err");
+  toast("هذه العملية للمشرف فقط", "err");
   return false;
 }
 /* ---------- صلاحيات الأساتذة (staff/{uid}) ---------- */
 let staffProfile = null; /* null لحد ما ينحمّل، أو للمشرف نفسه */
 const actorName = () => isAdmin() ? "المشرف" : ((staffProfile && staffProfile.title ? staffProfile.title + " " : "") + ((staffProfile && staffProfile.name) || (user && user.email) || ""));
-/* هل عنده صلاحية فعل معيّن: add / edit / delete / export — المشرف دائماً نعم */
+/* هل عنده صلاحية فعل معيّن: add / edit / delete / export - المشرف دائماً نعم */
 function hasPerm(action) {
   if (isAdmin()) return true;
   return !!(staffProfile && staffProfile.perms && staffProfile.perms[action]);
 }
 function requirePerm(action, label) {
   if (hasPerm(action)) return true;
-  toast("ما عندك صلاحية " + (label || "هذه العملية") + " — راجع المشرف", "err");
+  toast("ما عندك صلاحية " + (label || "هذه العملية") + " - راجع المشرف", "err");
   return false;
 }
 /* نطاق عمل الأستاذ: مراحل/مختبرات مسموحة، أو الكل للمشرف/الأستاذ المطلق */
@@ -962,7 +962,7 @@ function scopedShifts() {
   if (isAdmin() || !staffProfile || staffProfile.allowedShifts === "all" || !staffProfile.allowedShifts) return ["صباحي", "مسائي"];
   return staffProfile.allowedShifts.length ? staffProfile.allowedShifts : ["صباحي", "مسائي"];
 }
-/* تطبيق/إخفاء أزرار حسب الصلاحية — تُستدعى بعد كل رسم لقائمة */
+/* تطبيق/إخفاء أزرار حسب الصلاحية - تُستدعى بعد كل رسم لقائمة */
 function applyPermGates(root = document) {
   if (isAdmin()) return;
   root.querySelectorAll("[data-perm]").forEach(el => {
@@ -972,7 +972,7 @@ function applyPermGates(root = document) {
 /* هل مسموح لهذا الحساب يشوف هذي البطاقة (بغض النظر عن التبويب المفتوح) */
 function cardPermOk(el) {
   if (isAdmin()) return true;
-  if (!el.dataset.viewperm) return true; /* بطاقات .adm بلا viewperm — الحماية عبر CSS العام */
+  if (!el.dataset.viewperm) return true; /* بطاقات .adm بلا viewperm - الحماية عبر CSS العام */
   return !!(staffProfile && staffProfile.perms && staffProfile.perms[el.dataset.viewperm]);
 }
 /* التبويب الحالي بصفحة الإدارة + دمج الصلاحية والتصنيف بمكان وحد */
@@ -1102,7 +1102,7 @@ onAuthStateChanged(auth, async u => {
       await signOut(auth); try { localStorage.removeItem("hadhir.sessionStart"); } catch {}
       location.replace("index.html"); return;
     }
-    /* جلب ملف الصلاحيات — لو الحساب معطّل أو محذوف يوقف فوراً */
+    /* جلب ملف الصلاحيات - لو الحساب معطّل أو محذوف يوقف فوراً */
     try {
       const snap = await getDoc(doc(db, "staff", u.uid));
       if (!snap.exists() || snap.data().active !== true) {
@@ -1112,7 +1112,7 @@ onAuthStateChanged(auth, async u => {
       updateDoc(doc(db, "staff", u.uid), { lastLoginAt: serverTimestamp() }).catch(() => {});
     } catch { await signOut(auth); location.replace("index.html"); return; }
   }
-  $("#accEmail").textContent = (u.email || "") + (isAdmin() ? " — مشرف 🛡️" : " — " + actorName());
+  $("#accEmail").textContent = (u.email || "") + (isAdmin() ? " - مشرف" : " - " + actorName());
   document.body.classList.toggle("staff", !isAdmin());
   const b = $("#boot"); if (b) b.remove();
   if (window.__bootDone) window.__bootDone();
@@ -1235,9 +1235,9 @@ function fillPickers() {
   if (sel.stage && !myStages.includes(sel.stage)) sel.stage = "";
   if (sel.lab && !myLabs.includes(sel.lab)) sel.lab = "";
   if (!myShifts.includes(sel.shift)) sel.shift = myShifts[0] || "صباحي";
-  fillSelect($("#selStage"), myStages, sel.stage, "— اختر المرحلة —");
+  fillSelect($("#selStage"), myStages, sel.stage, "- اختر المرحلة -");
   fillSelect($("#selSection"), settings.sections, sel.section, "كل الشعب");
-  fillSelect($("#selLab"), myLabs, sel.lab, "— اختر المختبر —");
+  fillSelect($("#selLab"), myLabs, sel.lab, "- اختر المختبر -");
   fillSubjectSel();
   fillSelect($("#selShift"), myShifts, sel.shift, null);
   $("#selDate").value = sel.date;
@@ -1258,7 +1258,7 @@ function fillPickers() {
 }
 function fillSubjectSel() {
   const list = subjects.filter(s => s.stage === sel.stage);
-  let h = opt("", list.length ? "— اختر المادة —" : "لا توجد مواد لهذه المرحلة", sel.subjectId);
+  let h = opt("", list.length ? "- اختر المادة -" : "لا توجد مواد لهذه المرحلة", sel.subjectId);
   list.forEach(s => h += opt(s.id, s.name, sel.subjectId));
   $("#selSubject").innerHTML = h;
   if (sel.subjectId && !list.some(s => s.id === sel.subjectId)) { sel.subjectId = ""; }
@@ -1267,7 +1267,7 @@ function fillRSubject() {
   const st = $("#rStage").value;
   const list = st ? subjects.filter(s => s.stage === st) : subjects;
   let h = opt("", "كل المواد", $("#rSubject").value);
-  list.forEach(s => h += opt(s.id, s.name + " — " + s.stage, $("#rSubject").value));
+  list.forEach(s => h += opt(s.id, s.name + " - " + s.stage, $("#rSubject").value));
   $("#rSubject").innerHTML = h;
 }
 
@@ -1313,7 +1313,7 @@ function rosterStudents() {
 }
 function hostedStudents() {
   const other = sel.shift === "مسائي" ? "صباحي" : "مسائي";
-  if (!scopedShifts().includes(other)) return []; /* الأستاذ مقيّد بشفت وحد — ما يشوف استضافة من شفت مو مسؤول عنه */
+  if (!scopedShifts().includes(other)) return []; /* الأستاذ مقيّد بشفت وحد - ما يشوف استضافة من شفت مو مسؤول عنه */
   return students.filter(s =>
     isActive(s) && s.stage === sel.stage && (!s.lab || s.lab === sel.lab) &&
     (s.shift || "صباحي") === other && (!sel.section || s.section === sel.section));
@@ -1372,7 +1372,7 @@ let _celebratedKey = "";
 function celebrateIfComplete(unmarked, rosterLen) {
   const key = sel.date + "_" + sel.subjectId + "_" + sel.lab;
   if (rosterLen > 0 && unmarked === 0) {
-    if (_celebratedKey !== key) { _celebratedKey = key; toast("خلصت الجلسة — كل الطلاب اتسجلوا ✓", "ok"); pulseTicket(); }
+    if (_celebratedKey !== key) { _celebratedKey = key; toast("خلصت الجلسة - كل الطلاب اتسجلوا", "ok"); pulseTicket(); }
   } else if (_celebratedKey === key) { _celebratedKey = ""; }
 }
 function pulseTicket() {
@@ -1399,13 +1399,13 @@ function renderRoster() {
   const tdy = todayStr();
   let rel = sel.date === tdy ? "" :
     '<span class="t-date" style="background:rgba(252,211,77,.22);border:1px solid rgba(252,211,77,.55)">' +
-    (sel.date > tdy ? "⚠ تاريخ مستقبلي" : "تعديل يوم سابق ✎") + "</span>";
+    (sel.date > tdy ? "تاريخ مستقبلي" : "تعديل يوم سابق") + "</span>";
   const _tm = termRangeFor(sel.stage);
   if (_tm && (sel.date < _tm.from || sel.date > _tm.to)) {
     const lkOn = settings.lockTerms !== false;
     const opened = unlockUntil > Date.now();
     rel += '<span class="t-date" style="background:rgba(241,112,112,.25);border:1px solid rgba(241,112,112,.6)">' +
-      (lkOn ? (opened ? "🔓 خارج الفصل — مفتوح مؤقتاً" : "🔒 خارج الفصل — محمي") : "خارج الفصل الحالي") + "</span>";
+      (lkOn ? (opened ? "خارج الفصل - مفتوح مؤقتاً" : "خارج الفصل - محمي") : "خارج الفصل الحالي") + "</span>";
   }
   const F = rosterStFilter;
   const cell = (f, cls, val, lab) =>
@@ -1426,7 +1426,7 @@ function renderRoster() {
 
   if (!rosterAll.length && !guestRecs.length && !hostedAll.length) {
     box.innerHTML = '<div class="empty">' + ICO.users + "<p>لا يوجد طلاب (" + esc(sel.shift) + ") بهذه المرحلة في " + esc(sel.lab) +
-      (sel.section ? " — شعبة " + esc(sel.section) : "") + ".<br>أضفهم من تبويب «الطلاب» أو بدّل الدراسة.</p></div>";
+      (sel.section ? " - شعبة " + esc(sel.section) : "") + ".<br>أضفهم من تبويب «الطلاب» أو بدّل الدراسة.</p></div>";
     return;
   }
   const q = rosterQ.trim();
@@ -1441,7 +1441,7 @@ function renderRoster() {
   if (!roster.length && !guestsShow.length && !hostedShow.length) {
     h += '<div class="empty"><p>' +
       (q ? "لا نتائج للبحث «" + esc(q) + "»" : "لا أحد ضمن هذا الفلتر") +
-      (F ? ' — <a href="#" id="clrF" style="color:var(--prim);font-weight:700;text-decoration:none">إلغاء الفلتر</a>' : "") + "</p></div>";
+      (F ? ' - <a href="#" id="clrF" style="color:var(--prim);font-weight:700;text-decoration:none">إلغاء الفلتر</a>' : "") + "</p></div>";
   } else {
     roster.forEach(s => {
       i++;
@@ -1449,19 +1449,19 @@ function renderRoster() {
       const byOther = r && r.recordedBy && user && r.recordedBy !== user.email;
       h += '<div class="roster-item" data-sid="' + esc(s.id) + '"' + (r ? ' data-st="' + r.status + '"' : "") +
         '><span class="num">' + i + '</span><div class="rname"><b>' + esc(s.name) +
-        '</b><span class="meta">' + esc([s.section ? "شعبة " + s.section : "", !s.lab ? "متنقّل — بدون مختبر" : "", s.acadStatus === "returned" ? "عائد" : ""].filter(Boolean).join(" • ")) +
-        (byOther ? '<span class="badge-host" style="background:rgba(217,119,6,.14);color:#B45309;border-color:rgba(217,119,6,.35)" title="سجّلها هذا الأستاذ — انتبه قبل لا تغيّرها">✎ سجّلها ' + esc(r.recordedByName || r.recordedBy) + '</span>' : "") +
+        '</b><span class="meta">' + esc([s.section ? "شعبة " + s.section : "", !s.lab ? "متنقّل - بدون مختبر" : "", s.acadStatus === "returned" ? "عائد" : ""].filter(Boolean).join(" • ")) +
+        (byOther ? '<span class="badge-host" style="background:rgba(217,119,6,.14);color:#B45309;border-color:rgba(217,119,6,.35)" title="سجّلها هذا الأستاذ - انتبه قبل لا تغيّرها">سجّلها ' + esc(r.recordedByName || r.recordedBy) + '</span>' : "") +
         "</span></div>" +
         segHTML(r, s.id) + "</div>";
     });
     if (hostedShow.length) {
-      h += '<p class="sec-title" style="margin:12px 0 8px">استضافة — ال' + esc(otherShift) + " (تُسجَّل على دراستهم الأصلية)</p>";
+      h += '<p class="sec-title" style="margin:12px 0 8px">استضافة - ال' + esc(otherShift) + " (تُسجَّل على دراستهم الأصلية)</p>";
       hostedShow.forEach(s => {
         i++;
         const r = attRecords.get(s.id);
         h += '<div class="roster-item hosted" data-sid="' + esc(s.id) + '"' + (r ? ' data-st="' + r.status + '"' : "") +
           '><span class="num">' + i + '</span><div class="rname"><b>' + esc(s.name) +
-          '</b><span class="meta"><span class="badge-host">استضافة — ' + esc(otherShift) + "</span>" +
+          '</b><span class="meta"><span class="badge-host">استضافة - ' + esc(otherShift) + "</span>" +
           (s.section ? "<span> شعبة " + esc(s.section) + "</span>" : "") +
           (!s.lab ? "<span> • متنقّل</span>" : "") + "</span></div>" +
           segHTML(r, s.id) + "</div>";
@@ -1473,7 +1473,7 @@ function renderRoster() {
       if (r.lab !== sel.lab) gp.push("يُسجَّل على " + r.lab);
       if ((r.shift || "صباحي") !== sel.shift) gp.push("دراسة " + (r.shift || "صباحي"));
       h += '<div class="roster-item guest" data-sid="' + esc(r.studentId) + '" data-st="' + r.status + '"><span class="num">' + i + '</span><div class="rname"><b>' + esc(r.studentName) +
-        '</b><span class="meta"><span class="badge-lab">ضيف — ' + esc(gp.join(" • ") || "خارج القائمة") + "</span></span></div>" +
+        '</b><span class="meta"><span class="badge-lab">ضيف - ' + esc(gp.join(" • ") || "خارج القائمة") + "</span></span></div>" +
         segHTML(r, r.studentId) + "</div>";
     });
   }
@@ -1494,7 +1494,7 @@ async function clearSession() {
     ...[...attRecords.values()].filter(r => r.sessionLab === sel.lab && (!r.sessionShift || r.sessionShift === sel.shift)).map(r => r.studentId)]
     .filter((id, i, arr) => arr.indexOf(id) === i && attRecords.has(id));
   if (!ids.length) { toast("لا توجد تحديدات لمسحها", "err"); return; }
-  if (!await confirmDlg("مسح <b>" + ids.length + "</b> تحديداً لهذه الجلسة (" + esc(fmtDate(sel.date)) + ")؟<br><span class='hint'>ترجع الحالات «بلا تحديد» — باقي الأيام والمواد ما تتأثر.</span>", { okLabel: "مسح التحديدات" })) return;
+  if (!await confirmDlg("مسح <b>" + ids.length + "</b> تحديداً لهذه الجلسة (" + esc(fmtDate(sel.date)) + ")؟<br><span class='hint'>ترجع الحالات «بلا تحديد» - باقي الأيام والمواد ما تتأثر.</span>", { okLabel: "مسح التحديدات" })) return;
   try {
     for (let i = 0; i < ids.length; i += 400) {
       const b = writeBatch(db);
@@ -1502,7 +1502,7 @@ async function clearSession() {
       await b.commit();
     }
     toast("مُسحت تحديدات الجلسة (" + ids.length + ")");
-    audit("clear_session", "مسح تحديدات جلسة " + sel.date + " — " + sel.lab + " (" + ids.length + ")");
+    audit("clear_session", "مسح تحديدات جلسة " + sel.date + " - " + sel.lab + " (" + ids.length + ")");
   } catch (e) { toast("تعذّر المسح: " + e.code, "err"); }
 }
 /* ---------- كارد الجلسة: طيّ + جلسات أخيرة ---------- */
@@ -1535,7 +1535,7 @@ function renderRecents() {
   if (!arr.length) { box.style.display = "none"; box.innerHTML = ""; return; }
   box.style.display = "";
   box._arr = arr;
-  box.innerHTML = '<p class="lbl" style="margin-bottom:7px">جلسات أخيرة — ضغطة وحدة ترجّعك</p><div class="chips">' +
+  box.innerHTML = '<p class="lbl" style="margin-bottom:7px">جلسات أخيرة - ضغطة وحدة ترجّعك</p><div class="chips">' +
     arr.map((x, i) => '<button class="chip" data-rc="' + i + '"><b>' + esc(x.subj.name) + '</b><span style="opacity:.75">' +
       esc(x.lab) + (x.section ? " • " + esc(x.section) : "") + ((x.shift || "صباحي") === "مسائي" ? " • مسائي" : "") + "</span></button>").join("") + "</div>";
 }
@@ -1558,7 +1558,7 @@ function openRollCall() {
     const core = rosterStudents().filter(s => !attRecords.get(s.id));
     const host = hostedStudents().filter(s => !attRecords.get(s.id));
     const other = sel.shift === "مسائي" ? "صباحي" : "مسائي";
-    if (!core.length && !host.length) { toast("الكل محدد مسبقاً — ماكو «بلا تحديد» للمناداة"); return; }
+    if (!core.length && !host.length) { toast("الكل محدد مسبقاً - ماكو «بلا تحديد» للمناداة"); return; }
     if (!host.length) { startRollCall(core); return; }
     if (showHosted) { startRollCall([...core, ...host]); return; }
     if (!core.length) { showHosted = true; renderRoster(); startRollCall(host); return; }
@@ -1579,11 +1579,11 @@ function openRollCall() {
   });
 }
 function startRollCall(list) {
-  if (!list.length) { toast("الكل محدد مسبقاً — ماكو «بلا تحديد» للمناداة"); return; }
+  if (!list.length) { toast("الكل محدد مسبقاً - ماكو «بلا تحديد» للمناداة"); return; }
   let i = 0;
   const chosen = new Map();
   const wrap = document.createElement("div");
-  openModal({ title: "وضع المناداة — " + (list.length) + " طالب", body: wrap, actions: [{ label: "إنهاء", cls: "btn-g", onClick: closeModal }] });
+  openModal({ title: "وضع المناداة - " + (list.length) + " طالب", body: wrap, actions: [{ label: "إنهاء", cls: "btn-g", onClick: closeModal }] });
   const kh = e => {
     if (e.key === "1") mark("present");
     else if (e.key === "2") mark("absent");
@@ -1611,13 +1611,13 @@ function startRollCall(list) {
     });
     wrap.innerHTML =
       '<div style="text-align:center;padding:10px 0 4px">' +
-      '<div style="font-size:42px">✅</div><b style="font-size:17px;display:block;margin:8px 0 14px">خلصت المناداة</b>' +
+      '<div style="font-size:42px"></div><b style="font-size:17px;display:block;margin:8px 0 14px">خلصت المناداة</b>' +
       '<div class="summary">' +
       '<div class="sum p"><b>' + m.present + '</b><span>حاضر</span></div>' +
       '<div class="sum a"><b>' + m.absent + '</b><span>غائب</span></div>' +
       '<div class="sum e"><b>' + m.excused + '</b><span>مجاز</span></div>' +
       '<div class="sum"><b>' + sk + '</b><span>تخطّي</span></div></div>' +
-      (sk ? '<p class="hint" style="margin-top:10px">المتخطون بقوا «بلا تحديد» — تكدر تسجلهم بزر «الباقي غائب».</p>' : "") +
+      (sk ? '<p class="hint" style="margin-top:10px">المتخطون بقوا «بلا تحديد» - تكدر تسجلهم بزر «الباقي غائب».</p>' : "") +
       "</div>";
   }
   function draw() {
@@ -1631,7 +1631,7 @@ function startRollCall(list) {
       '<div style="text-align:center;padding:14px 6px 4px">' +
       '<span class="avatar ' + avCls(s.name) + '" style="width:58px;height:58px;font-size:23px;margin:0 auto;display:grid">' + esc((s.name || "؟").trim()[0] || "؟") + '</span>' +
       '<b style="display:block;font-size:21px;margin:12px 0 3px;line-height:1.5">' + esc(s.name) + '</b>' +
-      (((s.shift || "صباحي") !== sel.shift) ? '<div style="margin:4px 0 6px"><span class="badge-host" style="font-size:12px;padding:3px 12px">استضافة — ' + esc(s.shift || "صباحي") + '</span></div>' : "") +
+      (((s.shift || "صباحي") !== sel.shift) ? '<div style="margin:4px 0 6px"><span class="badge-host" style="font-size:12px;padding:3px 12px">استضافة - ' + esc(s.shift || "صباحي") + '</span></div>' : "") +
       '<span class="hint">' + (esc([s.section ? "شعبة " + s.section : "", !s.lab ? "متنقّل" : "", s.acadStatus === "returned" ? "عائد" : ""].filter(Boolean).join(" • ")) || "&nbsp;") + '</span></div>' +
       '<div class="grid g3" style="margin-top:16px">' +
       '<button class="btn" data-rcst="present" style="background:var(--ok);color:#fff;min-height:58px;flex-direction:column;gap:3px">' + ICO.check + 'حاضر</button>' +
@@ -1720,17 +1720,17 @@ async function fillRemaining(status) {
   } catch (e) { toast("تعذّر الحفظ: " + e.code, "err"); }
 }
 
-/* حالة استثنائية بالحضور — يغطي كل الاحتمالات الجامعية الشائعة:
+/* حالة استثنائية بالحضور - يغطي كل الاحتمالات الجامعية الشائعة:
    طالب من مختبر آخر بنفس المرحلة، طالب من شفت آخر (مسائي/صباحي)،
    وحتى طالب من مرحلة مختلفة كلياً (راسب/مؤجل مادة يحضرها مع مرحلة غير مرحلته). */
 function openGuestPicker() {
   const wrap = document.createElement("div");
   wrap.innerHTML =
-    '<p class="hint" style="margin-bottom:10px">دوّر بأي طالب فعّال بالنظام — من مختبر ثاني، شفت ثاني، أو حتى مرحلة ثانية. يُسجَّل <b>حاضراً على مختبره وشفته الأصليين</b>، مو على جلستك الحالية.</p>' +
+    '<p class="hint" style="margin-bottom:10px">دوّر بأي طالب فعّال بالنظام - من مختبر ثاني، شفت ثاني، أو حتى مرحلة ثانية. يُسجَّل <b>حاضراً على مختبره وشفته الأصليين</b>، مو على جلستك الحالية.</p>' +
     '<div class="search-wrap" style="margin-bottom:10px">' +
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>' +
     '<input class="inp" id="gSearch" placeholder="بحث بالاسم…"></div><div id="gList"></div>';
-  openModal({ title: "طالب — حالة استثنائية", body: wrap, actions: [] });
+  openModal({ title: "طالب - حالة استثنائية", body: wrap, actions: [] });
   const list = wrap.querySelector("#gList"), inp = wrap.querySelector("#gSearch");
   function draw() {
     const t = inp.value.trim();
@@ -1746,7 +1746,7 @@ function openGuestPicker() {
       ((s.shift || "صباحي") === "مسائي" ? '<span class="tag">مسائي</span>' : "") +
       (s.section ? '<span class="tag">شعبة ' + esc(s.section) + "</span>" : "") + "</span></span>" +
       '<span class="chip" style="color:var(--ok)">' + ICO.check + " حاضر</span></button>").join("")
-      : '<div class="empty"><p>ماكو نتائج — تأكد الطالب فعّال وغير مسجَّل بهذه الجلسة أصلاً.</p></div>';
+      : '<div class="empty"><p>ماكو نتائج - تأكد الطالب فعّال وغير مسجَّل بهذه الجلسة أصلاً.</p></div>';
   }
   inp.oninput = debounce(draw, 150); draw();
   list.onclick = async e => {
@@ -1767,7 +1767,7 @@ async function loadRecords(force) {
   recStFilter = "";
   const f = $("#rFrom").value || todayStr(), t = $("#rTo").value || f;
   const key = f + "_" + t;
-  /* لو نفس المدى ونفس البيانات محمّلة قبل أقل من دقيقة، لا تعيد القراءة من فايرستور — بس أعد الرسم */
+  /* لو نفس المدى ونفس البيانات محمّلة قبل أقل من دقيقة، لا تعيد القراءة من فايرستور - بس أعد الرسم */
   if (!force && key === _recCacheKey && Date.now() - _recCacheAt < 60000) { renderRecords(); return; }
   recLoading = true; renderRecords();
   try {
@@ -1830,7 +1830,7 @@ function renderRecords() {
   }
   const shown = F ? rows.filter(r => r.status === F) : rows;
   if (!shown.length) {
-    h += '<div class="card"><div class="empty"><p>لا سجلات بهذه الحالة — <a href="#" id="clrRF" style="color:var(--prim);font-weight:700;text-decoration:none">إلغاء الفلتر</a></p></div></div>';
+    h += '<div class="card"><div class="empty"><p>لا سجلات بهذه الحالة - <a href="#" id="clrRF" style="color:var(--prim);font-weight:700;text-decoration:none">إلغاء الفلتر</a></p></div></div>';
     box.innerHTML = h;
     const cf = box.querySelector("#clrRF");
     if (cf) cf.onclick = ev => { ev.preventDefault(); recStFilter = ""; renderRecords(); };
@@ -1851,7 +1851,7 @@ function renderRecords() {
       curD = r.date;
       const dc = { present: 0, absent: 0, excused: 0 };
       shown.forEach(x => { if (x.date === curD) dc[x.status] = (dc[x.status] || 0) + 1; });
-      const rel = curD === todayStr() ? "اليوم — " : curD === new Date(Date.now() - 864e5).toLocaleDateString("en-CA") ? "أمس — " : "";
+      const rel = curD === todayStr() ? "اليوم - " : curD === new Date(Date.now() - 864e5).toLocaleDateString("en-CA") ? "أمس - " : "";
       h += '<p class="sec-title rec-date-head">' + rel + esc(fmtDate(curD)) +
         ' <span style="opacity:.55;font-weight:600">' + esc(curD) + '</span><span style="flex:1"></span>' +
         '<span style="color:var(--ok)">ح ' + dc.present + '</span><span style="color:var(--no)">غ ' + dc.absent + '</span><span style="color:var(--ex)">م ' + dc.excused + "</span></p>";
@@ -1891,7 +1891,7 @@ $("#recBody").addEventListener("click", async e => {
       await deleteDoc(doc(db, "attendance", del.dataset.del));
       recRows = recRows.filter(r => r.id !== del.dataset.del);
       renderRecords(); toast("حُذف السجل");
-      audit("delete_record", "حذف سجل حضور: " + (rowD ? rowD.studentName + " — " + (rowD.subjectName || "") + " — " + rowD.date : del.dataset.del),
+      audit("delete_record", "حذف سجل حضور: " + (rowD ? rowD.studentName + " - " + (rowD.subjectName || "") + " - " + rowD.date : del.dataset.del),
         snapData ? { collection: "attendance", id: del.dataset.del, data: snapData } : null);
     } catch (err) { toast("تعذّر الحذف: " + err.code, "err"); }
     return;
@@ -2069,7 +2069,7 @@ async function exportStyledXLSX(filename, sheets) {
   URL.revokeObjectURL(a.href);
 }
 const stTxt = s => (STATUS[s] || {}).txt || s;
-/* ═══════════════ التصدير الأسبوعي — كل جلسة ملف Excel منفصل بروحه ═══════════════ */
+/* ═══════════════ التصدير الأسبوعي - كل جلسة ملف Excel منفصل بروحه ═══════════════ */
 const SESS_COLS = [
   { header: "اسم الطالب", key: "name", width: 28, align: "right" },
   { header: "المرحلة", key: "stage", width: 16 },
@@ -2108,8 +2108,8 @@ async function exportWeeklySessions(fromD, toD) {
     rowsSorted.forEach(r => c[r.status] = (c[r.status] || 0) + 1);
     const blob = await buildXLSXBlob([{
       name: "الجلسة",
-      title: (subj ? subj.name : r0.subjectName || "مادة") + " — " + fmtDate(r0.date),
-      meta: "المختبر: " + (r0.lab || "—") + "  •  الدراسة: " + (r0.shift || "صباحي") + "  •  المرحلة: " + (r0.stage || "—") + "  •  " + rowsSorted.length + " طالب",
+      title: (subj ? subj.name : r0.subjectName || "مادة") + " - " + fmtDate(r0.date),
+      meta: "المختبر: " + (r0.lab || "-") + "  •  الدراسة: " + (r0.shift || "صباحي") + "  •  المرحلة: " + (r0.stage || "-") + "  •  " + rowsSorted.length + " طالب",
       summary: [
         { label: "الجلسات", value: rowsSorted.length },
         { label: "حاضر", value: c.present || 0, fg: XLC.ok, bg: XLC.okBg },
@@ -2134,8 +2134,8 @@ async function exportWeeklySessions(fromD, toD) {
   a.href = URL.createObjectURL(zipBlob);
   a.download = "حاضر - تصدير أسبوعي " + fromD + " إلى " + toD + ".zip";
   a.click(); URL.revokeObjectURL(a.href);
-  st.textContent = "✓ تم — " + groups.size + " جلسة منفصلة داخل ملف ZIP واحد";
-  audit("weekly_export", "تصدير أسبوعي: " + fromD + " إلى " + toD + " — " + groups.size + " جلسة");
+  st.textContent = "تم - " + groups.size + " جلسة منفصلة داخل ملف ZIP واحد";
+  audit("weekly_export", "تصدير أسبوعي: " + fromD + " إلى " + toD + " - " + groups.size + " جلسة");
 }
 function weekRange(kind) {
   const now = new Date(); const d = new Date(now);
@@ -2186,7 +2186,7 @@ const ST_COLS = [
 ];
 const recRowObj = r => ({ date: r.date, name: r.studentName, stage: r.stage, section: r.section || "",
   lab: r.lab, shift: r.shift || "صباحي", slab: r.sessionLab || r.lab, subject: r.subjectName, status: stTxt(r.status) });
-const stRowObj = s => ({ name: s.name, stage: s.stage, section: s.section || "", lab: s.lab || "—", shift: s.shift || "صباحي" });
+const stRowObj = s => ({ name: s.name, stage: s.stage, section: s.section || "", lab: s.lab || "-", shift: s.shift || "صباحي" });
 
 $("#btnRExport").onclick = async function () {
   if (!requirePerm("exportExcel", "التصدير")) return;
@@ -2198,7 +2198,7 @@ $("#btnRExport").onclick = async function () {
   if (!sec) {
     const secs = [...new Set(rows.map(r => r.section || ""))];
     if (secs.length > 1) { toast("حدد شعبة واحدة بالفلاتر قبل التصدير", "err"); return; }
-    sec = secs[0] || "—";
+    sec = secs[0] || "-";
   }
   let shf = $("#rShift").value;
   if (!shf) {
@@ -2216,7 +2216,7 @@ $("#btnRExport").onclick = async function () {
     const extra = [];
     if (st && st.acadStatus === "returned") extra.push("عائد");
     if (st && st.system) extra.push(st.system);
-    return (r.studentName || "") + (extra.length ? " (" + extra.join(" — ") + ")" : "");
+    return (r.studentName || "") + (extra.length ? " (" + extra.join(" - ") + ")" : "");
   };
   this.disabled = true;
   try {
@@ -2226,7 +2226,7 @@ $("#btnRExport").onclick = async function () {
       const list = rows.slice().sort((a, b) => coll.compare(a.studentName || "", b.studentName || ""));
       sheet = {
         name: "كشف الحضور", title: "كشف الحضور",
-        info: [info1, "المادة: " + subjName + "     |     الدراسة: " + shf + "     |     التاريخ: " + fmtDate(d) + " — " + d],
+        info: [info1, "المادة: " + subjName + "     |     الدراسة: " + shf + "     |     التاريخ: " + fmtDate(d) + " - " + d],
         meta: "أُصدر في " + todayStr() + "  •  " + list.length + " طالب",
         columns: [
           { header: "ت", key: "i", width: 5 },
@@ -2307,7 +2307,7 @@ function renderStudents() {
   const rows = filteredStudents();
   if (!rows.length) {
     box.innerHTML = '<div class="card"><div class="empty">' + ICO.users +
-      "<p>" + (students.length ? "لا توجد نتائج بهذه الفلاتر." : "لا يوجد طلاب بعد — أضفهم يدوياً أو استوردهم من Excel.") + "</p></div></div>";
+      "<p>" + (students.length ? "لا توجد نتائج بهذه الفلاتر." : "لا يوجد طلاب بعد - أضفهم يدوياً أو استوردهم من Excel.") + "</p></div></div>";
     return;
   }
   const rowHTML = s =>
@@ -2317,7 +2317,7 @@ function renderStudents() {
     '<div class="smain"><b>' + esc(s.name) + '</b><div class="meta">' +
     '<span class="tag t-stage">' + esc(s.stage) + "</span>" +
     (s.section ? '<span class="tag">شعبة ' + esc(s.section) + "</span>" : "") +
-    (s.lab ? '<span class="tag t-lab">' + esc(s.lab) + "</span>" : '<span class="tag" style="border-style:dashed">بدون مختبر — الكل</span>') +
+    (s.lab ? '<span class="tag t-lab">' + esc(s.lab) + "</span>" : '<span class="tag" style="border-style:dashed">بدون مختبر - الكل</span>') +
     ((s.shift || "صباحي") === "مسائي" ? '<span class="tag">مسائي</span>' : "") +
     (s.graduate ? '<span class="tag" style="color:var(--ex);border-color:transparent;background:var(--ex-soft)">خريج' + (s.gradYear ? " " + esc(s.gradYear) : "") + "</span>" : "") +
     (s.acadStatus === "returned" ? '<span class="tag" style="color:var(--prim-deep);background:var(--prim-soft);border-color:transparent">عائد</span>' : "") +
@@ -2329,7 +2329,7 @@ function renderStudents() {
       '<button class="btn btn-ic btn-g" data-edit="' + esc(s.id) + '" title="تعديل">' + ICO.pen + "</button>" +
       '<button class="btn btn-ic btn-g adm" data-rm="' + esc(s.id) + '" title="حذف" style="color:var(--no)">' + ICO.trash + "</button>") +
     "</div>";
-  let h = '<p class="hint" style="margin-bottom:8px">' + rows.length + " طالب" + (selMode ? " — انقر على الصف للتحديد" : "") + "</p>";
+  let h = '<p class="hint" style="margin-bottom:8px">' + rows.length + " طالب" + (selMode ? " - انقر على الصف للتحديد" : "") + "</p>";
   const groups = new Map();
   rows.forEach(s => { const k = s.stage || "أخرى"; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(s); });
   const order = [...settings.stages.filter(st => groups.has(st)), ...[...groups.keys()].filter(k => !settings.stages.includes(k))];
@@ -2338,7 +2338,7 @@ function renderStudents() {
   } else {
     order.forEach(st => {
       const g = groups.get(st);
-      h += '<p class="sec-title" style="margin:14px 0 8px">' + esc(st) + ' <span style="opacity:.6">— ' + g.length + "</span></p>" + g.map(rowHTML).join("");
+      h += '<p class="sec-title" style="margin:14px 0 8px">' + esc(st) + ' <span style="opacity:.6">- ' + g.length + "</span></p>" + g.map(rowHTML).join("");
     });
   }
   box.innerHTML = h;
@@ -2355,7 +2355,7 @@ $("#stBody").addEventListener("click", async e => {
       const snapData = { ...s }; delete snapData.id;
       await deleteDoc(doc(db, "students", s.id));
       toast("حُذف الطالب");
-      audit("delete_student", "حذف الطالب: " + s.name + " — " + s.stage, { collection: "students", id: s.id, data: snapData });
+      audit("delete_student", "حذف الطالب: " + s.name + " - " + s.stage, { collection: "students", id: s.id, data: snapData });
     }
     catch (err) { toast("تعذّر الحذف: " + err.code, "err"); }
     return;
@@ -2380,13 +2380,13 @@ function studentModal(s) {
     '<div class="field"><label class="lbl">المختبر</label><select class="sel" id="fLab"></select></div>' +
     '<div class="field"><label class="lbl">الدراسة</label><select class="sel" id="fShift"><option>صباحي</option><option>مسائي</option></select></div></div>' +
     (s ? '<div class="grid g2" style="margin-top:10px">' +
-         '<div class="field"><label class="lbl">الحالة</label><select class="sel" id="fGrad"><option value="active">مستمر</option><option value="returned">عائد</option><option value="deferred">مؤجل</option><option value="suspended">مرقّن قيد</option><option value="grad">خريج 🎓</option></select></div>' +
+         '<div class="field"><label class="lbl">الحالة</label><select class="sel" id="fGrad"><option value="active">مستمر</option><option value="returned">عائد</option><option value="deferred">مؤجل</option><option value="suspended">مرقّن قيد</option><option value="grad">خريج</option></select></div>' +
          '<div class="field"><label class="lbl">النظام (خاص بالطالب)</label><select class="sel" id="fSys"><option value="">حسب المرحلة</option><option>فصلي</option><option>سنوي</option><option>كورسات</option><option>بولوني</option></select></div>' +
          '</div>' +
-         '<p class="hint" style="margin-top:11px">تعديل بيانات الطالب لا يغيّر سجلات حضوره القديمة — تبقى محفوظة كما سُجّلت بتاريخها.</p>' : '');
+         '<p class="hint" style="margin-top:11px">تعديل بيانات الطالب لا يغيّر سجلات حضوره القديمة - تبقى محفوظة كما سُجّلت بتاريخها.</p>' : '');
   fillSelect(wrap.querySelector("#fStage"), settings.stages, s ? s.stage : (sel.stage || settings.stages[0] || ""), null);
   fillSelect(wrap.querySelector("#fSection"), settings.sections, s ? (s.section || "") : (sel.section || ""), "بدون شعبة");
-  fillSelect(wrap.querySelector("#fLab"), settings.labs, s ? (s.lab || "") : (sel.lab || settings.labs[0] || ""), "بدون مختبر — يظهر بكل المختبرات");
+  fillSelect(wrap.querySelector("#fLab"), settings.labs, s ? (s.lab || "") : (sel.lab || settings.labs[0] || ""), "بدون مختبر - يظهر بكل المختبرات");
   wrap.querySelector("#fShift").value = s ? (s.shift || "صباحي") : (sel.shift || "صباحي");
   if (s) {
     wrap.querySelector("#fGrad").value = s.graduate ? "grad" : (s.acadStatus || "active");
@@ -2407,7 +2407,7 @@ function studentModal(s) {
           btn.dataset.warned = "1";
           btn.classList.remove("btn-p"); btn.classList.add("btn-d");
           btn.textContent = "أضف نسخة مكررة على أي حال";
-          toast("الاسم موجود مسبقاً (" + exDup.stage + " — " + exDup.lab + ") — إذا صعد مرحلة عدّل بياناته بدل الإضافة", "err");
+          toast("الاسم موجود مسبقاً (" + exDup.stage + " - " + exDup.lab + ") - إذا صعد مرحلة عدّل بياناته بدل الإضافة", "err");
           return;
         }
         btn.disabled = true;
@@ -2419,11 +2419,11 @@ function studentModal(s) {
               graduate: stat === "grad",
               acadStatus: (stat === "grad" || stat === "active") ? "" : stat,
               system: wrap.querySelector("#fSys").value || "" });
-            audit("edit_student", "تعديل الطالب: " + name + " — " + stage, { collection: "students", id: s.id, data: snapBefore });
+            audit("edit_student", "تعديل الطالب: " + name + " - " + stage, { collection: "students", id: s.id, data: snapBefore });
           }
           else {
             await addDoc(collection(db, "students"), { name, stage, section, lab, shift, createdAt: serverTimestamp() });
-            audit("add_student", "إضافة الطالب: " + name + " — " + stage);
+            audit("add_student", "إضافة الطالب: " + name + " - " + stage);
           }
           closeModal(); toast(s ? "حُفظ التعديل" : "أُضيف الطالب: " + name);
         } catch (err) { toast("تعذّر الحفظ: " + err.code, "err"); btn.disabled = false; }
@@ -2474,12 +2474,12 @@ $("#bulkDel").onclick = async () => {
 $("#bulkMove").onclick = () => {
   if (!selSet.size) return;
   const wrap = document.createElement("div");
-  wrap.innerHTML = '<p class="hint" style="margin-bottom:10px">نقل <b>' + selSet.size + '</b> طالباً — اترك «بدون تغيير» للحقول اللي ما تريد تلمسها:</p>' +
+  wrap.innerHTML = '<p class="hint" style="margin-bottom:10px">نقل <b>' + selSet.size + '</b> طالباً - اترك «بدون تغيير» للحقول اللي ما تريد تلمسها:</p>' +
     '<div class="grid g2">' +
-    '<div class="field"><label class="lbl">المرحلة</label><select class="sel" id="bmStage"><option value="__keep">— بدون تغيير —</option>' + settings.stages.map(v => "<option>" + esc(v) + "</option>").join("") + '</select></div>' +
-    '<div class="field"><label class="lbl">الشعبة</label><select class="sel" id="bmSec"><option value="__keep">— بدون تغيير —</option><option value="">بدون شعبة</option>' + settings.sections.map(v => "<option>" + esc(v) + "</option>").join("") + '</select></div>' +
-    '<div class="field"><label class="lbl">المختبر</label><select class="sel" id="bmLab"><option value="__keep">— بدون تغيير —</option><option value="">بدون مختبر (يظهر بالكل)</option>' + settings.labs.map(v => "<option>" + esc(v) + "</option>").join("") + '</select></div>' +
-    '<div class="field"><label class="lbl">الدراسة</label><select class="sel" id="bmShift"><option value="__keep">— بدون تغيير —</option><option>صباحي</option><option>مسائي</option></select></div></div>';
+    '<div class="field"><label class="lbl">المرحلة</label><select class="sel" id="bmStage"><option value="__keep">- بدون تغيير -</option>' + settings.stages.map(v => "<option>" + esc(v) + "</option>").join("") + '</select></div>' +
+    '<div class="field"><label class="lbl">الشعبة</label><select class="sel" id="bmSec"><option value="__keep">- بدون تغيير -</option><option value="">بدون شعبة</option>' + settings.sections.map(v => "<option>" + esc(v) + "</option>").join("") + '</select></div>' +
+    '<div class="field"><label class="lbl">المختبر</label><select class="sel" id="bmLab"><option value="__keep">- بدون تغيير -</option><option value="">بدون مختبر (يظهر بالكل)</option>' + settings.labs.map(v => "<option>" + esc(v) + "</option>").join("") + '</select></div>' +
+    '<div class="field"><label class="lbl">الدراسة</label><select class="sel" id="bmShift"><option value="__keep">- بدون تغيير -</option><option>صباحي</option><option>مسائي</option></select></div></div>';
   openModal({ title: "نقل جماعي", body: wrap, actions: [
     { label: "إلغاء", cls: "btn-g", onClick: closeModal },
     { label: "تنفيذ النقل", cls: "btn-p", onClick: async btn => {
@@ -2504,7 +2504,7 @@ $("#bulkStatus").onclick = () => {
   if (!selSet.size) return;
   const wrap = document.createElement("div");
   wrap.innerHTML = '<div class="field"><label class="lbl">الحالة الجديدة لـ ' + selSet.size + ' طالب</label>' +
-    '<select class="sel" id="bsSt"><option value="active">مستمر</option><option value="returned">عائد</option><option value="deferred">مؤجل</option><option value="suspended">مرقّن قيد</option><option value="grad">خريج 🎓</option></select></div>';
+    '<select class="sel" id="bsSt"><option value="active">مستمر</option><option value="returned">عائد</option><option value="deferred">مؤجل</option><option value="suspended">مرقّن قيد</option><option value="grad">خريج</option></select></div>';
   openModal({ title: "تغيير الحالة جماعياً", body: wrap, actions: [
     { label: "إلغاء", cls: "btn-g", onClick: closeModal },
     { label: "تطبيق", cls: "btn-p", onClick: async btn => {
@@ -2525,7 +2525,7 @@ $("#bulkStatus").onclick = () => {
 $("#btnImport").onclick = () => { if (!requirePerm("addStudent", "إضافة طلاب")) return; $("#fileImport").click(); };
 $("#btnTemplate").onclick = () => exportStyledXLSX("حاضر - قالب الطلاب.xlsx", [{
   name: "الطلاب", title: "قالب استيراد الطلاب",
-  meta: "لا تغيّر صف العناوين — عبّي الصفوف تحته مباشرة ثم استورد الملف من تبويب الطلاب",
+  meta: "لا تغيّر صف العناوين - عبّي الصفوف تحته مباشرة ثم استورد الملف من تبويب الطلاب",
   columns: ST_COLS,
   rows: [{ name: "علي حسين محمد", stage: settings.stages[0] || "المرحلة الأولى",
            section: settings.sections[0] || "أ", lab: settings.labs[0] || "مختبر 1", shift: "صباحي" }],
@@ -2541,7 +2541,7 @@ $("#fileImport").addEventListener("change", async e => {
     const ws = wb.Sheets[wb.SheetNames[0]];
     const rows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" }).map(r => r.map(c => String(c).trim()));
     let hIdx = rows.findIndex(r => r.some(c => c.includes("اسم") || c.toLowerCase().includes("name")));
-    if (hIdx === -1) { toast("ما لكيت صف العناوين — لازم يحتوي عمود «الاسم»", "err"); return; }
+    if (hIdx === -1) { toast("ما لكيت صف العناوين - لازم يحتوي عمود «الاسم»", "err"); return; }
     const head = rows[hIdx];
     const col = kw => head.findIndex(c => kw.some(k => c.includes(k) || c.toLowerCase().includes(k)));
     const ci = { name: col(["اسم", "name"]), stage: col(["مرحل", "stage"]), section: col(["شعب", "section"]), lab: col(["مختبر", "lab"]), shift: col(["دراس", "وجب", "shift"]) };
@@ -2559,7 +2559,7 @@ $("#fileImport").addEventListener("change", async e => {
         shift: (ci.shift > -1 && /مسائ|مساء/.test(String(r[ci.shift]))) ? "مسائي" : "صباحي"
       });
     }
-    if (!items.length) { toast("الملف فارغ — لا توجد أسماء", "err"); return; }
+    if (!items.length) { toast("الملف فارغ - لا توجد أسماء", "err"); return; }
     importPreview(items);
   } catch (err) { toast("تعذّرت قراءة الملف", "err"); }
 });
@@ -2593,16 +2593,16 @@ function importPreview(items) {
     '<div class="sum"><b>' + sames.length + '</b><span>مطابق يُتخطى</span></div>' +
     '<div class="sum e"><b>' + conflicts.length + '</b><span>تعارض</span></div>' +
     '<div class="sum a"><b>' + errs.length + '</b><span>ناقص</span></div></div>' +
-    (conflicts.length ? '<p class="hint" style="margin-bottom:8px">التعارض = نفس الاسم موجود ببيانات مختلفة (مثل طالب صعد مرحلة) — بعد الإضافة راح يمرّون عليك واحد واحد لتقرر، مع خيار «الكل».</p>' : '') +
+    (conflicts.length ? '<p class="hint" style="margin-bottom:8px">التعارض = نفس الاسم موجود ببيانات مختلفة (مثل طالب صعد مرحلة) - بعد الإضافة راح يمرّون عليك واحد واحد لتقرر، مع خيار «الكل».</p>' : '') +
     (newNote.length ? '<p class="hint" style="margin-bottom:8px">قيم جديدة ستُضاف للقوائم تلقائياً: <b>' + newNote.map(esc).join("، ") + '</b></p>' : '') +
     '<div style="max-height:290px;overflow:auto;border:1px solid var(--line);border-radius:12px;padding:8px">' +
     items.slice(0, 300).map(it =>
       '<div class="roster-item" style="margin-bottom:6px' + (it.err ? ";border-color:var(--no)" : it.conflict ? ";border-color:var(--ex)" : "") + '">' +
       '<div class="rname"><b>' + esc(it.name) + '</b><span class="meta">' +
       esc([it.stage, it.section && "شعبة " + it.section, it.lab].filter(Boolean).join(" • ")) +
-      (it.err ? ' <b style="color:var(--no)">— ' + it.err + '</b>'
-        : it.conflict ? ' <b style="color:var(--ex)">— موجود حالياً بـ' + esc(it.exist.stage) + '</b>'
-        : it.same ? ' <b style="color:var(--mut)">— مطابق، يُتخطى</b>' : "") +
+      (it.err ? ' <b style="color:var(--no)">- ' + it.err + '</b>'
+        : it.conflict ? ' <b style="color:var(--ex)">- موجود حالياً بـ' + esc(it.exist.stage) + '</b>'
+        : it.same ? ' <b style="color:var(--mut)">- مطابق، يُتخطى</b>' : "") +
       "</span></div></div>").join("") + "</div>";
   openModal({
     title: "معاينة الاستيراد",
@@ -2610,7 +2610,7 @@ function importPreview(items) {
     actions: [
       { label: "إلغاء", cls: "btn-g", onClick: closeModal },
       { label: "بدء الاستيراد", cls: "btn-p", onClick: async btn => {
-        if (!fresh.length && !conflicts.length) { toast("لا يوجد جديد ولا تعارضات — كل الأسماء مطابقة", "err"); return; }
+        if (!fresh.length && !conflicts.length) { toast("لا يوجد جديد ولا تعارضات - كل الأسماء مطابقة", "err"); return; }
         btn.disabled = true;
         try {
           if (newNote.length && isAdmin()) {
@@ -2694,7 +2694,7 @@ function resolveConflicts(list, nAdded, nSame) {
 /* ═══════════════ الإدارة: المواد ═══════════════ */
 function renderSubjects() {
   const box = $("#subList"); if (!box) return;
-  if (!subjects.length) { box.innerHTML = '<p class="hint">لا توجد مواد بعد — أضف مادة وانسبها لمرحلتها.</p>'; return; }
+  if (!subjects.length) { box.innerHTML = '<p class="hint">لا توجد مواد بعد - أضف مادة وانسبها لمرحلتها.</p>'; return; }
   const byStage = {};
   subjects.forEach(s => (byStage[s.stage] = byStage[s.stage] || []).push(s));
   box.innerHTML = Object.keys(byStage).sort((a, b) => coll.compare(a, b)).map(st =>
@@ -2714,7 +2714,7 @@ $("#btnAddSub").onclick = async () => {
   try {
     await addDoc(collection(db, "subjects"), { name, stage, createdAt: serverTimestamp() });
     $("#subName").value = ""; toast("أُضيفت المادة: " + name);
-    audit("add_subject", "إضافة مادة: " + name + " — " + stage);
+    audit("add_subject", "إضافة مادة: " + name + " - " + stage);
   }
   catch (e) { toast("تعذّرت الإضافة: " + e.code, "err"); }
 };
@@ -2731,7 +2731,7 @@ $("#subList").addEventListener("click", async e => {
       const snapData = { ...s }; delete snapData.id;
       await deleteDoc(doc(db, "subjects", s.id));
       toast("حُذفت المادة");
-      audit("delete_subject", "حذف المادة: " + s.name + " — " + s.stage, { collection: "subjects", id: s.id, data: snapData });
+      audit("delete_subject", "حذف المادة: " + s.name + " - " + s.stage, { collection: "subjects", id: s.id, data: snapData });
     }
     catch (err) { toast("تعذّر الحذف: " + err.code, "err"); }
     return;
@@ -2752,7 +2752,7 @@ $("#subList").addEventListener("click", async e => {
           const snapBefore = { ...s }; delete snapBefore.id;
           await updateDoc(doc(db, "subjects", s.id), { name, stage });
           closeModal(); toast("حُفظ التعديل");
-          audit("edit_subject", "تعديل مادة: " + name + " — " + stage, { collection: "subjects", id: s.id, data: snapBefore });
+          audit("edit_subject", "تعديل مادة: " + name + " - " + stage, { collection: "subjects", id: s.id, data: snapBefore });
         }
         catch (err) { toast("تعذّر الحفظ: " + err.code, "err"); }
       } }
@@ -2814,11 +2814,11 @@ $("#listsBody").addEventListener("click", async e => {
     const nUse = usageCount(key, v);
     if (nUse) {
       openModal({
-        title: "القيمة مستخدمة — الحذف ممنوع",
-        body: '<p style="font-size:14px">«<b>' + esc(v) + '</b>» مستخدمة عند <b>' + nUse + '</b> عنصر (طلاب/مواد)، وحذفها يترك بياناتهم معلّقة بقيمة يتيمة.</p><p class="hint" style="margin-top:8px">إذا تريد تغيير الاسم استخدم زر إعادة التسمية ✏ (ينسحب على كلشي تلقائياً)، أو عدّل الطلاب والمواد المرتبطين أولاً ثم احذفها.</p>',
+        title: "القيمة مستخدمة - الحذف ممنوع",
+        body: '<p style="font-size:14px">«<b>' + esc(v) + '</b>» مستخدمة عند <b>' + nUse + '</b> عنصر (طلاب/مواد)، وحذفها يترك بياناتهم معلّقة بقيمة يتيمة.</p><p class="hint" style="margin-top:8px">إذا تريد تغيير الاسم استخدم زر إعادة التسمية (ينسحب على كلشي تلقائياً)، أو عدّل الطلاب والمواد المرتبطين أولاً ثم احذفها.</p>',
         actions: [
           { label: "إغلاق", cls: "btn-g", onClick: closeModal },
-          { label: "إعادة تسمية ✏", cls: "btn-p", onClick: () => { closeModal(); openRenameDlg(key, v); } }
+          { label: "إعادة تسمية", cls: "btn-p", onClick: () => { closeModal(); openRenameDlg(key, v); } }
         ]
       });
       return;
@@ -2896,7 +2896,7 @@ function openRenameDlg(key, oldV) {
     '<input class="inp" id="renInp" value="' + esc(oldV) + '"></div>' +
     '<p class="hint">التغيير ينسحب تلقائياً على: <b>' + nStu + '</b> طالب' +
     (key === "stages" ? '، <b>' + nSub + '</b> مادة' : '') +
-    '، وكل سجلات الحضور القديمة — حتى الفلاتر والتقارير تبقى مضبوطة.</p>';
+    '، وكل سجلات الحضور القديمة - حتى الفلاتر والتقارير تبقى مضبوطة.</p>';
   openModal({
     title: "إعادة تسمية «" + oldV + "»",
     body: wrap,
@@ -2969,7 +2969,7 @@ $("#fileRestore").addEventListener("change", async e => {
       '<div class="sum"><b>' + st.length + '</b><span>طالب</span></div>' +
       '<div class="sum"><b>' + su.length + '</b><span>مادة</span></div>' +
       '<div class="sum"><b>' + at.length + '</b><span>سجل حضور</span></div></div>' +
-      '<p class="hint">الاستعادة <b>دمج آمن</b>: تُعيد المحذوف وتحدّث الموجود بنفس المعرّفات — ولا تحذف أي شي إضافي عندك.' +
+      '<p class="hint">الاستعادة <b>دمج آمن</b>: تُعيد المحذوف وتحدّث الموجود بنفس المعرّفات - ولا تحذف أي شي إضافي عندك.' +
       (data.exportedAt ? '<br>تاريخ النسخة: ' + esc(String(data.exportedAt).slice(0, 10)) : '') + '</p>',
     actions: [
       { label: "إلغاء", cls: "btn-g", onClick: closeModal },
@@ -3137,7 +3137,7 @@ async function openStudentReport(sid, fbName) {
   const term = termRangeFor(s ? s.stage : (recsAll[0] && recsAll[0].stage));
   let useTerm = !!term;
   const exAsAbs = (settings.alertExcused || "no") === "yes";
-  /* نفس منطق كشف التنبيهات الرسمي بالضبط — تصاعد حسب عدد الغيابات بالمادة نفسها،
+  /* نفس منطق كشف التنبيهات الرسمي بالضبط - تصاعد حسب عدد الغيابات بالمادة نفسها،
      وليس نسبة مئوية ولا مدة زمنية. لا تصير حالة الطالب "إنذار نهائي" من غياب وحد. */
   const n1 = settings.alertAbs1 || 3, step = settings.alertStep || 3;
   const T = { t: n1, w: n1 + step, f: n1 + 2 * step };
@@ -3164,12 +3164,12 @@ async function openStudentReport(sid, fbName) {
            (s.acadStatus === "deferred" ? '<span class="tag" style="color:var(--ex);background:var(--ex-soft);border-color:transparent">مؤجل</span>' : '') +
            (s.acadStatus === "suspended" ? '<span class="tag" style="color:var(--no);background:var(--no-soft);border-color:transparent">مرقّن قيد</span>' : '') +
            ((s.system || (settings.stageSystems || {})[s.stage]) ? '<span class="tag">' + esc(s.system || (settings.stageSystems || {})[s.stage]) + '</span>' : '')
-         : '<span class="tag">طالب محذوف — الكشف من سجلاته</span>') +
+         : '<span class="tag">طالب محذوف - الكشف من سجلاته</span>') +
       '</div></div></div>';
     if (term) {
       h += '<p class="hint" style="margin-bottom:10px">النطاق: <b>' + (useTerm ? esc(term.name) : "كل التاريخ") + '</b>' +
         (useTerm ? ' (' + esc(term.from) + ' ← ' + esc(term.to) + ')' : '') +
-        ' — <a href="#" id="repScope" style="color:var(--prim);font-weight:700;text-decoration:none">' +
+        ' - <a href="#" id="repScope" style="color:var(--prim);font-weight:700;text-decoration:none">' +
         (useTerm ? "عرض كل التاريخ" : "عرض الفصل الحالي") + '</a></p>';
     }
     if (!recs.length) {
@@ -3207,7 +3207,7 @@ async function openStudentReport(sid, fbName) {
       '<div class="sum a"><b>' + tot.a + '</b><span>غائب</span></div>' +
       '<div class="sum e"><b>' + tot.e + '</b><span>مجاز</span></div></div></div>' +
       '<p class="hint" style="margin:2px 0 10px">الحدود: تنبيه بـ' + T.t + ' غيابات • إنذار بـ' + T.w + ' • إنذار نهائي بـ' + T.f +
-      ' — بالمادة نفسها، والمجاز ' + (exAsAbs ? "يُحسب" : "لا يُحسب") + ' غياباً</p>';
+      ' - بالمادة نفسها، والمجاز ' + (exAsAbs ? "يُحسب" : "لا يُحسب") + ' غياباً</p>';
     h += subs.map(g => {
       const L = lvl(g.m), pc = Math.round(g.rate * 100);
       return '<div class="rep-sub"><div class="rep-head"><b>' + esc(g.subject) + '</b><span class="lvl ' + L[1] + '">' + L[0] + '</span></div>' +
@@ -3237,7 +3237,7 @@ async function openStudentReport(sid, fbName) {
         }));
         await exportStyledXLSX("حاضر - كشف " + name + " " + todayStr() + ".xlsx", [{
           name: "كشف الطالب",
-          title: "كشف حضور الطالب — " + name,
+          title: "كشف حضور الطالب - " + name,
           meta: "أُصدر في " + todayStr() +
             (s ? "  •  " + s.stage + (s.section ? "  •  شعبة " + s.section : "") + "  •  " + s.lab + (s.graduate ? "  •  خريج " + (s.gradYear || "") : "") : "") +
             "  •  النطاق: " + (useTerm ? term.name : "كل التاريخ") +
@@ -3261,7 +3261,7 @@ async function openStudentReport(sid, fbName) {
           rows: subs, tab: "FFD97706"
         }, {
           name: "السجل التفصيلي",
-          title: "كل جلسات " + name + " — سجل يوم بيوم",
+          title: "كل جلسات " + name + " - سجل يوم بيوم",
           meta: "عدد الجلسات: " + detailRows.length + "  •  مرتّبة تصاعدياً بالتاريخ",
           columns: [
             { header: "التاريخ", key: "date", width: 14 },
@@ -3284,7 +3284,7 @@ async function openSubjectReport(subId) {
   if (!sub) { toast("ما لكيت المادة", "err"); return; }
   const wrap = document.createElement("div");
   wrap.innerHTML = '<div class="skel"></div><div class="skel"></div><div class="skel"></div>';
-  openModal({ title: "كشف مادة — " + sub.name, body: wrap, actions: [] });
+  openModal({ title: "كشف مادة - " + sub.name, body: wrap, actions: [] });
   let recs = [];
   try {
     const snap = await getDocs(query(collection(db, "attendance"), where("subjectId", "==", subId))); trackRead("docs", snap.size);
@@ -3318,7 +3318,7 @@ async function openSubjectReport(subId) {
     return { ...g, total: t, m, rate: t ? m / t : 0 };
   }).sort((x, y) => y.rate - x.rate);
 
-  let h = '<p class="hint" style="margin-bottom:10px"><b>' + esc(sub.name) + '</b> — ' + esc(sub.stage) + ' — ' + dateKeys.length + ' جلسة مسجّلة، ' + byStudent.size + ' طالب</p>';
+  let h = '<p class="hint" style="margin-bottom:10px"><b>' + esc(sub.name) + '</b> - ' + esc(sub.stage) + ' - ' + dateKeys.length + ' جلسة مسجّلة، ' + byStudent.size + ' طالب</p>';
   const subRingColor = rateAll >= 30 ? "var(--no)" : rateAll >= 15 ? "var(--ex)" : "var(--ok)";
   h += '<div style="display:flex;align-items:center;gap:16px;margin-bottom:6px">' +
     ringSVG(rateAll, subRingColor, 78, "نسبة الغياب") +
@@ -3328,7 +3328,7 @@ async function openSubjectReport(subId) {
     '<div class="sum a"><b>' + tot.a + '</b><span>غائب</span></div>' +
     '<div class="sum e"><b>' + tot.e + '</b><span>مجاز</span></div></div></div>';
   h += '<div style="height:190px;margin:14px 0"><canvas id="subChart"></canvas></div>';
-  h += '<p class="sec-title">أعلى الطلاب غياباً — بنفس معيار التنبيهات (تنبيه ' + n1w + '، إنذار ' + (n1w + stepw) + '، نهائي ' + (n1w + 2 * stepw) + ')</p>';
+  h += '<p class="sec-title">أعلى الطلاب غياباً - بنفس معيار التنبيهات (تنبيه ' + n1w + '، إنذار ' + (n1w + stepw) + '، نهائي ' + (n1w + 2 * stepw) + ')</p>';
   h += students_.slice(0, 12).map(g => {
     const pc = Math.round(g.rate * 100);
     const L = g.m >= (n1w + 2 * stepw) ? ["إنذار نهائي", "lvl-final"] : g.m >= (n1w + stepw) ? ["إنذار", "lvl-danger"] : g.m >= n1w ? ["تنبيه", "lvl-warn"] : ["سليم", "lvl-ok"];
@@ -3352,7 +3352,7 @@ async function openSubjectReport(subId) {
       data: { labels: dateKeys.map(fmtDate), datasets: [{ label: "نسبة الحضور بكل جلسة ٪", data: dateKeys.map(k => { const g = byDate.get(k); const t = g.p + g.a + g.e; return t ? Math.round(g.p / t * 100) : 0; }), borderColor: C.prim, backgroundColor: C.prim + "33", fill: true, tension: .3, pointRadius: 3 }] },
       options: { maintainAspectRatio: false, scales: { y: { min: 0, max: 100, grid: { color: C.line } }, x: { grid: { display: false }, ticks: { maxTicksLimit: 8 } } } }
     });
-  } catch { /* الرسم البياني اختياري — الكشف يبقى شغّال بدونه */ }
+  } catch { /* الرسم البياني اختياري - الكشف يبقى شغّال بدونه */ }
 
   wrap.querySelector("#subRepExport").onclick = async function () {
     if (!requirePerm("exportSubjectReport", "تصدير كشف المادة")) return;
@@ -3364,7 +3364,7 @@ async function openSubjectReport(subId) {
       });
       await exportStyledXLSX("حاضر - كشف مادة " + sub.name + " " + todayStr() + ".xlsx", [{
         name: "الطلاب",
-        title: "كشف مادة — " + sub.name,
+        title: "كشف مادة - " + sub.name,
         meta: "أُصدر في " + todayStr() + "  •  " + sub.stage + "  •  " + dateKeys.length + " جلسة  •  " + byStudent.size + " طالب",
         summary: [
           { label: "السجلات", value: totalAll }, { label: "حاضر", value: tot.p, fg: XLC.ok, bg: XLC.okBg },
@@ -3381,7 +3381,7 @@ async function openSubjectReport(subId) {
         rows: students_, tab: "FFD97706"
       }, {
         name: "حسب الجلسة",
-        title: "مادة " + sub.name + " — إحصائية كل جلسة",
+        title: "مادة " + sub.name + " - إحصائية كل جلسة",
         meta: dateKeys.length + " جلسة بالمجموع",
         columns: [
           { header: "التاريخ", key: "date", width: 14 }, { header: "حاضر", key: "p", width: 8 },
@@ -3413,7 +3413,7 @@ function renderTerms() {
   renderSysList();
   const terms = (settings.terms || []).slice().sort((a, b) => (b.from || "").localeCompare(a.from || ""));
   if (!terms.length) {
-    box.innerHTML = '<p class="hint">ماكو فصول بعد — أضف الفصل الحالي حتى تنضبط الكشوفات وكشف الطالب على مدته.</p>';
+    box.innerHTML = '<p class="hint">ماكو فصول بعد - أضف الفصل الحالي حتى تنضبط الكشوفات وكشف الطالب على مدته.</p>';
     return;
   }
   box.innerHTML = terms.map(t => {
@@ -3458,7 +3458,7 @@ $("#termList").addEventListener("click", async e => {
   if (d) {
     const t = (settings.terms || []).find(x => x.id === d.dataset.tdel);
     if (!t) return;
-    if (!await confirmDlg("حذف فصل <b>" + esc(t.name) + "</b>؟<br><span class='hint'>سجلات الحضور ما تتأثر — فقط يختفي من القائمة.</span>")) return;
+    if (!await confirmDlg("حذف فصل <b>" + esc(t.name) + "</b>؟<br><span class='hint'>سجلات الحضور ما تتأثر - فقط يختفي من القائمة.</span>")) return;
     settings.terms = settings.terms.filter(x => x.id !== t.id);
     if (settings.currentTermId === t.id) settings.currentTermId = "";
     await saveLists();
@@ -3504,11 +3504,11 @@ function openTermDlg(t) {
     '<div class="field"><label class="lbl">من (عام)</label><input class="inp" type="date" id="teFrom" value="' + esc(t.from) + '"></div>' +
     '<div class="field"><label class="lbl">إلى (عام)</label><input class="inp" type="date" id="teTo" value="' + esc(t.to) + '"></div></div>' +
     '<div class="divider"></div>' +
-    '<p class="sec-title">تواريخ خاصة بمرحلة — الفارغ يتبع تواريخ الفصل العامة</p>' +
+    '<p class="sec-title">تواريخ خاصة بمرحلة - الفارغ يتبع تواريخ الفصل العامة</p>' +
     settings.stages.map((st, i) => {
       const o = ov[st] || {};
       return '<div class="grid g3" style="margin-bottom:8px">' +
-        '<div class="field"><label class="lbl">' + esc(st) + ' — من</label><input class="inp" type="date" data-of="' + i + '" value="' + esc(o.from || "") + '"></div>' +
+        '<div class="field"><label class="lbl">' + esc(st) + ' - من</label><input class="inp" type="date" data-of="' + i + '" value="' + esc(o.from || "") + '"></div>' +
         '<div class="field"><label class="lbl">إلى</label><input class="inp" type="date" data-ot="' + i + '" value="' + esc(o.to || "") + '"></div>' +
         '<div class="field"><label class="lbl">&nbsp;</label><button class="btn btn-g btn-sm" data-oc="' + i + '" style="min-height:42px">مسح</button></div></div>';
     }).join("");
@@ -3582,7 +3582,7 @@ $("#btnPromote").onclick = () => {
   const total = plan.reduce((s, p) => s + p.list.length, 0);
   const body = '<p style="font-size:14px;margin-bottom:10px">راح يُرحَّل <b>' + total + '</b> طالباً حسب ترتيب المراحل بالقوائم:</p>' +
     plan.map(p => '<div class="rec" style="padding:8px 11px"><div class="rmain"><b style="font-size:13px">' + esc(p.from) +
-      ' ← ' + (p.to ? esc(p.to) : 'تخريج 🎓 دفعة ' + esc(gradTag || "—")) + '</b></div><span class="chip"><b>' + p.list.length + '</b></span></div>').join("") +
+      ' ← ' + (p.to ? esc(p.to) : 'تخريج دفعة ' + esc(gradTag || "-")) + '</b></div><span class="chip"><b>' + p.list.length + '</b></span></div>').join("") +
     '<p class="hint" style="margin-top:10px">سجلات الحضور القديمة تبقى على مراحلها كما سُجّلت (تاريخ صحيح). الخريجون يظلون بالنظام ضمن فلتر «الخريجون» ويرجعون فعالين بأي وقت من تعديل بياناتهم.</p>';
   openModal({
     title: "تأكيد الترحيل",
@@ -3606,7 +3606,7 @@ $("#btnPromote").onclick = () => {
             }
           }
           closeModal();
-          toast("اكتمل الترحيل: " + total + " طالباً 🎓");
+          toast("اكتمل الترحيل: " + total + " طالباً");
           audit("promote", "ترحيل " + total + " طالباً: " + plan.map(p => p.from + " ← " + (p.to || "تخريج " + gradTag)).join("، "));
         } catch (err) {
           toast("تعذّر الترحيل: " + (err.code || err.message), "err");
@@ -3630,7 +3630,7 @@ function guardLock(d, stage) {
   if (!isLocked(d, stage)) return Promise.resolve(true);
   return new Promise(res => {
     openModal({
-      title: "🔒 تاريخ محمي",
+      title: "تاريخ محمي",
       body: '<p style="font-size:14px">التاريخ <b>' + esc(fmtDate(d)) + '</b> خارج الفصل الحالي، والتعديل عليه مقفول حمايةً للسجل التاريخي.</p>' +
             '<p class="hint" style="margin-top:8px">فُكّ القفل مؤقتاً لتصحيح مقصود، أو أطفئه نهائياً من كارد الفصول الدراسية.</p>',
       actions: [
@@ -3639,7 +3639,7 @@ function guardLock(d, stage) {
           unlockUntil = Date.now() + 10 * 60 * 1000;
           audit("unlock", "فكّ قفل التعديل خارج الفصل مؤقتاً (10 دقائق)");
           closeModal();
-          toast("🔓 انفك القفل لمدة 10 دقائق");
+          toast("انفك القفل لمدة 10 دقائق");
           renderRoster();
           res(true);
         } }
@@ -3652,7 +3652,7 @@ $("#lockTermsChk").addEventListener("change", async e => {
   settings.lockTerms = e.target.checked;
   await saveLists();
   audit("lock_toggle", e.target.checked ? "تفعيل قفل الفصول" : "إطفاء قفل الفصول");
-  toast(e.target.checked ? "تفعّل القفل خارج الفصل الحالي 🔒" : "انطفأ قفل الفصول");
+  toast(e.target.checked ? "تفعّل القفل خارج الفصل الحالي" : "انطفأ قفل الفصول");
   renderRoster();
 });
 
@@ -3719,11 +3719,11 @@ $("#staffList").addEventListener("click", e => {
   else if (act === "del") deleteStaffAccount(s);
 });
 async function deleteStaffAccount(s) {
-  if (!await confirmDlg("حذف حساب <b>" + esc(s.name) + "</b> نهائياً؟<br><span class='hint'>سجلات حضوره وتصديراته السابقة تبقى محفوظة بالسجل والتدقيق كما هي — بس هو نفسه ما يكدر يدخل بعدها.</span>")) return;
+  if (!await confirmDlg("حذف حساب <b>" + esc(s.name) + "</b> نهائياً؟<br><span class='hint'>سجلات حضوره وتصديراته السابقة تبقى محفوظة بالسجل والتدقيق كما هي - بس هو نفسه ما يكدر يدخل بعدها.</span>")) return;
   try {
     await deleteDoc(doc(db, "staff", s.id));
     audit("staff_delete", "حذف نهائي لحساب: " + s.name + " (" + s.email + ")");
-    toast("انحذف الحساب — ما يكدر يدخل بعدها");
+    toast("انحذف الحساب - ما يكدر يدخل بعدها");
     loadStaffList(true);
   } catch (e) { toast("تعذّر الحذف: " + (e.code || e.message), "err"); }
 }
@@ -3803,7 +3803,7 @@ function openStaffForm(existing) {
               const pass = wrap.querySelector("#sfPass").value;
               if (!email || !email.includes("@")) { toast("اكتب بريد صحيح", "err"); btn.disabled = false; btn.textContent = "إنشاء الحساب"; return; }
               if (!pass || pass.length < 6) { toast("كلمة السر لازم ٦ محارف فأكثر", "err"); btn.disabled = false; btn.textContent = "إنشاء الحساب"; return; }
-              /* تطبيق فايربيس ثانوي مؤقت — حتى ما تنقلب جلسة تسجيل دخولك أنت كمشرف */
+              /* تطبيق فايربيس ثانوي مؤقت - حتى ما تنقلب جلسة تسجيل دخولك أنت كمشرف */
               const tmpApp = initializeApp(FIREBASE_CONFIG, "staffCreate_" + Date.now());
               const tmpAuth = getAuth(tmpApp);
               try {
@@ -3813,7 +3813,7 @@ function openStaffForm(existing) {
                   active: true, createdAt: serverTimestamp(), createdBy: user.email
                 });
                 audit("staff_add", "إضافة أستاذ: " + (title ? title + " " : "") + name);
-                toast("انسوى الحساب — عطيه البريد وكلمة السر يدخل فيهم");
+                toast("انسوى الحساب - عطيه البريد وكلمة السر يدخل فيهم");
               } finally {
                 try { await signOut(tmpAuth); } catch {}
                 try { await deleteApp(tmpApp); } catch {}
@@ -3887,7 +3887,7 @@ $("#auditList").addEventListener("click", async e => {
     await setDoc(doc(db, col, id), data);
     await updateDoc(auditRef, { restored: true, restoredAt: serverTimestamp(), restoredBy: user.email });
     audit("undo", "تراجع عن عملية بواسطة " + actorName());
-    toast("تم التراجع — البيانات رجعت ✓");
+    toast("تم التراجع - البيانات رجعت");
     $("#btnAuditLoad").click();
   } catch (err) { toast("تعذّر التراجع: " + (err.code || err.message), "err"); b.disabled = false; b.textContent = "↺ تراجع"; }
 });
@@ -3908,12 +3908,12 @@ $("#btnDupScan").onclick = () => {
   const dups = [...groups.values()].filter(g => g.length > 1);
   const box = $("#dupList");
   box._groups = dups;
-  if (!dups.length) { box.innerHTML = '<div class="empty"><p>ماكو أسماء مكررة أو متشابهة ✅</p></div>'; return; }
-  box.innerHTML = '<p class="hint" style="margin-bottom:8px">' + dups.length + ' مجموعة متشابهة — افتح وقرر:</p>' +
+  if (!dups.length) { box.innerHTML = '<div class="empty"><p>ماكو أسماء مكررة أو متشابهة</p></div>'; return; }
+  box.innerHTML = '<p class="hint" style="margin-bottom:8px">' + dups.length + ' مجموعة متشابهة - افتح وقرر:</p>' +
     dups.map((g, i) =>
       '<div class="rep-sub"><div class="rep-head"><b>' + esc(g[0].name) + '</b><span class="chip"><b>' + g.length + '</b></span>' +
       '<button class="btn btn-sm btn-p" data-dgm="' + i + '">دمج…</button></div>' +
-      '<div class="rep-stats">' + g.map(s => "<span>" + esc(s.name) + " — " + esc(s.stage) + " • " + esc(s.lab || "بدون مختبر") + (s.graduate ? " • خريج" : "") + "</span>").join("") +
+      '<div class="rep-stats">' + g.map(s => "<span>" + esc(s.name) + " - " + esc(s.stage) + " • " + esc(s.lab || "بدون مختبر") + (s.graduate ? " • خريج" : "") + "</span>").join("") +
       '</div></div>').join("");
 };
 $("#dupList").addEventListener("click", e => {
@@ -3926,7 +3926,7 @@ function openMergeDlg(g) {
   if (!requireAdmin()) return;
   const wrap = document.createElement("div");
   wrap.innerHTML =
-    '<p class="hint" style="margin-bottom:10px">اختر <b>الملف المعتمد</b> — الباقون تُنقل كل سجلات حضورهم إليه ثم تُحذف ملفاتهم:</p>' +
+    '<p class="hint" style="margin-bottom:10px">اختر <b>الملف المعتمد</b> - الباقون تُنقل كل سجلات حضورهم إليه ثم تُحذف ملفاتهم:</p>' +
     g.map((s, i) =>
       '<label class="roster-item" style="cursor:pointer"><input type="radio" name="mergeP" value="' + i + '"' + (i === 0 ? " checked" : "") +
       ' style="width:17px;height:17px;accent-color:var(--prim);flex:none">' +
@@ -3984,14 +3984,14 @@ function openMergeDlg(g) {
   });
 }
 
-/* ═══════════════ نسخة أمان محلية صامتة (إضافية — لا تغني عن نسخة Excel/JSON اليدوية) ═══════════════ */
-/* تُخزَّن بالمتصفح نفسه كل ما تفتح تبويب الإدارة، وتُستبدل تلقائياً — مجرد خط دفاع أخير لو صار خلل مفاجئ. */
+/* ═══════════════ نسخة أمان محلية صامتة (إضافية - لا تغني عن نسخة Excel/JSON اليدوية) ═══════════════ */
+/* تُخزَّن بالمتصفح نفسه كل ما تفتح تبويب الإدارة، وتُستبدل تلقائياً - مجرد خط دفاع أخير لو صار خلل مفاجئ. */
 function localSafetySnapshot() {
   try {
     if (!students.length && !subjects.length) return;
     const snap = { at: new Date().toISOString(), students, subjects, settings };
     localStorage.setItem("hadhir.safetySnapshot", JSON.stringify(snap));
-  } catch (e) { /* المساحة المحلية ممتلئة أو غير متاحة — تجاهل بصمت، النسخ اليدوية تبقى الأساس */ }
+  } catch (e) { /* المساحة المحلية ممتلئة أو غير متاحة - تجاهل بصمت، النسخ اليدوية تبقى الأساس */ }
 }
 
 /* ═══════════════ تذكير النسخ الاحتياطي ═══════════════ */
@@ -4001,17 +4001,17 @@ function renderBackupStatus() {
   const t = settings.lastBackupAt;
   const days = t ? Math.floor((Date.now() - new Date(t).getTime()) / 864e5) : null;
   if (t === undefined || t === null) {
-    el.innerHTML = '<b style="color:var(--no)">ما أخذت نسخة احتياطية بعد</b> — خذ وحدة هسة وخلّها عادة أسبوعية.';
+    el.innerHTML = '<b style="color:var(--no)">ما أخذت نسخة احتياطية بعد</b> - خذ وحدة هسة وخلّها عادة أسبوعية.';
   } else {
     const col = days <= 7 ? "var(--ok)" : days <= 14 ? "var(--ex)" : "var(--no)";
     el.innerHTML = 'آخر نسخة: <b style="color:' + col + '">' + (days === 0 ? "اليوم" : "قبل " + days + " يوم") +
-      '</b> (' + esc(String(t).slice(0, 10)) + ')' + (days > 14 ? ' — <b style="color:var(--no)">تأخرت!</b>' : "");
+      '</b> (' + esc(String(t).slice(0, 10)) + ')' + (days > 14 ? ' - <b style="color:var(--no)">تأخرت!</b>' : "");
   }
   if (!bkNagged && dataReady && (students.length || subjects.length)) {
     const overdue = days === null ? 99 : days;
     if (overdue > 14) {
       bkNagged = true;
-      toast("⏰ " + (days === null ? "ما عندك نسخة احتياطية" : "آخر نسخة احتياطية قبل " + days + " يوم") + " — الإدارة ← النسخ الاحتياطي", "err");
+      toast("⏰ " + (days === null ? "ما عندك نسخة احتياطية" : "آخر نسخة احتياطية قبل " + days + " يوم") + " - الإدارة ← النسخ الاحتياطي", "err");
     }
   }
 }
@@ -4044,11 +4044,11 @@ $("#orgLogoFile").addEventListener("change", e => {
       cv.height = Math.max(1, Math.round(im.height * sc));
       cv.getContext("2d").drawImage(im, 0, 0, cv.width, cv.height);
       const url = cv.toDataURL("image/png");
-      if (url.length > 500000) { toast("الشعار كبير حتى بعد الضغط — استخدم صورة أبسط", "err"); return; }
+      if (url.length > 500000) { toast("الشعار كبير حتى بعد الضغط - استخدم صورة أبسط", "err"); return; }
       settings.orgLogo = url;
       await saveLists();
       renderOrg();
-      toast("انحفظ الشعار ✓ — راح يطلع بكل ملفات Excel");
+      toast("انحفظ الشعار - راح يطلع بكل ملفات Excel");
     };
     im.onerror = () => toast("تعذّرت قراءة الصورة", "err");
     im.src = rd.result;
@@ -4068,7 +4068,7 @@ $("#btnOrgSave").onclick = async () => {
   settings.orgName2 = $("#orgL2").value.trim();
   await saveLists();
   audit("org", "تحديث الترويسة الرسمية");
-  toast("انحفظت الترويسة ✓");
+  toast("انحفظت الترويسة");
 };
 
 /* ═══════════════ كشف التنبيهات والإنذارات ═══════════════ */
@@ -4136,8 +4136,8 @@ $("#btnWarnX").onclick = async function () {
       '<div class="sum e"><b>' + cT + '</b><span>تنبيه</span></div>' +
       '<div class="sum" style="border-color:var(--ex)"><b style="color:#C2410C">' + cW + '</b><span>إنذار</span></div>' +
       '<div class="sum a"><b>' + cF + '</b><span>إنذار نهائي</span></div></div>';
-    audit("warnings", "كشف تنبيهات: " + stg + " — " + (cT + cW + cF) + " حالة");
-    toast("نزل كشف التنبيهات ✓");
+    audit("warnings", "كشف تنبيهات: " + stg + " - " + (cT + cW + cF) + " حالة");
+    toast("نزل كشف التنبيهات");
   } catch (e) { toast("تعذّر التوليد: " + (e.code || e.message), "err"); }
   this.disabled = false;
   this.textContent = oldT;
@@ -4154,15 +4154,15 @@ $("#btnBackupX").onclick = async function () {
     const att = await fetchAllAttendance();
     await exportStyledXLSX("حاضر - نسخة احتياطية " + todayStr() + ".xlsx", [
       { name: "الطلاب", title: "الطلاب",
-        meta: "نسخة احتياطية — " + todayStr() + "  •  " + students.length + " طالب",
+        meta: "نسخة احتياطية - " + todayStr() + "  •  " + students.length + " طالب",
         columns: ST_COLS, rows: students.map(stRowObj), tab: "FF2563EB" },
       { name: "المواد", title: "المواد",
-        meta: "نسخة احتياطية — " + todayStr() + "  •  " + subjects.length + " مادة",
+        meta: "نسخة احتياطية - " + todayStr() + "  •  " + subjects.length + " مادة",
         columns: [{ header: "المادة", key: "name", width: 26, align: "right" },
                   { header: "المرحلة", key: "stage", width: 16 }],
         rows: subjects.map(s => ({ name: s.name, stage: s.stage })), tab: "FF0EA5E9" },
       { name: "سجل الحضور", title: "سجل الحضور الكامل",
-        meta: "نسخة احتياطية — " + todayStr() + "  •  " + att.length + " سجل",
+        meta: "نسخة احتياطية - " + todayStr() + "  •  " + att.length + " سجل",
         columns: REC_COLS, rows: att.map(recRowObj), statusKey: "status", tab: "FF0F766E" }
     ]);
     if (isAdmin()) { settings.lastBackupAt = new Date().toISOString(); saveLists(); }
