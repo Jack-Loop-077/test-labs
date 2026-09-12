@@ -103,11 +103,26 @@
       0% { transform: scale(0.96); opacity: 0.8; }
       100% { transform: scale(1.35); opacity: 0; }
     }
-    @keyframes sweepDotsDiagonal {
-      0% { -webkit-mask-position: 0% 0%; mask-position: 0% 0%; }
-      100% { -webkit-mask-position: 100% 100%; mask-position: 100% 100%; }
-    }
     @keyframes rot { to { transform: rotate(360deg); } }
+
+    /* موجة الاختفاء/الظهور فوق النقاط: تنمو من اليسار حتى تصل نصف العرض،
+       بعدها يبدأ الجزء المختفي بالرجوع للظهور من اليسار وهو يلحق الحافة
+       المتقدمة، إلى أن تلتقي الحافتان قرب اليمين وتبدأ الدورة من جديد. */
+    @property --wipe-a {
+      syntax: '<percentage>';
+      inherits: false;
+      initial-value: 0%;
+    }
+    @property --wipe-b {
+      syntax: '<percentage>';
+      inherits: false;
+      initial-value: 0%;
+    }
+    @keyframes dotsWipe {
+      0%   { --wipe-a: 0%;   --wipe-b: 0%; }
+      50%  { --wipe-a: 0%;   --wipe-b: 50%; }
+      100% { --wipe-a: 100%; --wipe-b: 100%; }
+    }
 
     .cascade-item {
       opacity: 0;
@@ -222,11 +237,23 @@
       background-image: radial-gradient(rgba(255, 255, 255, 0.4) 1.5px, transparent 1.5px);
       background-size: 18px 18px;
       pointer-events: none;
-      -webkit-mask-image: linear-gradient(225deg, transparent 0%, rgba(0, 0, 0, 0.95) 35%, rgba(0, 0, 0, 1) 100%);
-      mask-image: linear-gradient(225deg, transparent 0%, rgba(0, 0, 0, 0.95) 35%, rgba(0, 0, 0, 1) 100%);
-      -webkit-mask-size: 260% 260%;
-      mask-size: 260% 260%;
-      animation: sweepDotsDiagonal 6s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+      --wipe-a: 0%;
+      --wipe-b: 0%;
+      -webkit-mask-image: linear-gradient(90deg,
+        #000 0%,
+        #000 calc(var(--wipe-a) - 4%),
+        transparent var(--wipe-a),
+        transparent var(--wipe-b),
+        #000 calc(var(--wipe-b) + 4%),
+        #000 100%);
+      mask-image: linear-gradient(90deg,
+        #000 0%,
+        #000 calc(var(--wipe-a) - 4%),
+        transparent var(--wipe-a),
+        transparent var(--wipe-b),
+        #000 calc(var(--wipe-b) + 4%),
+        #000 100%);
+      animation: dotsWipe 6.5s linear infinite;
     }
 
     .bg-shape {
