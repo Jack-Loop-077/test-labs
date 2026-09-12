@@ -3,28 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  
+
+  <!-- إجبار النظام والمتصفح على استخدام الوضع الفاتح فقط -->
   <meta name="color-scheme" content="light" />
   <meta name="supported-color-schemes" content="light" />
   <meta name="theme-color" content="#087f5b" />
-  <title>حاضر | نظام حضور الطلاب</title>
-
-  <script>
-    try {
-      var _t = localStorage.getItem("hadhir.theme");
-      if (!_t) _t = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-      document.documentElement.dataset.theme = _t;
-    } catch (e) {}
-  </script>
-
+  <title>تسجيل الدخول - حاضر</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23087f5b'/%3E%3Cpath d='M18 33l10 10 18-20' stroke='%23fff' stroke-width='7' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+
+  <!-- الخطوط -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
 
   <style>
     /* ==========================================================================
-       1. المتغيرات والقواعد الأساسية
+       1. المتغيرات والقواعد الأساسية (مع قفل الوضع الليلي)
        ========================================================================== */
     :root {
       color-scheme: light !important;
@@ -38,7 +32,7 @@
       --bg-main: #f4f9f7;
       --white: #ffffff;
       --error: #e63946;
-      --error-bg: #fdeaec;
+      --error-soft: #fbeaea;
       --radius-card: clamp(20px, 4vw, 32px);
       --radius-md: clamp(10px, 2vw, 14px);
       --shadow-card: 0 20px 50px rgba(8, 127, 91, 0.12);
@@ -46,9 +40,7 @@
     }
 
     @media (prefers-color-scheme: dark) {
-      :root {
-        color-scheme: light !important;
-      }
+      :root { color-scheme: light !important; }
       html, body {
         background-color: var(--bg-main) !important;
         color: var(--text-main) !important;
@@ -88,6 +80,7 @@
       align-items: center;
       justify-content: center;
       min-height: 100vh;
+      min-height: 100svh;
       padding: clamp(12px, 3vw, 32px);
     }
 
@@ -95,64 +88,40 @@
        2. الحركات والتأثيرات
        ========================================================================== */
     @keyframes cardEnter {
-      from {
-        opacity: 0;
-        transform: translate3d(0, 22px, 0) scale(0.97);
-      }
-      to {
-        opacity: 1;
-        transform: translate3d(0, 0, 0) scale(1);
-      }
+      from { opacity: 0; transform: translate3d(0, 22px, 0) scale(0.97); }
+      to   { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
     }
-
     @keyframes cascadeUp {
-      from {
-        opacity: 0;
-        transform: translate3d(0, 14px, 0);
-      }
-      to {
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
-      }
+      from { opacity: 0; transform: translate3d(0, 14px, 0); }
+      to   { opacity: 1; transform: translate3d(0, 0, 0); }
     }
-
     @keyframes floatSlow {
       0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
       50% { transform: translate3d(0, -8px, 0) rotate(4deg); }
     }
-
     @keyframes auraPulse {
       0% { transform: scale(0.96); opacity: 0.8; }
       100% { transform: scale(1.35); opacity: 0; }
     }
-
     @keyframes sweepDotsDiagonal {
       0% { -webkit-mask-position: 0% 0%; mask-position: 0% 0%; }
       100% { -webkit-mask-position: 100% 100%; mask-position: 100% 100%; }
     }
-
-    @keyframes rot {
-      to { transform: rotate(360deg); }
-    }
-
-    .animate-card {
-      animation: cardEnter 0.55s var(--ease-smooth) forwards;
-      will-change: transform, opacity;
-    }
+    @keyframes rot { to { transform: rotate(360deg); } }
 
     .cascade-item {
       opacity: 0;
       animation: cascadeUp 0.45s var(--ease-smooth) forwards;
       will-change: transform, opacity;
     }
-
-    .delay-1 { animation-delay: 0.08s; }
-    .delay-2 { animation-delay: 0.16s; }
-    .delay-3 { animation-delay: 0.24s; }
-    .delay-4 { animation-delay: 0.32s; }
+    .delay-1 { animation-delay: 0.05s; }
+    .delay-2 { animation-delay: 0.18s; }
+    .delay-3 { animation-delay: 0.31s; }
+    .delay-4 { animation-delay: 0.44s; }
+    .delay-5 { animation-delay: 0.57s; }
 
     /* ==========================================================================
-       3. خلفية الصفحة وشاشة التحميل
+       3. خلفية الصفحة
        ========================================================================== */
     .page-background {
       position: fixed;
@@ -166,18 +135,8 @@
         var(--bg-main) !important;
     }
 
-    .bspin {
-      width: 48px;
-      height: 48px;
-      border: 4px solid var(--primary-light);
-      border-top-color: var(--primary);
-      border-radius: 50%;
-      animation: rot 0.8s linear infinite;
-      z-index: 10;
-    }
-
     /* ==========================================================================
-       4. التخطيط العام للبطاقة
+       4. التخطيط العام + حالة التحميل (Boot Spinner)
        ========================================================================== */
     .page-wrapper {
       position: relative;
@@ -187,8 +146,43 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 16px;
     }
 
+    .boot-spinner {
+      width: 44px;
+      height: 44px;
+      border: 4px solid var(--primary-light);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: rot 0.8s linear infinite;
+    }
+
+    .boot-msg {
+      display: none;
+      max-width: 420px;
+      text-align: center;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-main);
+      line-height: 1.9;
+    }
+
+    .boot-msg button {
+      margin-top: 10px;
+      background: var(--primary);
+      color: var(--white);
+      border: none;
+      border-radius: 9px;
+      padding: 9px 22px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* ==========================================================================
+       5. البطاقة (مخفية إلى أن يتم التحقق من الجلسة)
+       ========================================================================== */
     .card-layout {
       width: clamp(320px, 92vw, 480px);
       display: none;
@@ -201,12 +195,19 @@
       position: relative;
     }
 
-    .card-layout.show {
+    .card-layout.ready {
       display: flex;
+      animation: cardEnter 0.55s var(--ease-smooth) forwards;
+    }
+
+    .page-foot {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      text-align: center;
     }
 
     /* ==========================================================================
-       5. القسم العلوي الأخضر
+       6. القسم العلوي الأخضر
        ========================================================================== */
     .welcome-panel {
       background:
@@ -245,18 +246,13 @@
     }
 
     .shape-1 {
-      width: clamp(70px, 18vw, 110px);
-      height: clamp(70px, 18vw, 110px);
-      top: -30px;
-      right: -30px;
+      width: clamp(70px, 18vw, 110px); height: clamp(70px, 18vw, 110px);
+      top: -30px; right: -30px;
       animation: floatSlow 6s ease-in-out infinite alternate;
     }
-
     .shape-2 {
-      width: clamp(60px, 15vw, 90px);
-      height: clamp(60px, 15vw, 90px);
-      bottom: -20px;
-      left: -20px;
+      width: clamp(60px, 15vw, 90px); height: clamp(60px, 15vw, 90px);
+      bottom: -20px; left: -20px;
       animation: floatSlow 7s ease-in-out 1s infinite alternate-reverse;
     }
 
@@ -267,9 +263,7 @@
       border-radius: 50%;
       border: 2px solid rgba(255, 255, 255, 0.75);
       background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.05) 100%);
-      box-shadow: 
-        0 15px 35px rgba(0, 0, 0, 0.2),
-        inset 0 1.5px 2px rgba(255, 255, 255, 0.8);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2), inset 0 1.5px 2px rgba(255, 255, 255, 0.8);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -280,20 +274,21 @@
       transition: transform 0.3s ease;
       cursor: pointer;
     }
+    .brand-circle:hover { transform: scale(1.04); }
 
-    .brand-circle:hover {
-      transform: scale(1.04);
-    }
-
+    /* حلقة النبض: تبقى مخفية إلى أن ينتهي أنيميشن دخول الدائرة، حينها تُضاف كلاس pulsing بالجافاسكربت */
     .brand-circle::before {
       content: "";
       position: absolute;
       inset: -4px;
       border-radius: 50%;
       border: 1.5px solid rgba(255, 255, 255, 0.85);
-      animation: auraPulse 2.8s var(--ease-smooth) infinite;
+      opacity: 0;
       pointer-events: none;
       z-index: -1;
+    }
+    .brand-circle.pulsing::before {
+      animation: auraPulse 2.8s var(--ease-smooth) infinite;
     }
 
     .brand-icon-svg {
@@ -313,7 +308,7 @@
     }
 
     /* ==========================================================================
-       6. القسم السفلي الأبيض (النموذج)
+       7. القسم السفلي الأبيض (النموذج)
        ========================================================================== */
     .login-panel {
       padding: clamp(28px, 6vw, 42px) clamp(20px, 5vw, 36px);
@@ -324,11 +319,7 @@
       background: linear-gradient(180deg, #ffffff 0%, #f7faf8 100%) !important;
     }
 
-    .login-header {
-      text-align: center;
-      margin-bottom: clamp(20px, 4vw, 28px);
-    }
-
+    .login-header { text-align: center; margin-bottom: clamp(20px, 4vw, 28px); }
     .login-title {
       margin: 0;
       color: var(--primary) !important;
@@ -337,21 +328,16 @@
       letter-spacing: -0.3px;
       line-height: 1.2;
     }
-
     .login-sub {
-      margin-top: 6px;
+      margin: 6px 0 0;
+      color: var(--text-muted) !important;
       font-size: 13px;
-      color: var(--text-muted);
+      font-weight: 500;
+      text-align: center;
     }
 
-    .login-form {
-      width: 100%;
-    }
-
-    .form-group {
-      margin-bottom: clamp(14px, 3vw, 20px);
-    }
-
+    .login-form { width: 100%; }
+    .form-group { margin-bottom: clamp(14px, 3vw, 20px); }
     .form-label {
       display: block;
       margin-bottom: 8px;
@@ -360,11 +346,7 @@
       font-weight: 700;
     }
 
-    .input-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
+    .input-wrapper { position: relative; display: flex; align-items: center; }
 
     .form-input {
       width: 100%;
@@ -378,23 +360,20 @@
       outline: none;
       padding: 0 44px 0 44px;
       direction: ltr;
-      text-align: right;
+      text-align: left;
       box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
       transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
     }
 
     .form-input:-webkit-autofill,
-    .form-input:-webkit-autofill:hover, 
+    .form-input:-webkit-autofill:hover,
     .form-input:-webkit-autofill:focus {
       -webkit-text-fill-color: var(--text-main) !important;
       -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
       transition: background-color 5000s ease-in-out 0s;
     }
 
-    .form-input::placeholder {
-      color: #9cb2aa !important;
-      text-align: right;
-    }
+    .form-input::placeholder { color: #9cb2aa !important; }
 
     .form-input:focus {
       border-color: var(--primary) !important;
@@ -411,14 +390,8 @@
       pointer-events: none;
       transition: color 0.2s ease;
     }
-
-    .input-icon.right-icon {
-      right: 14px;
-    }
-
-    .form-input:focus ~ .input-icon.right-icon {
-      color: var(--primary) !important;
-    }
+    .input-icon.right-icon { right: 14px; }
+    .form-input:focus ~ .input-icon.right-icon { color: var(--primary) !important; }
 
     .toggle-password-btn {
       position: absolute;
@@ -433,11 +406,7 @@
       border-radius: 8px;
       transition: color 0.2s ease, background-color 0.2s ease;
     }
-
-    .toggle-password-btn:hover {
-      color: var(--primary) !important;
-      background: var(--primary-light) !important;
-    }
+    .toggle-password-btn:hover { color: var(--primary) !important; background: var(--primary-light) !important; }
 
     .submit-btn {
       position: relative;
@@ -459,21 +428,13 @@
       box-shadow: 0 6px 20px rgba(8, 127, 91, 0.22);
       transition: background 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
     }
-
     .submit-btn:hover {
       background: linear-gradient(135deg, #08835e 0%, var(--primary-dark) 100%) !important;
       transform: translate3d(0, -2px, 0);
       box-shadow: 0 10px 24px rgba(8, 127, 91, 0.32);
     }
-
-    .submit-btn:active {
-      transform: translate3d(0, 0, 0);
-    }
-
-    .submit-btn[disabled] {
-      opacity: 0.65;
-      pointer-events: none;
-    }
+    .submit-btn:active { transform: translate3d(0, 0, 0); }
+    .submit-btn:disabled { opacity: 0.7; cursor: default; pointer-events: none; }
 
     .btn-icon {
       width: clamp(16px, 3.5vw, 19px);
@@ -481,18 +442,14 @@
       stroke: var(--white) !important;
       transition: transform 0.2s ease;
     }
+    .submit-btn:hover .btn-icon { transform: translate3d(-4px, 0, 0); }
 
-    .submit-btn:hover .btn-icon {
-      transform: translate3d(-4px, 0, 0);
-    }
-
-    .spin {
-      width: 18px;
-      height: 18px;
+    .btn-spin {
+      width: 16px; height: 16px;
       border: 2.5px solid rgba(255,255,255,.4);
       border-top-color: #fff;
       border-radius: 50%;
-      animation: rot .7s linear infinite;
+      animation: rot 0.7s linear infinite;
     }
 
     .form-alert {
@@ -501,22 +458,20 @@
       padding: 12px;
       border-radius: var(--radius-md);
       text-align: center;
-      font-size: 13px;
+      font-size: 13.5px;
       font-weight: 700;
-      background-color: var(--error-bg) !important;
-      color: var(--error) !important;
-      border: 1px solid rgba(230, 57, 70, 0.2);
+    }
+    .form-alert.show { display: block; }
+    .form-alert.error {
+      background-color: var(--error-soft) !important;
+      color: #991b1b !important;
+      border: 1px solid #f3c6c6;
     }
 
-    .form-alert.show {
-      display: block;
-    }
-
-    .foot-note {
-      text-align: center;
-      font-size: 11.5px;
-      color: var(--text-muted);
-      margin-top: 16px;
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .cascade-item { opacity: 1 !important; }
+      .brand-circle.pulsing::before { opacity: 0 !important; }
     }
   </style>
 </head>
@@ -526,109 +481,13 @@
   <div class="page-background" aria-hidden="true"></div>
 
   <main class="page-wrapper">
-    <!-- محمل الصفحة عند التحقق المستمر -->
-    <div class="bspin" id="chk"></div>
-    <div id="chkMsg" style="display:none; max-width:420px; text-align:center; font-size:13.5px; font-weight:600; color:var(--text-main); line-height:1.9; z-index: 10;"></div>
 
-    <!-- بطاقة تسجيل الدخول الرئيسية -->
-    <div class="card-layout animate-card" id="card">
-
-      <!-- القسم العلوي الأخضر -->
-      <aside class="welcome-panel">
-        <div class="bg-grid-pattern"></div>
-        <div class="bg-shape shape-1"></div>
-        <div class="bg-shape shape-2"></div>
-
-        <div class="cascade-item delay-1">
-          <div class="brand-circle">
-            <svg class="brand-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20 6L9 17l-5-5"/>
-            </svg>
-            <h2 class="brand-title">حاضر</h2>
-          </div>
-        </div>
-      </aside>
-
-      <!-- القسم السفلي الأبيض: نموذج تسجيل الدخول -->
-      <section class="login-panel">
-        <header class="login-header cascade-item delay-2">
-          <h1 class="login-title">تسجيل الدخول</h1>
-          <p class="login-sub">نظام حضور الطلاب — سجّل دخولك للمتابعة</p>
-        </header>
-
-        <form class="login-form" id="loginForm" onsubmit="return false;" novalidate>
-          
-          <div class="form-alert" id="aErr" role="alert"></div>
-
-          <div class="form-group cascade-item delay-2">
-            <label class="form-label" for="aEmail">البريد الإلكتروني</label>
-            <div class="input-wrapper">
-              <input
-                class="form-input"
-                id="aEmail"
-                type="email"
-                dir="ltr"
-                placeholder="you@example.com"
-                autocomplete="username"
-                required
-              />
-              <svg class="input-icon right-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="5" width="18" height="14" rx="2"/>
-                <path d="m3 7 9 6 9-6"/>
-              </svg>
-            </div>
-          </div>
-
-          <div class="form-group cascade-item delay-3">
-            <label class="form-label" for="aPass">كلمة السر</label>
-            <div class="input-wrapper">
-              <input
-                class="form-input"
-                id="aPass"
-                type="password"
-                dir="ltr"
-                placeholder="••••••••"
-                autocomplete="current-password"
-                required
-              />
-              <svg class="input-icon right-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="5" y="10" width="14" height="11" rx="2"/>
-                <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
-              </svg>
-              <button
-                type="button"
-                class="toggle-password-btn"
-                id="btnTogglePw"
-                aria-label="إظهار كلمة السر"
-                tabindex="-1"
-              >
-                <svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/>
-                  <circle cx="12" cy="12" r="3"/>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <button class="submit-btn cascade-item delay-4" id="btnLogin" type="button">
-            <span>تسجيل الدخول</span>
-            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M19 12H5"/>
-              <path d="m11 18-6-6 6-6"/>
-            </svg>
-          </button>
-
-          <p class="foot-note cascade-item delay-4">بعد الدخول تنتقل تلقائياً إلى صفحة النظام</p>
-
-        </form>
-      </section>
-
-    </div>
-  </main>
-
-  <script>
+    <!-- حالة التحميل: تظهر لحد ما نتحقق من جلسة الدخول عبر Firebase -->
+    <div class="boot-spinner" id="chk"></div>
+    <div class="boot-msg" id="chkMsg"></div>
+    <script>
     (function () {
-      var BTN = '<button onclick="location.reload()" style="margin-top:10px;background:#087f5b;color:#fff;border:none;border-radius:9px;padding:9px 22px;font:inherit;font-weight:600;cursor:pointer">إعادة التحميل</button>';
+      var BTN = '<button onclick="location.reload()">إعادة التحميل</button>';
       function live() { var c = document.getElementById("chk"); return c && c.style.display !== "none"; }
       function show(msg) {
         if (!live()) return;
@@ -644,16 +503,110 @@
       }, 12000);
       window.__bootDone = function () { clearTimeout(t); };
       window.addEventListener("error", function (e) {
-        show((e.message || "خطأ غير معروف") + (e.filename ? " — " + String(e.filename).split("/").pop() : ""));
+        show((e.message || "خطأ غير معروف") + (e.filename ? " - " + String(e.filename).split("/").pop() : ""));
       });
       window.addEventListener("unhandledrejection", function (e) {
         show((e.reason && (e.reason.message || e.reason)) || "رفض غير معالج");
       });
     })();
-  </script>
+    </script>
+
+    <!-- البطاقة: نفس التصميم المعتمد بالكامل، تظهر فقط بعد التحقق من الجلسة -->
+    <div class="card-layout" id="card">
+
+      <!-- القسم العلوي الأخضر -->
+      <aside class="welcome-panel">
+        <div class="bg-grid-pattern"></div>
+        <div class="bg-shape shape-1"></div>
+        <div class="bg-shape shape-2"></div>
+
+        <div class="cascade-item delay-1" id="brandWrap">
+          <div class="brand-circle" id="brandCircle">
+            <svg class="brand-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 6L9 17l-5-5"/>
+            </svg>
+            <h2 class="brand-title">حاضر</h2>
+          </div>
+        </div>
+      </aside>
+
+      <!-- القسم السفلي الأبيض: نموذج تسجيل الدخول -->
+      <section class="login-panel">
+        <header class="login-header cascade-item delay-2">
+          <h1 class="login-title">تسجيل الدخول</h1>
+          <p class="login-sub">نظام حضور الطلاب - سجّل دخولك للمتابعة</p>
+        </header>
+
+        <div class="form-alert error" id="formError" role="alert"></div>
+
+        <form class="login-form" id="loginForm" novalidate>
+
+          <div class="form-group cascade-item delay-3">
+            <label class="form-label" for="email">البريد الإلكتروني</label>
+            <div class="input-wrapper">
+              <input
+                class="form-input"
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                autocomplete="username"
+                required
+              />
+              <svg class="input-icon right-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="5" width="18" height="14" rx="2"/>
+                <path d="m3 7 9 6 9-6"/>
+              </svg>
+            </div>
+          </div>
+
+          <div class="form-group cascade-item delay-4">
+            <label class="form-label" for="password">كلمة المرور</label>
+            <div class="input-wrapper">
+              <input
+                class="form-input"
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                autocomplete="current-password"
+                required
+              />
+              <svg class="input-icon right-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="10" width="14" height="11" rx="2"/>
+                <path d="M8 10V7a4 4 0 0 1 8 0v3"/>
+              </svg>
+              <button
+                type="button"
+                class="toggle-password-btn"
+                id="togglePassword"
+                aria-label="إظهار كلمة المرور"
+                tabindex="-1"
+              >
+                <svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <button class="submit-btn cascade-item delay-5" type="submit" id="submitBtn">
+            <span id="submitBtnLabel">تسجيل الدخول</span>
+            <svg class="btn-icon" id="submitBtnIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 12H5"/>
+              <path d="m11 18-6-6 6-6"/>
+            </svg>
+          </button>
+
+        </form>
+      </section>
+
+    </div>
+
+    <p class="page-foot">بعد الدخول تنتقل تلقائياً إلى صفحة النظام</p>
+  </main>
 
   <script type="module">
-    /* إعدادات Firebase */
+    /* إعدادات Firebase - مشروع labs-a4765 */
     const FIREBASE_CONFIG = {
       apiKey: "AIzaSyDMUlwIrd2wb11xgiS-vKqeJEuTYPY9YmA",
       authDomain: "test-labs-1cb92.firebaseapp.com",
@@ -663,7 +616,9 @@
       appId: "1:602549047680:web:b915fe8aed877cc04bf165"
     };
 
+    /* إيميل المشرف - يطابق نفس القيمة بملف LABS.html */
     const ADMIN_EMAIL = "hasanhasan12331233@gmail.com";
+    /* أقصى مدة جلسة قبل تسجيل خروج إجباري (يومين) - احتراز أمني بسيط */
     const SESSION_MAX_MS = 2 * 24 * 60 * 60 * 1000;
 
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -677,21 +632,23 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    function showGateError(msg) {
+    function revealCard() {
       if (window.__bootDone) window.__bootDone();
       $("#chk").style.display = "none";
-      $("#card").classList.add("show");
-      const e = $("#aErr");
-      e.textContent = msg;
-      e.classList.add("show");
+      $("#card").classList.add("ready");
+    }
+
+    function showGateError(msg) {
+      revealCard();
+      const box = $("#formError");
+      box.textContent = msg;
+      box.classList.add("show");
     }
 
     onAuthStateChanged(auth, async u => {
-      if (window.__bootDone) window.__bootDone();
       if (!u) {
-        $("#chk").style.display = "none";
-        $("#card").classList.add("show");
-        setTimeout(() => $("#aEmail").focus(), 60);
+        revealCard();
+        setTimeout(() => $("#email").focus(), 60);
         return;
       }
       const isAdmin = (u.email || "").toLowerCase() === ADMIN_EMAIL.toLowerCase();
@@ -700,12 +657,12 @@
         location.replace("LABS.html");
         return;
       }
-      
+      /* حساب أستاذ - تحقّق من ملفه بقاعدة البيانات قبل الدخول */
       try {
         const snap = await getDoc(doc(db, "staff", u.uid));
         if (!snap.exists() || snap.data().active !== true) {
           await signOut(auth);
-          showGateError(snap.exists() ? "الحساب معطّل من قبل المشرف — راجعه لتفعيله." : "ما لكينا ملف صلاحيات لهذا الحساب — راجع المشرف.");
+          showGateError(snap.exists() ? "الحساب معطّل من قبل المشرف - راجعه لتفعيله." : "ما لكينا ملف صلاحيات لهذا الحساب - راجع المشرف.");
           return;
         }
         let start = null; try { start = Number(localStorage.getItem("hadhir.sessionStart")); } catch {}
@@ -713,52 +670,83 @@
         else if (Date.now() - start > SESSION_MAX_MS) {
           await signOut(auth);
           try { localStorage.removeItem("hadhir.sessionStart"); } catch {}
-          showGateError("انتهت صلاحية الجلسة (يومين) — سجّل دخولك مجدداً.");
+          showGateError("انتهت صلاحية الجلسة (يومين) - سجّل دخولك مجدداً.");
           return;
         }
         location.replace("LABS.html");
       } catch (err) {
         await signOut(auth);
-        showGateError("تعذّر التحقق من الحساب — تأكد من الإنترنت وحاول مجدداً.");
+        showGateError("تعذّر التحقق من الحساب - تأكد من الإنترنت وحاول مجدداً.");
       }
     });
 
     const AUTH_ERR = {
       "auth/invalid-email": "صيغة البريد الإلكتروني غير صحيحة.",
-      "auth/user-not-found": "لا يوجد حساب بهذا البريد — تأكد من البريد أو راجع المشرف.",
+      "auth/user-not-found": "لا يوجد حساب بهذا البريد - تأكد من البريد أو راجع المشرف.",
       "auth/wrong-password": "كلمة السر غير صحيحة.",
       "auth/invalid-credential": "البريد أو كلمة السر غير صحيحة.",
-      "auth/too-many-requests": "محاولات كثيرة — انتظر قليلاً ثم حاول مجدداً.",
-      "auth/network-request-failed": "لا يوجد اتصال بالإنترنت — تسجيل الدخول يحتاج اتصالاً."
+      "auth/too-many-requests": "محاولات كثيرة - انتظر قليلاً ثم حاول مجدداً.",
+      "auth/network-request-failed": "لا يوجد اتصال بالإنترنت - تسجيل الدخول يحتاج اتصالاً."
     };
 
     async function doLogin() {
-      const btn = $("#btnLogin"), errB = $("#aErr");
+      const btn = $("#submitBtn"), label = $("#submitBtnLabel"), icon = $("#submitBtnIcon"), errB = $("#formError");
       errB.classList.remove("show");
-      btn.disabled = true; 
-      btn.innerHTML = '<span class="spin"></span><span>جارٍ الدخول…</span>';
-      
+      btn.disabled = true;
+      icon.style.display = "none";
+      label.insertAdjacentHTML("beforebegin", '<span class="btn-spin" id="btnSpin"></span>');
+      label.textContent = "جارٍ الدخول…";
       try {
-        await signInWithEmailAndPassword(auth, $("#aEmail").value.trim(), $("#aPass").value);
+        await signInWithEmailAndPassword(auth, $("#email").value.trim(), $("#password").value);
+        /* التحويل يصير تلقائياً من onAuthStateChanged */
       } catch (e) {
         errB.textContent = AUTH_ERR[e.code] || "تعذّر تسجيل الدخول (" + (e.code || e.message) + ")";
         errB.classList.add("show");
-        btn.disabled = false; 
-        btn.innerHTML = '<span>تسجيل الدخول</span><svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></svg>';
+        btn.disabled = false;
+        const spin = $("#btnSpin"); if (spin) spin.remove();
+        icon.style.display = "";
+        label.textContent = "تسجيل الدخول";
       }
     }
 
-    $("#btnLogin").onclick = doLogin;
-    $("#aPass").addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
-    $("#aEmail").addEventListener("keydown", e => { if (e.key === "Enter") $("#aPass").focus(); });
+    $("#loginForm").addEventListener("submit", e => { e.preventDefault(); doLogin(); });
+  </script>
 
-    $("#btnTogglePw").addEventListener("click", () => {
-      const p = $("#aPass"), showing = p.type === "text";
-      p.type = showing ? "password" : "text";
-      $("#eyeIcon").innerHTML = showing
-        ? `<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/>`
-        : `<path d="M3 3l18 18"/><path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/><path d="M9.9 4.2A10.8 10.8 0 0 1 12 4c6.5 0 10 8 10 8a18 18 0 0 1-3.1 4.3"/><path d="M6.6 6.6C3.6 8.7 2 12 2 12s3.5 8 10 8a9.8 9.8 0 0 0 4.2-.9"/>`;
+  <!-- سكريبت زخرفي بحت: تبديل إظهار كلمة المرور + نبضة الشعار بعد ظهوره + تنظيف الأداء -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const password = document.getElementById("password");
+      const togglePassword = document.getElementById("togglePassword");
+      const eyeIcon = document.getElementById("eyeIcon");
+
+      togglePassword.addEventListener("click", () => {
+        const isPassword = password.type === "password";
+        password.type = isPassword ? "text" : "password";
+        togglePassword.setAttribute("aria-label", isPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور");
+        eyeIcon.innerHTML = isPassword
+          ? `<path d="M3 3l18 18"/><path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/><path d="M9.9 4.2A10.8 10.8 0 0 1 12 4c6.5 0 10 8 10 8a18 18 0 0 1-3.1 4.3"/><path d="M6.6 6.6C3.6 8.7 2 12 2 12s3.5 8 10 8a9.8 9.8 0 0 0 4.2-.9"/>`
+          : `<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/>`;
+      });
+
+      const brandWrap = document.getElementById("brandWrap");
+      const brandCircle = document.getElementById("brandCircle");
+      if (brandWrap && brandCircle) {
+        brandWrap.addEventListener("animationend", function onEnd(e) {
+          if (e.target !== brandWrap) return;
+          brandCircle.classList.add("pulsing");
+          brandWrap.removeEventListener("animationend", onEnd);
+        });
+      }
+
+      document.querySelectorAll(".cascade-item").forEach((el) => {
+        el.addEventListener("animationend", function onEnd(e) {
+          if (e.target !== el) return;
+          el.style.willChange = "auto";
+          el.removeEventListener("animationend", onEnd);
+        });
+      });
     });
   </script>
+
 </body>
 </html>
