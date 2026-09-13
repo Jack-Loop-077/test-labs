@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" style="color-scheme: light;">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -101,24 +101,19 @@
     }
     @keyframes rot { to { transform: rotate(360deg); } }
 
-    /* موجة الاختفاء/الظهور فوق النقاط: تنمو من اليسار حتى تصل نصف العرض،
-       بعدها يبدأ الجزء المختفي بالرجوع للظهور من اليسار وهو يلحق الحافة
-       المتقدمة، إلى أن تلتقي الحافتان قرب اليمين وتبدأ الدورة من جديد. */
-    @property --wipe-a {
+    /* نبضة حيوية للنقاط: تكبر بمقدار بسيط بادئة من الأركان الأربعة، تلتقي بمنتصف
+       اللوحة، ثم ترجع وتصغر - دورة مستمرة ومتكررة */
+    @property --corner-r {
       syntax: '<percentage>';
       inherits: false;
       initial-value: 0%;
     }
-    @property --wipe-b {
-      syntax: '<percentage>';
-      inherits: false;
-      initial-value: 0%;
+    @keyframes dotsGrow {
+      0%   { --corner-r: 0%; }
+      55%  { --corner-r: 55%; }
+      100% { --corner-r: 0%; }
     }
-    @keyframes dotsWipe {
-      0%   { --wipe-a: 0%;   --wipe-b: 0%; }
-      50%  { --wipe-a: 0%;   --wipe-b: 50%; }
-      100% { --wipe-a: 100%; --wipe-b: 100%; }
-    }
+
 
     .cascade-item {
       opacity: 0;
@@ -227,7 +222,7 @@
       overflow: hidden;
     }
 
-    /* حاوية تستثني دائرة خلف الشعار حتى لا تظهر النقاط تحته أبداً، بغض النظر عن موجة الاختفاء */
+    /* حاوية تستثني دائرة خلف الشعار حتى لا تظهر النقاط تحته أبداً */
     .bg-grid-hole {
       position: absolute;
       inset: 0;
@@ -249,23 +244,29 @@
       background-image: radial-gradient(rgba(255, 255, 255, 0.4) 1.5px, transparent 1.5px);
       background-size: 18px 18px;
       pointer-events: none;
-      --wipe-a: 0%;
-      --wipe-b: 0%;
-      -webkit-mask-image: linear-gradient(90deg,
-        #000 0%,
-        #000 calc(var(--wipe-a) - 4%),
-        transparent var(--wipe-a),
-        transparent var(--wipe-b),
-        #000 calc(var(--wipe-b) + 4%),
-        #000 100%);
-      mask-image: linear-gradient(90deg,
-        #000 0%,
-        #000 calc(var(--wipe-a) - 4%),
-        transparent var(--wipe-a),
-        transparent var(--wipe-b),
-        #000 calc(var(--wipe-b) + 4%),
-        #000 100%);
-      animation: dotsWipe 6.5s linear infinite;
+    }
+
+    /* طبقة نقاط أكبر وأوضح، تنكشف بشكل دائري من كل ركن من الأركان الأربعة
+       وتلتقي في منتصف اللوحة، ثم تختفي تدريجياً لترجع الدورة من جديد */
+    .bg-grid-big {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.7) 2.6px, transparent 2.6px);
+      background-size: 18px 18px;
+      pointer-events: none;
+      --corner-r: 0%;
+      -webkit-mask-image:
+        radial-gradient(circle at 0% 0%,     #000 0%, #000 var(--corner-r), transparent calc(var(--corner-r) + 15%)),
+        radial-gradient(circle at 100% 0%,   #000 0%, #000 var(--corner-r), transparent calc(var(--corner-r) + 15%)),
+        radial-gradient(circle at 0% 100%,   #000 0%, #000 var(--corner-r), transparent calc(var(--corner-r) + 15%)),
+        radial-gradient(circle at 100% 100%, #000 0%, #000 var(--corner-r), transparent calc(var(--corner-r) + 15%));
+      mask-image:
+        radial-gradient(circle at 0% 0%,     #000 0%, #000 var(--corner-r), transparent calc(var(--corner-r) + 15%)),
+        radial-gradient(circle at 100% 0%,   #000 0%, #000 var(--corner-r), transparent calc(var(--corner-r) + 15%)),
+        radial-gradient(circle at 0% 100%,   #000 0%, #000 var(--corner-r), transparent calc(var(--corner-r) + 15%)),
+        radial-gradient(circle at 100% 100%, #000 0%, #000 var(--corner-r), transparent calc(var(--corner-r) + 15%));
+      mask-composite: add;
+      animation: dotsGrow 5s ease-in-out infinite;
     }
 
     .bg-shape {
@@ -308,18 +309,23 @@
     }
     .brand-circle:hover { transform: scale(1.04); }
 
-    /* توهج خفيف خلف الدائرة يتزامن مع لحظة اكتمال رسم علامة الصح */
-    .brand-circle::after {
+    /* حلقة النبض: تبقى مخفية إلى أن ينتهي أنيميشن دخول الدائرة، حينها تُضاف كلاس pulsing بالجافاسكربت */
+    .brand-circle::before {
       content: "";
       position: absolute;
-      inset: -6px;
+      inset: -4px;
       border-radius: 50%;
-      box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+      border: 1.5px solid rgba(255, 255, 255, 0.85);
+      opacity: 0;
       pointer-events: none;
       z-index: -1;
     }
-    .brand-circle.drawing::after {
-      animation: checkGlow 4.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+    .brand-circle.pulsing::before {
+      animation: auraPulse 2.8s var(--ease-smooth) infinite;
+    }
+    @keyframes auraPulse {
+      0% { transform: scale(0.96); opacity: 0.8; }
+      100% { transform: scale(1.35); opacity: 0; }
     }
 
     .brand-icon-svg {
@@ -327,29 +333,6 @@
       height: clamp(28px, 7vw, 38px);
       stroke: var(--white) !important;
       filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2));
-    }
-
-    /* علامة الصح ترسم نفسها بشكل دوري: تُرسم، تبقى ظاهرة لحظة، ثم تختفي وتُرسم من جديد */
-    .check-path {
-      stroke-dasharray: 1;
-      stroke-dashoffset: 1;
-    }
-    .brand-circle.drawing .check-path {
-      animation: checkDraw 4.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
-    }
-    @keyframes checkDraw {
-      0%   { stroke-dashoffset: 1; opacity: 1; }
-      38%  { stroke-dashoffset: 0; opacity: 1; }
-      68%  { stroke-dashoffset: 0; opacity: 1; }
-      76%  { stroke-dashoffset: 0; opacity: 0; }
-      80%  { stroke-dashoffset: 1; opacity: 0; }
-      100% { stroke-dashoffset: 1; opacity: 1; }
-    }
-    @keyframes checkGlow {
-      0%   { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
-      38%  { box-shadow: 0 0 22px 6px rgba(255, 255, 255, 0.55); }
-      55%  { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
     }
 
     .brand-title {
@@ -533,8 +516,7 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; }
       .cascade-item { opacity: 1 !important; }
-      .brand-circle::after { box-shadow: none !important; }
-      .check-path { stroke-dashoffset: 0 !important; opacity: 1 !important; }
+      .brand-circle.pulsing::before { opacity: 0 !important; }
     }
   </style>
 </head>
@@ -581,6 +563,7 @@
       <aside class="welcome-panel">
         <div class="bg-grid-hole">
           <div class="bg-grid-pattern"></div>
+          <div class="bg-grid-big"></div>
         </div>
         <div class="bg-shape shape-1"></div>
         <div class="bg-shape shape-2"></div>
@@ -588,7 +571,7 @@
         <div class="cascade-item delay-1" id="brandWrap">
           <div class="brand-circle" id="brandCircle">
             <svg class="brand-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-              <path class="check-path" pathLength="1" d="M20 6L9 17l-5-5"/>
+              <path d="M20 6L9 17l-5-5"/>
             </svg>
             <h2 class="brand-title">حاضر</h2>
           </div>
@@ -797,11 +780,11 @@
       if (brandWrap && brandCircle) {
         brandWrap.addEventListener("animationend", function onEnd(e) {
           if (e.target !== brandWrap) return;
-          brandCircle.classList.add("drawing");
+          brandCircle.classList.add("pulsing");
           brandWrap.removeEventListener("animationend", onEnd);
         });
         // شبكة أمان: إذا تعطّل حدث animationend لأي سبب، فعّل الرسم بعد فترة معقولة
-        setTimeout(() => brandCircle.classList.add("drawing"), 6000);
+        setTimeout(() => brandCircle.classList.add("pulsing"), 6000);
       }
 
       document.querySelectorAll(".cascade-item").forEach((el) => {
