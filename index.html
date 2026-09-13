@@ -99,10 +99,6 @@
       0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
       50% { transform: translate3d(0, -8px, 0) rotate(4deg); }
     }
-    @keyframes auraPulse {
-      0% { transform: scale(0.96); opacity: 0.8; }
-      100% { transform: scale(1.35); opacity: 0; }
-    }
     @keyframes rot { to { transform: rotate(360deg); } }
 
     /* موجة الاختفاء/الظهور فوق النقاط: تنمو من اليسار حتى تصل نصف العرض،
@@ -231,6 +227,22 @@
       overflow: hidden;
     }
 
+    /* حاوية تستثني دائرة خلف الشعار حتى لا تظهر النقاط تحته أبداً، بغض النظر عن موجة الاختفاء */
+    .bg-grid-hole {
+      position: absolute;
+      inset: 0;
+      -webkit-mask-image: radial-gradient(circle at 50% 50%,
+        transparent 0,
+        transparent clamp(62px, 15vw, 80px),
+        #000 clamp(76px, 17vw, 94px),
+        #000 100%);
+      mask-image: radial-gradient(circle at 50% 50%,
+        transparent 0,
+        transparent clamp(62px, 15vw, 80px),
+        #000 clamp(76px, 17vw, 94px),
+        #000 100%);
+    }
+
     .bg-grid-pattern {
       position: absolute;
       inset: 0;
@@ -296,19 +308,18 @@
     }
     .brand-circle:hover { transform: scale(1.04); }
 
-    /* حلقة النبض: تبقى مخفية إلى أن ينتهي أنيميشن دخول الدائرة، حينها تُضاف كلاس pulsing بالجافاسكربت */
-    .brand-circle::before {
+    /* توهج خفيف خلف الدائرة يتزامن مع لحظة اكتمال رسم علامة الصح */
+    .brand-circle::after {
       content: "";
       position: absolute;
-      inset: -4px;
+      inset: -6px;
       border-radius: 50%;
-      border: 1.5px solid rgba(255, 255, 255, 0.85);
-      opacity: 0;
+      box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
       pointer-events: none;
       z-index: -1;
     }
-    .brand-circle.pulsing::before {
-      animation: auraPulse 2.8s var(--ease-smooth) infinite;
+    .brand-circle.drawing::after {
+      animation: checkGlow 4.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
     }
 
     .brand-icon-svg {
@@ -316,6 +327,29 @@
       height: clamp(28px, 7vw, 38px);
       stroke: var(--white) !important;
       filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2));
+    }
+
+    /* علامة الصح ترسم نفسها بشكل دوري: تُرسم، تبقى ظاهرة لحظة، ثم تختفي وتُرسم من جديد */
+    .check-path {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+    }
+    .brand-circle.drawing .check-path {
+      animation: checkDraw 4.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+    }
+    @keyframes checkDraw {
+      0%   { stroke-dashoffset: 1; opacity: 1; }
+      38%  { stroke-dashoffset: 0; opacity: 1; }
+      68%  { stroke-dashoffset: 0; opacity: 1; }
+      76%  { stroke-dashoffset: 0; opacity: 0; }
+      80%  { stroke-dashoffset: 1; opacity: 0; }
+      100% { stroke-dashoffset: 1; opacity: 1; }
+    }
+    @keyframes checkGlow {
+      0%   { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+      38%  { box-shadow: 0 0 22px 6px rgba(255, 255, 255, 0.55); }
+      55%  { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
     }
 
     .brand-title {
@@ -499,7 +533,8 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; }
       .cascade-item { opacity: 1 !important; }
-      .brand-circle.pulsing::before { opacity: 0 !important; }
+      .brand-circle::after { box-shadow: none !important; }
+      .check-path { stroke-dashoffset: 0 !important; opacity: 1 !important; }
     }
   </style>
 </head>
@@ -544,14 +579,16 @@
 
       <!-- القسم العلوي الأخضر -->
       <aside class="welcome-panel">
-        <div class="bg-grid-pattern"></div>
+        <div class="bg-grid-hole">
+          <div class="bg-grid-pattern"></div>
+        </div>
         <div class="bg-shape shape-1"></div>
         <div class="bg-shape shape-2"></div>
 
         <div class="cascade-item delay-1" id="brandWrap">
           <div class="brand-circle" id="brandCircle">
             <svg class="brand-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M20 6L9 17l-5-5"/>
+              <path class="check-path" pathLength="1" d="M20 6L9 17l-5-5"/>
             </svg>
             <h2 class="brand-title">حاضر</h2>
           </div>
@@ -760,9 +797,11 @@
       if (brandWrap && brandCircle) {
         brandWrap.addEventListener("animationend", function onEnd(e) {
           if (e.target !== brandWrap) return;
-          brandCircle.classList.add("pulsing");
+          brandCircle.classList.add("drawing");
           brandWrap.removeEventListener("animationend", onEnd);
         });
+        // شبكة أمان: إذا تعطّل حدث animationend لأي سبب، فعّل الرسم بعد فترة معقولة
+        setTimeout(() => brandCircle.classList.add("drawing"), 6000);
       }
 
       document.querySelectorAll(".cascade-item").forEach((el) => {
