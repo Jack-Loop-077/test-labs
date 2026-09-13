@@ -561,10 +561,10 @@ body.staff .adm{display:none!important}
             <div class="field"><label class="lbl">المختبر</label><select class="sel" id="selLab"></select></div>
           </div>
           <div class="grid g2" style="margin-top:10px">
-            <div class="field"><label class="lbl">الدراسة</label><select class="sel" id="selShift"><option>صباحي</option><option>مسائي</option></select></div>
             <div class="field"><label class="lbl">التاريخ</label><input class="inp" type="date" id="selDate"></div>
+            <div class="field" style="justify-content:end"><button class="btn btn-p" id="btnApplySession" style="width:100%">تطبيق الجلسة</button></div>
           </div>
-          <p class="hint" style="margin-top:8px">غيّر التاريخ للرجوع وتعديل يوم سابق - المختبر هنا يخص هذي الجلسة تحديداً.</p>
+          <p class="hint" id="sessionApplyHint" style="margin-top:8px">اختر المرحلة والمادة والشعبة والمختبر، ثم اضغط «تطبيق الجلسة» لعرض الطلاب. تغيير الفلاتر لا يغيّر الجلسة الحالية حتى تضغط التطبيق.</p>
         </div>
       </div>
 
@@ -636,7 +636,7 @@ body.staff .adm{display:none!important}
       <div id="bulkBar"><div class="row">
         <span class="chip" style="flex:none">محدد <b id="bulkCount" style="margin-inline-start:4px;color:var(--prim)">0</b></span>
         <span style="flex:1"></span>
-        <button class="btn btn-sm btn-p" id="bulkMove">نقل…</button>
+        <button class="btn btn-sm btn-p" id="bulkMove">نقل / دراسة…</button>
         <button class="btn btn-sm btn-g" id="bulkStatus">الحالة…</button>
         <button class="btn btn-sm btn-g adm" id="bulkDel" style="color:var(--no)">حذف</button>
         <button class="btn btn-sm btn-g" id="bulkCancel">إلغاء</button>
@@ -791,9 +791,11 @@ body.staff .adm{display:none!important}
           <span class="chip" data-wk="lastweek">الأسبوع الماضي</span>
           <span class="chip" data-wk="month">هذا الشهر</span>
         </div>
-        <button class="btn btn-p" id="btnWeeklyExport" style="width:100%">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-          تصدير كل جلسات المدى (ملف ZIP)
+        <button class="btn btn-g" id="btnWeeklyPreview" style="width:100%">معاينة جلسات المدى</button>
+        <div id="wkPreview" style="margin-top:12px"></div>
+        <button class="btn btn-p" id="btnWeeklyExport" style="width:100%;display:none;margin-top:10px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 2 2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          تصدير الجلسات المحددة (ZIP)
         </button>
         <p class="hint" id="wkStatus" style="margin-top:8px"></p>
       </div>
@@ -1214,6 +1216,7 @@ $("#view-attend").classList.add("active");
 
 /* ═══════════════ شاشة تسجيل الحضور ═══════════════ */
 let sel = { stage: "", subjectId: "", section: "", lab: "", shift: "صباحي", date: todayStr() };
+let pendingSession = { stage: "", subjectId: "", section: "", lab: "", date: todayStr() };
 try { Object.assign(sel, JSON.parse(localStorage.getItem("hadhir.sel") || "{}")); } catch {}
 sel.date = todayStr();
 if (sel.shift !== "مسائي") sel.shift = "صباحي";
@@ -1234,13 +1237,16 @@ function fillPickers() {
   /* لو المرحلة/المختبر المحفوظين خارج نطاق الأستاذ، رجّعهم فاضي حتى ما يشتغل بيانات مو مسؤول عنها */
   if (sel.stage && !myStages.includes(sel.stage)) sel.stage = "";
   if (sel.lab && !myLabs.includes(sel.lab)) sel.lab = "";
-  if (!myShifts.includes(sel.shift)) sel.shift = myShifts[0] || "صباحي";
-  fillSelect($("#selStage"), myStages, sel.stage, "- اختر المرحلة -");
+  fillSelect($("#selStage"), myStages, pendingSession.stage, "- اختر المرحلة -");
   fillSelect($("#selSection"), settings.sections, sel.section, "كل الشعب");
-  fillSelect($("#selLab"), myLabs, sel.lab, "- اختر المختبر -");
-  fillSubjectSel();
-  fillSelect($("#selShift"), myShifts, sel.shift, null);
-  $("#selDate").value = sel.date;
+  fillSelect($("#selLab"), myLabs, pendingSession.lab, "- اختر المختبر -");
+  const pendingSubjects = subjects.filter(s => s.stage === pendingSession.stage);
+  fillSelect($("#selSubject"), pendingSubjects.map(s => s.id), pendingSession.subjectId, null);
+  [...$("#selSubject").options].forEach(o => {
+    const x = pendingSubjects.find(s => s.id === o.value);
+    if (x) o.textContent = x.name;
+  });
+  $("#selDate").value = pendingSession.date || todayStr();
   // فلاتر السجل
   fillSelect($("#rStage"), myStages, myStages.includes($("#rStage").value) ? $("#rStage").value : "", "كل المراحل");
   fillSelect($("#rSection"), settings.sections, $("#rSection").value, "كل الشعب");
@@ -1271,22 +1277,38 @@ function fillRSubject() {
   $("#rSubject").innerHTML = h;
 }
 
-["selStage", "selSubject", "selSection", "selLab", "selShift", "selDate"].forEach(id => {
+["selStage", "selSubject", "selSection", "selLab", "selDate"].forEach(id => {
   $("#" + id).addEventListener("change", () => {
-    sel.stage   = $("#selStage").value;
-    if (id === "selStage") { sel.subjectId = ""; fillSubjectSel(); }
-    sel.subjectId = $("#selSubject").value;
-    sel.section = $("#selSection").value;
-    sel.lab     = $("#selLab").value;
-    sel.shift   = $("#selShift").value || "صباحي";
-    sel.date    = $("#selDate").value || todayStr();
-    localStorage.setItem("hadhir.sel", JSON.stringify(sel));
-    rosterStFilter = "";
-    showHosted = false;
-    if (sel.stage && sel.subjectId && sel.lab) { sessCollapsed = true; pushRecent(); }
-    renderAttend();
+    pendingSession.stage = $("#selStage").value;
+    if (id === "selStage") { pendingSession.subjectId = ""; fillPickers(); }
+    pendingSession.subjectId = $("#selSubject").value;
+    pendingSession.section = $("#selSection").value;
+    pendingSession.lab = $("#selLab").value;
+    pendingSession.date = $("#selDate").value || todayStr();
+    $("#sessionApplyHint").textContent = "تغييراتك محفوظة كاختيارات معلّقة. اضغط «تطبيق الجلسة» حتى تُعرض القائمة.";
   });
 });
+
+function applySessionFromForm() {
+  const p = {
+    stage: $("#selStage").value,
+    subjectId: $("#selSubject").value,
+    section: $("#selSection").value,
+    lab: $("#selLab").value,
+    date: $("#selDate").value || todayStr()
+  };
+  if (!p.stage || !p.subjectId || !p.lab) {
+    toast("اختر المرحلة والمادة والمختبر أولاً", "err");
+    return;
+  }
+  sel.stage=p.stage; sel.subjectId=p.subjectId; sel.section=p.section; sel.lab=p.lab; sel.date=p.date; sel.shift="";
+  pendingSession={...p};
+  localStorage.setItem("hadhir.sel", JSON.stringify(sel));
+  rosterStFilter=""; showHosted=false; sessCollapsed=false;
+  renderAttend(); updateSessCard();
+  $("#sessionApplyHint").textContent="تم تطبيق الجلسة. تغيير الفلاتر لا يؤثر حتى تضغط «تطبيق الجلسة» مرة ثانية.";
+}
+$("#btnApplySession").onclick = applySessionFromForm;
 
 function subscribeAtt() {
   const key = sel.date + "|" + sel.subjectId;
@@ -1743,7 +1765,7 @@ function openGuestPicker() {
       '<span class="avatar ' + avCls(s.name) + '">' + esc((s.name || "؟").trim()[0] || "؟") + '</span><span class="smain"><b>' + esc(s.name) +
       '</b><span class="meta"><span class="tag">' + esc(s.stage) + "</span>" +
       (s.lab ? '<span class="tag t-lab">' + esc(s.lab) + "</span>" : '<span class="tag">متنقّل</span>') +
-      ((s.shift || "صباحي") === "مسائي" ? '<span class="tag">مسائي</span>' : "") +
+      ('<span class="tag">' + esc(s.shift || "غير محدد") + '</span>') +
       (s.section ? '<span class="tag">شعبة ' + esc(s.section) + "</span>" : "") + "</span></span>" +
       '<span class="chip" style="color:var(--ok)">' + ICO.check + " حاضر</span></button>").join("")
       : '<div class="empty"><p>ماكو نتائج - تأكد الطالب فعّال وغير مسجَّل بهذه الجلسة أصلاً.</p></div>';
@@ -2069,102 +2091,125 @@ async function exportStyledXLSX(filename, sheets) {
   URL.revokeObjectURL(a.href);
 }
 const stTxt = s => (STATUS[s] || {}).txt || s;
-/* ═══════════════ التصدير الأسبوعي - كل جلسة ملف Excel منفصل بروحه ═══════════════ */
+/* ═══════════════ التصدير الأسبوعي - معاينة ثم تحديد ثم تصدير ═══════════════ */
 const SESS_COLS = [
   { header: "اسم الطالب", key: "name", width: 28, align: "right" },
   { header: "المرحلة", key: "stage", width: 16 },
   { header: "الشعبة", key: "section", width: 9 },
   { header: "الحالة", key: "status", width: 10 }
 ];
-function sessionKey(r) { return r.date + "␟" + r.subjectId + "␟" + (r.lab || "") + "␟" + (r.shift || "صباحي"); }
-async function exportWeeklySessions(fromD, toD) {
+function sessionKey(r) { return r.date + "␟" + r.subjectId + "␟" + (r.lab || "") + "␟" + (r.sessionShift || r.shift || "صباحي"); }
+let weeklyGroups = new Map();
+let weeklySelected = new Set();
+
+function weeklyGroupLabel(rows) {
+  const r = rows[0], subj = subjects.find(s => s.id === r.subjectId);
+  return (subj ? subj.name : r.subjectName || "مادة") + " • " + fmtDate(r.date) +
+    " • " + (r.lab || "بدون مختبر") + " • " + (r.sessionShift || r.shift || "صباحي");
+}
+function renderWeeklyPreview() {
+  const box = $("#wkPreview"), exp = $("#btnWeeklyExport");
+  if (!box) return;
+  if (!weeklyGroups.size) {
+    box.innerHTML = '<div class="empty">' + ICO.calendar + '<p>لا توجد جلسات ضمن المدى المحدد.</p></div>';
+    if (exp) exp.style.display = "none";
+    return;
+  }
+  const all = [...weeklyGroups.keys()];
+  const selectedCount = all.filter(k => weeklySelected.has(k)).length;
+  box.innerHTML =
+    '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:9px">' +
+      '<b style="font-size:13.5px">الجلسات المتاحة: ' + all.length + '</b>' +
+      '<span class="hint">المحدد: ' + selectedCount + '</span><span style="flex:1"></span>' +
+      '<button class="btn btn-sm btn-g" id="wkSelectAll">تحديد الكل</button>' +
+      '<button class="btn btn-sm btn-g" id="wkClearAll">إلغاء الكل</button>' +
+    '</div>' +
+    all.map((k, i) => {
+      const rows = weeklyGroups.get(k), r = rows[0];
+      const c = {present:0, absent:0, excused:0};
+      rows.forEach(x => c[x.status] = (c[x.status] || 0) + 1);
+      return '<label class="rec" style="cursor:pointer;align-items:flex-start">' +
+        '<input type="checkbox" class="wkPick" data-wk-key="' + esc(k) + '" ' + (weeklySelected.has(k) ? 'checked' : '') + ' style="width:18px;height:18px;accent-color:var(--prim);margin-top:3px;flex:none">' +
+        '<span class="rmain"><b>' + esc(weeklyGroupLabel(rows)) + '</b><span class="meta">' +
+          esc((r.stage || "-") + (r.section ? " • شعبة " + r.section : "") + " • " + rows.length + " طالب") +
+          ' • <span style="color:var(--ok)">حاضر ' + c.present + '</span> • <span style="color:var(--no)">غائب ' + c.absent + '</span> • <span style="color:var(--ex)">مجاز ' + c.excused + '</span>' +
+        '</span></span></label>';
+    }).join("");
+  if (exp) exp.style.display = selectedCount ? "" : "none";
+}
+async function loadWeeklyPreview(fromD, toD) {
   const st = $("#wkStatus");
   st.textContent = "…جاري جلب السجلات";
-  let recs;
+  weeklyGroups = new Map(); weeklySelected = new Set();
   try {
-    const snap = await getDocs(query(collection(db, "attendance"), where("date", ">=", fromD), where("date", "<=", toD))); trackRead("docs", snap.size);
-    recs = snap.docs.map(d => d.data());
-  } catch (e) { st.textContent = "تعذّر الجلب: " + (e.code || e.message); return; }
-  if (!recs.length) { st.textContent = "ماكو سجلات حضور بهذا المدى."; return; }
-
-  const groups = new Map();
-  recs.forEach(r => {
-    const k = sessionKey(r);
-    if (!groups.has(k)) groups.set(k, []);
-    groups.get(k).push(r);
-  });
-
+    const snap = await getDocs(query(collection(db, "attendance"), where("date", ">=", fromD), where("date", "<=", toD)));
+    trackRead("docs", snap.size);
+    snap.docs.map(d => d.data()).forEach(r => {
+      const k = sessionKey(r);
+      if (!weeklyGroups.has(k)) weeklyGroups.set(k, []);
+      weeklyGroups.get(k).push(r);
+    });
+    renderWeeklyPreview();
+    st.textContent = weeklyGroups.size ? "حدد الجلسات التي تريد تصديرها ثم اضغط زر التصدير." : "ماكو سجلات حضور بهذا المدى.";
+  } catch (e) { st.textContent = "تعذّر الجلب: " + (e.code || e.message); }
+}
+async function exportWeeklySessions(fromD, toD, selectedKeys) {
+  const st = $("#wkStatus");
+  const groups = new Map([...weeklyGroups].filter(([k]) => selectedKeys.has(k)));
+  if (!groups.size) { toast("حدد جلسة واحدة على الأقل", "err"); return; }
   st.textContent = "…جاري بناء " + groups.size + " ملف منفصل";
   await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js");
-  const zip = new JSZip();
-  const usedNames = new Set();
+  const zip = new JSZip(), usedNames = new Set();
   let i = 0;
   for (const [, rows] of groups) {
     i++;
-    const r0 = rows[0];
-    const subj = subjects.find(s => s.id === r0.subjectId);
-    const rowsSorted = rows.slice().sort((a, b) => (a.studentName || "").localeCompare(b.studentName || "", "ar"));
-    const c = { present: 0, absent: 0, excused: 0 };
+    const r0 = rows[0], subj = subjects.find(s => s.id === r0.subjectId);
+    const rowsSorted = rows.slice().sort((a,b) => (a.studentName||"").localeCompare(b.studentName||"","ar"));
+    const c = {present:0, absent:0, excused:0};
     rowsSorted.forEach(r => c[r.status] = (c[r.status] || 0) + 1);
     const blob = await buildXLSXBlob([{
-      name: "الجلسة",
-      title: (subj ? subj.name : r0.subjectName || "مادة") + " - " + fmtDate(r0.date),
-      meta: "المختبر: " + (r0.lab || "-") + "  •  الدراسة: " + (r0.shift || "صباحي") + "  •  المرحلة: " + (r0.stage || "-") + "  •  " + rowsSorted.length + " طالب",
-      summary: [
-        { label: "الجلسات", value: rowsSorted.length },
-        { label: "حاضر", value: c.present || 0, fg: XLC.ok, bg: XLC.okBg },
-        { label: "غائب", value: c.absent || 0, fg: XLC.no, bg: XLC.noBg },
-        { label: "مجاز", value: c.excused || 0, fg: XLC.ex, bg: XLC.exBg }
-      ],
-      columns: SESS_COLS,
-      rows: rowsSorted.map(r => ({ name: r.studentName || "", stage: r.stage || "", section: r.section || "", status: stTxt(r.status) })),
-      tab: "FF0F766E"
+      name:"الجلسة", title:(subj ? subj.name : r0.subjectName || "مادة") + " - " + fmtDate(r0.date),
+      meta:"المختبر: " + (r0.lab || "-") + " • الدراسة: " + (r0.sessionShift || r0.shift || "صباحي") + " • المرحلة: " + (r0.stage || "-") + " • " + rowsSorted.length + " طالب",
+      summary:[{label:"الطلاب",value:rowsSorted.length},{label:"حاضر",value:c.present||0,fg:XLC.ok,bg:XLC.okBg},{label:"غائب",value:c.absent||0,fg:XLC.no,bg:XLC.noBg},{label:"مجاز",value:c.excused||0,fg:XLC.ex,bg:XLC.exBg}],
+      columns:SESS_COLS,
+      rows:rowsSorted.map(r=>({name:r.studentName||"",stage:r.stage||"",section:r.section||"",status:stTxt(r.status)})), tab:"FF0F766E"
     }]);
-    let fname = "حاضر - " + r0.date + " - " + (subj ? subj.name : "مادة") + " - " + (r0.lab || "بدون مختبر") + " - " + (r0.shift || "صباحي") + ".xlsx";
-    fname = fname.replace(/[\\/?*\[\]:]/g, "-");
-    let base = fname, k = 2;
-    while (usedNames.has(fname)) fname = base.replace(".xlsx", "") + " (" + (k++) + ").xlsx";
-    usedNames.add(fname);
-    zip.file(fname, blob);
-    st.textContent = "…" + i + "/" + groups.size + " (" + fname.slice(0, 40) + "…)";
+    let fname = "حاضر - " + r0.date + " - " + (subj ? subj.name : "مادة") + " - " + (r0.lab || "بدون مختبر") + " - " + (r0.sessionShift || r0.shift || "صباحي") + ".xlsx";
+    fname=fname.replace(/[\\/?*\[\]:]/g,"-"); const base=fname; let n=2;
+    while(usedNames.has(fname)) fname=base.replace(".xlsx","")+" ("+(n++)+").xlsx";
+    usedNames.add(fname); zip.file(fname,blob); st.textContent="…"+i+"/"+groups.size;
   }
-  st.textContent = "…جاري ضغط الملف النهائي";
-  const zipBlob = await zip.generateAsync({ type: "blob" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(zipBlob);
-  a.download = "حاضر - تصدير أسبوعي " + fromD + " إلى " + toD + ".zip";
-  a.click(); URL.revokeObjectURL(a.href);
-  st.textContent = "تم - " + groups.size + " جلسة منفصلة داخل ملف ZIP واحد";
-  audit("weekly_export", "تصدير أسبوعي: " + fromD + " إلى " + toD + " - " + groups.size + " جلسة");
+  const zipBlob=await zip.generateAsync({type:"blob"}), a=document.createElement("a");
+  a.href=URL.createObjectURL(zipBlob); a.download="حاضر - تصدير محدد "+fromD+" إلى "+toD+".zip"; a.click(); URL.revokeObjectURL(a.href);
+  st.textContent="تم تصدير " + groups.size + " جلسة محددة.";
+  audit("weekly_export","تصدير أسبوعي محدد: "+fromD+" إلى "+toD+" - "+groups.size+" جلسة");
 }
 function weekRange(kind) {
-  const now = new Date(); const d = new Date(now);
-  if (kind === "week" || kind === "lastweek") {
-    const dow = d.getDay(); // 0=Sun
-    d.setDate(d.getDate() - dow - (kind === "lastweek" ? 7 : 0));
-    const from = new Date(d); const to = new Date(d); to.setDate(to.getDate() + 6);
-    return [ymd(from), ymd(to)];
-  }
-  const from = new Date(now.getFullYear(), now.getMonth(), 1);
-  const to = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-  return [ymd(from), ymd(to)];
+  const now=new Date(), d=new Date(now);
+  if(kind==="week"||kind==="lastweek"){const dow=d.getDay();d.setDate(d.getDate()-dow-(kind==="lastweek"?7:0));const from=new Date(d),to=new Date(d);to.setDate(to.getDate()+6);return [ymd(from),ymd(to)];}
+  return [ymd(new Date(now.getFullYear(),now.getMonth(),1)),ymd(new Date(now.getFullYear(),now.getMonth()+1,0))];
 }
-function ymd(d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
-$("#wkPresets").addEventListener("click", e => {
-  const c = e.target.closest("[data-wk]"); if (!c) return;
-  const [f, t] = weekRange(c.dataset.wk);
-  $("#wkFrom").value = f; $("#wkTo").value = t;
+function ymd(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+$("#wkPresets").addEventListener("click",e=>{const c=e.target.closest("[data-wk]");if(!c)return;const [f,t]=weekRange(c.dataset.wk);$("#wkFrom").value=f;$("#wkTo").value=t;});
+(function(){const [f,t]=weekRange("week");$("#wkFrom").value=f;$("#wkTo").value=t;})();
+$("#wkPreview").addEventListener("change",e=>{
+  const cb=e.target.closest(".wkPick"); if(!cb)return;
+  if(cb.checked) weeklySelected.add(cb.dataset.wkKey); else weeklySelected.delete(cb.dataset.wkKey);
+  renderWeeklyPreview();
 });
-(function () { const [f, t] = weekRange("week"); $("#wkFrom").value = f; $("#wkTo").value = t; })();
-$("#btnWeeklyExport").onclick = async function () {
-  if (!requireAdmin()) return;
-  const f = $("#wkFrom").value, t = $("#wkTo").value;
-  if (!f || !t) { toast("حدد المدى أولاً", "err"); return; }
-  if (f > t) { toast("تاريخ البداية بعد النهاية؟", "err"); return; }
-  this.disabled = true;
-  try { await exportWeeklySessions(f, t); }
-  catch (e) { $("#wkStatus").textContent = "خطأ: " + (e.message || e); }
-  this.disabled = false;
+$("#wkPreview").addEventListener("click",e=>{
+  if(e.target.closest("#wkSelectAll")) { weeklySelected=new Set(weeklyGroups.keys()); renderWeeklyPreview(); }
+  if(e.target.closest("#wkClearAll")) { weeklySelected.clear(); renderWeeklyPreview(); }
+});
+$("#btnWeeklyPreview").onclick=async function(){
+  if(!requireAdmin())return; const f=$("#wkFrom").value,t=$("#wkTo").value;
+  if(!f||!t||f>t){toast("تحقق من المدى الزمني","err");return;}
+  this.disabled=true; await loadWeeklyPreview(f,t); this.disabled=false;
+};
+$("#btnWeeklyExport").onclick=async function(){
+  if(!requireAdmin())return; const f=$("#wkFrom").value,t=$("#wkTo").value;
+  if(!f||!t||f>t){toast("تحقق من المدى الزمني","err");return;}
+  this.disabled=true; try{await exportWeeklySessions(f,t,weeklySelected);}catch(e){$("#wkStatus").textContent="خطأ: "+(e.message||e);} this.disabled=false;
 };
 const REC_COLS = [
   { header: "التاريخ", key: "date", width: 13 },
