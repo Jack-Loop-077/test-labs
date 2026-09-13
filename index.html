@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" style="color-scheme: light;">
+<html lang="ar" dir="rtl" style="color-scheme: light only;">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
   <!-- إجبار النظام والمتصفح على استخدام الوضع الفاتح فقط -->
-  <meta name="color-scheme" content="light" />
+  <meta name="color-scheme" content="light only" />
   <meta name="supported-color-schemes" content="light" />
+  <meta name="darkreader-lock" />
   <meta name="theme-color" content="#087f5b" />
   <meta name="robots" content="noindex, nofollow" />
   <title>تسجيل الدخول - حاضر</title>
@@ -22,7 +23,7 @@
        1. المتغيرات والقواعد الأساسية (مع قفل الوضع الليلي)
        ========================================================================== */
     :root {
-      color-scheme: light !important;
+      color-scheme: light only !important;
       --primary: #087f5b;
       --primary-dark: #056044;
       --primary-light: #e7f5ef;
@@ -41,7 +42,7 @@
     }
 
     @media (prefers-color-scheme: dark) {
-      :root { color-scheme: light !important; }
+      :root { color-scheme: light only !important; }
       html, body {
         background-color: var(--bg-main) !important;
         color: var(--text-main) !important;
@@ -70,7 +71,7 @@
       width: 100%;
       height: 100%;
       overflow-x: hidden;
-      color-scheme: light;
+      color-scheme: light only;
       scrollbar-color: var(--border-color) var(--bg-main);
     }
 
