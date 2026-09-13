@@ -8,6 +8,7 @@
   <meta name="color-scheme" content="light" />
   <meta name="supported-color-schemes" content="light" />
   <meta name="theme-color" content="#087f5b" />
+  <meta name="robots" content="noindex, nofollow" />
   <title>تسجيل الدخول - حاضر</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23087f5b'/%3E%3Cpath d='M18 33l10 10 18-20' stroke='%23fff' stroke-width='7' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 
@@ -69,6 +70,13 @@
       width: 100%;
       height: 100%;
       overflow-x: hidden;
+      color-scheme: light;
+      scrollbar-color: var(--border-color) var(--bg-main);
+    }
+
+    ::selection {
+      background: var(--primary-light);
+      color: var(--primary-dark);
     }
 
     body {
@@ -183,6 +191,38 @@
       font: inherit;
       font-weight: 700;
       cursor: pointer;
+    }
+
+    /* بانر انقطاع الاتصال بالإنترنت */
+    .offline-banner {
+      width: 100%;
+      max-width: 480px;
+      background: #fff6e0;
+      border: 1px solid #f4dd9c;
+      color: #7a5b00;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      text-align: center;
+    }
+    .offline-banner[hidden] { display: none; }
+
+    /* رسالة احتياطية إذا كان الجافاسكربت متوقفاً بالمتصفح */
+    .noscript-banner {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: var(--bg-main);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 32px;
+      font-size: 14.5px;
+      font-weight: 700;
+      line-height: 1.9;
     }
 
     /* ==========================================================================
@@ -401,7 +441,7 @@
       background-color: #ffffff !important;
       color: var(--text-main) !important;
       font-family: inherit;
-      font-size: clamp(13.5px, 3vw, 15px);
+      font-size: clamp(16px, 3.2vw, 16.5px);
       outline: none;
       padding: 0 44px 0 44px;
       direction: ltr;
@@ -523,9 +563,17 @@
 
 <body>
 
+  <noscript>
+    <div class="noscript-banner">
+      هذه الصفحة تحتاج تفعيل الجافاسكربت بالمتصفح حتى تشتغل - فعّله من إعدادات المتصفح وأعد التحميل.
+    </div>
+  </noscript>
+
   <div class="page-background" aria-hidden="true"></div>
 
   <main class="page-wrapper">
+
+    <div class="offline-banner" id="offlineBanner" hidden>لا يوجد اتصال بالإنترنت حالياً - تسجيل الدخول يحتاج اتصالاً.</div>
 
     <!-- حالة التحميل: تظهر لحد ما نتحقق من جلسة الدخول عبر Firebase -->
     <div class="boot-spinner" id="chk"></div>
@@ -739,6 +787,11 @@
     async function doLogin() {
       const btn = $("#submitBtn"), label = $("#submitBtnLabel"), icon = $("#submitBtnIcon"), errB = $("#formError");
       errB.classList.remove("show");
+      if (!navigator.onLine) {
+        errB.textContent = "لا يوجد اتصال بالإنترنت - تأكد من الشبكة وحاول مجدداً.";
+        errB.classList.add("show");
+        return;
+      }
       btn.disabled = true;
       icon.style.display = "none";
       label.insertAdjacentHTML("beforebegin", '<span class="btn-spin" id="btnSpin"></span>');
@@ -794,6 +847,16 @@
           el.removeEventListener("animationend", onEnd);
         });
       });
+
+      // بانر انقطاع الاتصال بالإنترنت
+      const offlineBanner = document.getElementById("offlineBanner");
+      function updateOnlineStatus() {
+        if (!offlineBanner) return;
+        offlineBanner.hidden = navigator.onLine;
+      }
+      window.addEventListener("online", updateOnlineStatus);
+      window.addEventListener("offline", updateOnlineStatus);
+      updateOnlineStatus();
     });
   </script>
 
