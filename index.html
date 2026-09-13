@@ -2,6 +2,15 @@
 <html lang="ar" dir="rtl" style="color-scheme: light only;">
 <head>
   <meta charset="UTF-8" />
+  <meta name="referrer" content="no-referrer" />
+  <script>
+    // حماية من هجمات clickjacking: لو حد حاول يحمّل هذي الصفحة داخل iframe
+    // بموقع ثاني (يخفيها ويخلي المستخدم يدخل بياناته بدون ما يشعر)، نكسر
+    // الإطار فورًا ونطلع بالصفحة الحقيقية.
+    if (window.top !== window.self) {
+      window.top.location = window.self.location;
+    }
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
   <!-- إجبار النظام والمتصفح على استخدام الوضع الفاتح فقط -->
