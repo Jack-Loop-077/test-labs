@@ -1312,7 +1312,7 @@ function isActive(s) {
 function rosterStudents() {
   return students.filter(s =>
     isActive(s) && s.stage === sel.stage && (!s.lab || s.lab === sel.lab) &&
-    (s.shift || "صباحي") === sel.shift && (!sel.section || s.section === sel.section));
+    (s.attendShift || s.shift || "صباحي") === sel.shift && (!sel.section || s.section === sel.section));
 }
 
 function renderAttend() {
@@ -1438,9 +1438,11 @@ function renderRoster() {
       i++;
       const r = attRecords.get(s.id);
       const byOther = r && r.recordedBy && user && r.recordedBy !== user.email;
+      const crossShift = (s.attendShift || s.shift || "صباحي") !== (s.shift || "صباحي");
       h += '<div class="roster-item" data-sid="' + esc(s.id) + '"' + (r ? ' data-st="' + r.status + '"' : "") +
         '><span class="num">' + i + '</span><div class="rname"><b>' + esc(s.name) +
         '</b><span class="meta">' + esc([s.section ? "شعبة " + s.section : "", !s.lab ? "متنقّل - بدون مختبر" : "", s.acadStatus === "returned" ? "عائد" : ""].filter(Boolean).join(" • ")) +
+        (crossShift ? '<span class="badge-host" style="background:rgba(8,145,178,.12);color:#0E7490;border-color:rgba(8,145,178,.35)" title="دراسته الرسمية مختلفة عن جلسة حضوره">دراسته ' + esc(s.shift || "صباحي") + '</span>' : "") +
         (byOther ? '<span class="badge-host" style="background:rgba(217,119,6,.14);color:#B45309;border-color:rgba(217,119,6,.35)" title="سجّلها هذا الأستاذ - انتبه قبل لا تغيّرها">سجّلها ' + esc(r.recordedByName || r.recordedBy) + '</span>' : "") +
         "</span></div>" +
         segHTML(r, s.id) + "</div>";
@@ -1618,7 +1620,7 @@ async function setStatus(studentId, status) {
     if (rec && rec.status === status) { await deleteDoc(doc(db, "attendance", docId)); return; }
     const subj = subjects.find(x => x.id === sel.subjectId);
     const base = s
-      ? { studentName: s.name, stage: s.stage, section: s.section || "", lab: s.lab || sel.lab, shift: s.shift || "صباحي" }
+      ? { studentName: s.name, stage: s.stage, section: s.section || "", lab: s.lab || sel.lab, shift: s.attendShift || s.shift || "صباحي" }
       : { studentName: rec.studentName, stage: rec.stage, section: rec.section || "", lab: rec.lab, shift: rec.shift || "صباحي" };
     await setDoc(doc(db, "attendance", docId), {
       studentId, ...base,
@@ -1665,7 +1667,7 @@ async function fillRemaining(status) {
       const batch = writeBatch(db);
       roster.slice(i, i + 400).forEach(s => {
         batch.set(doc(db, "attendance", sel.date + "_" + sel.subjectId + "_" + s.id), {
-          studentId: s.id, studentName: s.name, stage: s.stage, section: s.section || "", lab: s.lab || sel.lab, shift: s.shift || "صباحي",
+          studentId: s.id, studentName: s.name, stage: s.stage, section: s.section || "", lab: s.lab || sel.lab, shift: s.attendShift || s.shift || "صباحي",
           subjectId: sel.subjectId, subjectName: subj ? subj.name : "",
           date: sel.date, status, sessionLab: sel.lab, sessionShift: sel.shift,
           recordedBy: user ? user.email : "", recordedByName: actorName(), updatedAt: serverTimestamp()
@@ -1693,14 +1695,14 @@ function openGuestPicker() {
     const t = inp.value.trim();
     if (t.length < 2) { list.innerHTML = '<div class="empty"><p>اكتب حرفين على الأقل من اسم الطالب للبحث.</p></div>'; return; }
     const items = students.filter(s => isActive(s) &&
-      !(s.stage === sel.stage && (!s.lab || s.lab === sel.lab) && (s.shift || "صباحي") === sel.shift) &&
+      !(s.stage === sel.stage && (!s.lab || s.lab === sel.lab) && (s.attendShift || s.shift || "صباحي") === sel.shift) &&
       !attRecords.has(s.id) && s.name.includes(t));
     list.innerHTML = items.length ? items.slice(0, 60).map(s =>
       '<button class="st" style="width:100%;text-align:right" data-id="' + esc(s.id) + '">' +
       '<span class="avatar ' + avCls(s.name) + '">' + esc((s.name || "؟").trim()[0] || "؟") + '</span><span class="smain"><b>' + esc(s.name) +
       '</b><span class="meta"><span class="tag">' + esc(s.stage) + "</span>" +
       (s.lab ? '<span class="tag t-lab">' + esc(s.lab) + "</span>" : '<span class="tag">متنقّل</span>') +
-      ((s.shift || "صباحي") === "مسائي" ? '<span class="tag">مسائي</span>' : "") +
+      ((s.attendShift || s.shift || "صباحي") === "مسائي" ? '<span class="tag">مسائي</span>' : "") +
       (s.section ? '<span class="tag">شعبة ' + esc(s.section) + "</span>" : "") + "</span></span>" +
       '<span class="chip" style="color:var(--ok)">' + ICO.check + " حاضر</span></button>").join("")
       : '<div class="empty"><p>ماكو نتائج - تأكد الطالب فعّال وغير مسجَّل بهذه الجلسة أصلاً.</p></div>';
@@ -2375,7 +2377,9 @@ function studentModal(s) {
     '<div class="field"><label class="lbl">المرحلة</label><select class="sel" id="fStage"></select></div>' +
     '<div class="field"><label class="lbl">الشعبة</label><select class="sel" id="fSection"></select></div>' +
     '<div class="field"><label class="lbl">المختبر</label><select class="sel" id="fLab"></select></div>' +
-    '<div class="field"><label class="lbl">الدراسة</label><select class="sel" id="fShift"><option>صباحي</option><option>مسائي</option></select></div></div>' +
+    '<div class="field"><label class="lbl">الدراسة</label><select class="sel" id="fShift"><option>صباحي</option><option>مسائي</option></select></div>' +
+    '<div class="field"><label class="lbl">الحضور (الجلسة الفعلية)</label><select class="sel" id="fAttendShift"><option>صباحي</option><option>مسائي</option></select></div></div>' +
+    '<p class="hint" style="margin-top:8px">"الدراسة" هو نظام قبول الطالب الرسمي. "الحضور" يحدد بأي جلسة يطلع بقائمتك - إذا يحضر بشفت غير دراسته، بدّله هنا بس.</p>' +
     (s ? '<div class="grid g2" style="margin-top:10px">' +
          '<div class="field"><label class="lbl">الحالة</label><select class="sel" id="fGrad"><option value="active">مستمر</option><option value="returned">عائد</option><option value="deferred">مؤجل</option><option value="suspended">مرقّن قيد</option><option value="grad">خريج</option></select></div>' +
          '<div class="field"><label class="lbl">النظام (خاص بالطالب)</label><select class="sel" id="fSys"><option value="">حسب المرحلة</option><option>فصلي</option><option>سنوي</option><option>كورسات</option><option>بولوني</option></select></div>' +
@@ -2385,6 +2389,7 @@ function studentModal(s) {
   fillSelect(wrap.querySelector("#fSection"), settings.sections, s ? (s.section || "") : (sel.section || ""), "بدون شعبة");
   fillSelect(wrap.querySelector("#fLab"), settings.labs, s ? (s.lab || "") : (sel.lab || settings.labs[0] || ""), "بدون مختبر - يظهر بكل المختبرات");
   wrap.querySelector("#fShift").value = s ? (s.shift || "صباحي") : (sel.shift || "صباحي");
+  wrap.querySelector("#fAttendShift").value = s ? (s.attendShift || s.shift || "صباحي") : (sel.shift || "صباحي");
   if (s) {
     wrap.querySelector("#fGrad").value = s.graduate ? "grad" : (s.acadStatus || "active");
     wrap.querySelector("#fSys").value = s.system || "";
@@ -2397,6 +2402,7 @@ function studentModal(s) {
       { label: s ? "حفظ التعديل" : "إضافة", cls: "btn-p", onClick: async btn => {
         const name = wrap.querySelector("#fName").value.trim();
         const stage = wrap.querySelector("#fStage").value, section = wrap.querySelector("#fSection").value, lab = wrap.querySelector("#fLab").value, shift = wrap.querySelector("#fShift").value;
+        const attendShift = wrap.querySelector("#fAttendShift").value;
         if (!name) { toast("اكتب اسم الطالب", "err"); return; }
         if (!stage) { toast("حدّد المرحلة", "err"); return; }
         const exDup = !s ? students.find(x => !x.graduate && x.name === name) : null;
@@ -2412,14 +2418,14 @@ function studentModal(s) {
           if (s) {
             const stat = wrap.querySelector("#fGrad").value;
             const snapBefore = { ...s }; delete snapBefore.id;
-            await updateDoc(doc(db, "students", s.id), { name, stage, section, lab, shift,
+            await updateDoc(doc(db, "students", s.id), { name, stage, section, lab, shift, attendShift,
               graduate: stat === "grad",
               acadStatus: (stat === "grad" || stat === "active") ? "" : stat,
               system: wrap.querySelector("#fSys").value || "" });
             audit("edit_student", "تعديل الطالب: " + name + " - " + stage, { collection: "students", id: s.id, data: snapBefore });
           }
           else {
-            await addDoc(collection(db, "students"), { name, stage, section, lab, shift, createdAt: serverTimestamp() });
+            await addDoc(collection(db, "students"), { name, stage, section, lab, shift, attendShift, createdAt: serverTimestamp() });
             audit("add_student", "إضافة الطالب: " + name + " - " + stage);
           }
           closeModal(); toast(s ? "حُفظ التعديل" : "أُضيف الطالب: " + name);
@@ -2476,16 +2482,19 @@ $("#bulkMove").onclick = () => {
     '<div class="field"><label class="lbl">المرحلة</label><select class="sel" id="bmStage"><option value="__keep">- بدون تغيير -</option>' + settings.stages.map(v => "<option>" + esc(v) + "</option>").join("") + '</select></div>' +
     '<div class="field"><label class="lbl">الشعبة</label><select class="sel" id="bmSec"><option value="__keep">- بدون تغيير -</option><option value="">بدون شعبة</option>' + settings.sections.map(v => "<option>" + esc(v) + "</option>").join("") + '</select></div>' +
     '<div class="field"><label class="lbl">المختبر</label><select class="sel" id="bmLab"><option value="__keep">- بدون تغيير -</option><option value="">بدون مختبر (يظهر بالكل)</option>' + settings.labs.map(v => "<option>" + esc(v) + "</option>").join("") + '</select></div>' +
-    '<div class="field"><label class="lbl">الدراسة</label><select class="sel" id="bmShift"><option value="__keep">- بدون تغيير -</option><option>صباحي</option><option>مسائي</option></select></div></div>';
+    '<div class="field"><label class="lbl">الدراسة</label><select class="sel" id="bmShift"><option value="__keep">- بدون تغيير -</option><option>صباحي</option><option>مسائي</option></select></div>' +
+    '<div class="field"><label class="lbl">الحضور (الجلسة الفعلية)</label><select class="sel" id="bmAttendShift"><option value="__keep">- بدون تغيير -</option><option>صباحي</option><option>مسائي</option></select></div></div>';
   openModal({ title: "نقل جماعي", body: wrap, actions: [
     { label: "إلغاء", cls: "btn-g", onClick: closeModal },
     { label: "تنفيذ النقل", cls: "btn-p", onClick: async btn => {
       const st = wrap.querySelector("#bmStage").value, sc = wrap.querySelector("#bmSec").value, lb = wrap.querySelector("#bmLab").value, sf = wrap.querySelector("#bmShift").value;
+      const af = wrap.querySelector("#bmAttendShift").value;
       const upd = {};
       if (st !== "__keep") upd.stage = st;
       if (sc !== "__keep") upd.section = sc;
       if (lb !== "__keep") upd.lab = lb;
       if (sf !== "__keep") upd.shift = sf;
+      if (af !== "__keep") upd.attendShift = af;
       if (!Object.keys(upd).length) { toast("ما اخترت أي تغيير", "err"); return; }
       btn.disabled = true;
       try {
