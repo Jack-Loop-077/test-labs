@@ -419,7 +419,6 @@ main{max-width:1080px;margin-inline:auto;padding:16px 14px calc(var(--nav-h) + 4
 #view-manage .card.clp > :not(h2){display:none!important}
 
 /* الدراسة الصباحية/المسائية */
-.roster-item.hosted{border-style:dashed;border-color:var(--prim-line)}
 .badge-host{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;color:var(--prim);background:var(--prim-soft);border-radius:999px;padding:1px 8px}
 
 /* ═══ حزمة الصقل الشامل ═══ */
@@ -561,10 +560,11 @@ body.staff .adm{display:none!important}
             <div class="field"><label class="lbl">المختبر</label><select class="sel" id="selLab"></select></div>
           </div>
           <div class="grid g2" style="margin-top:10px">
+            <div class="field"><label class="lbl">الدراسة</label><select class="sel" id="selShift"><option>صباحي</option><option>مسائي</option></select></div>
             <div class="field"><label class="lbl">التاريخ</label><input class="inp" type="date" id="selDate"></div>
-            <div class="field" style="justify-content:end"><button class="btn btn-p" id="btnApplySession" style="width:100%">تطبيق الجلسة</button></div>
           </div>
-          <p class="hint" id="sessionApplyHint" style="margin-top:8px">اختر المرحلة والمادة والشعبة والمختبر، ثم اضغط «تطبيق الجلسة» لعرض الطلاب. تغيير الفلاتر لا يغيّر الجلسة الحالية حتى تضغط التطبيق.</p>
+          <p class="hint" style="margin-top:8px">غيّر التاريخ للرجوع وتعديل يوم سابق - المختبر هنا يخص هذي الجلسة تحديداً.</p>
+          <button class="btn btn-p" id="btnApplySession" style="width:100%;margin-top:12px">تطبيق الجلسة</button>
         </div>
       </div>
 
@@ -636,7 +636,7 @@ body.staff .adm{display:none!important}
       <div id="bulkBar"><div class="row">
         <span class="chip" style="flex:none">محدد <b id="bulkCount" style="margin-inline-start:4px;color:var(--prim)">0</b></span>
         <span style="flex:1"></span>
-        <button class="btn btn-sm btn-p" id="bulkMove">نقل / دراسة…</button>
+        <button class="btn btn-sm btn-p" id="bulkMove">نقل…</button>
         <button class="btn btn-sm btn-g" id="bulkStatus">الحالة…</button>
         <button class="btn btn-sm btn-g adm" id="bulkDel" style="color:var(--no)">حذف</button>
         <button class="btn btn-sm btn-g" id="bulkCancel">إلغاء</button>
@@ -791,11 +791,9 @@ body.staff .adm{display:none!important}
           <span class="chip" data-wk="lastweek">الأسبوع الماضي</span>
           <span class="chip" data-wk="month">هذا الشهر</span>
         </div>
-        <button class="btn btn-g" id="btnWeeklyPreview" style="width:100%">معاينة جلسات المدى</button>
-        <div id="wkPreview" style="margin-top:12px"></div>
-        <button class="btn btn-p" id="btnWeeklyExport" style="width:100%;display:none;margin-top:10px">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 2 2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-          تصدير الجلسات المحددة (ZIP)
+        <button class="btn btn-p" id="btnWeeklyExport" style="width:100%">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          معاينة واختيار جلسات المدى
         </button>
         <p class="hint" id="wkStatus" style="margin-top:8px"></p>
       </div>
@@ -1216,12 +1214,11 @@ $("#view-attend").classList.add("active");
 
 /* ═══════════════ شاشة تسجيل الحضور ═══════════════ */
 let sel = { stage: "", subjectId: "", section: "", lab: "", shift: "صباحي", date: todayStr() };
-let pendingSession = { stage: "", subjectId: "", section: "", lab: "", date: todayStr() };
 try { Object.assign(sel, JSON.parse(localStorage.getItem("hadhir.sel") || "{}")); } catch {}
 sel.date = todayStr();
 if (sel.shift !== "مسائي") sel.shift = "صباحي";
 let attRecords = new Map();   // studentId -> record
-let rosterQ = "", rosterStFilter = "", showHosted = false;
+let rosterQ = "", rosterStFilter = "";
 let sessCollapsed = !!(sel.stage && sel.subjectId && sel.lab);
 let attKey = "";
 
@@ -1237,16 +1234,13 @@ function fillPickers() {
   /* لو المرحلة/المختبر المحفوظين خارج نطاق الأستاذ، رجّعهم فاضي حتى ما يشتغل بيانات مو مسؤول عنها */
   if (sel.stage && !myStages.includes(sel.stage)) sel.stage = "";
   if (sel.lab && !myLabs.includes(sel.lab)) sel.lab = "";
-  fillSelect($("#selStage"), myStages, pendingSession.stage, "- اختر المرحلة -");
+  if (!myShifts.includes(sel.shift)) sel.shift = myShifts[0] || "صباحي";
+  fillSelect($("#selStage"), myStages, sel.stage, "- اختر المرحلة -");
   fillSelect($("#selSection"), settings.sections, sel.section, "كل الشعب");
-  fillSelect($("#selLab"), myLabs, pendingSession.lab, "- اختر المختبر -");
-  const pendingSubjects = subjects.filter(s => s.stage === pendingSession.stage);
-  fillSelect($("#selSubject"), pendingSubjects.map(s => s.id), pendingSession.subjectId, null);
-  [...$("#selSubject").options].forEach(o => {
-    const x = pendingSubjects.find(s => s.id === o.value);
-    if (x) o.textContent = x.name;
-  });
-  $("#selDate").value = pendingSession.date || todayStr();
+  fillSelect($("#selLab"), myLabs, sel.lab, "- اختر المختبر -");
+  fillSubjectSel();
+  fillSelect($("#selShift"), myShifts, sel.shift, null);
+  $("#selDate").value = sel.date;
   // فلاتر السجل
   fillSelect($("#rStage"), myStages, myStages.includes($("#rStage").value) ? $("#rStage").value : "", "كل المراحل");
   fillSelect($("#rSection"), settings.sections, $("#rSection").value, "كل الشعب");
@@ -1277,38 +1271,25 @@ function fillRSubject() {
   $("#rSubject").innerHTML = h;
 }
 
-["selStage", "selSubject", "selSection", "selLab", "selDate"].forEach(id => {
-  $("#" + id).addEventListener("change", () => {
-    pendingSession.stage = $("#selStage").value;
-    if (id === "selStage") { pendingSession.subjectId = ""; fillPickers(); }
-    pendingSession.subjectId = $("#selSubject").value;
-    pendingSession.section = $("#selSection").value;
-    pendingSession.lab = $("#selLab").value;
-    pendingSession.date = $("#selDate").value || todayStr();
-    $("#sessionApplyHint").textContent = "تغييراتك محفوظة كاختيارات معلّقة. اضغط «تطبيق الجلسة» حتى تُعرض القائمة.";
-  });
+$("#selStage").addEventListener("change", () => {
+  const stageVal = $("#selStage").value;
+  const list = subjects.filter(s => s.stage === stageVal);
+  $("#selSubject").innerHTML = opt("", list.length ? "- اختر المادة -" : "لا توجد مواد لهذه المرحلة", "") +
+    list.map(s => opt(s.id, s.name, "")).join("");
 });
-
-function applySessionFromForm() {
-  const p = {
-    stage: $("#selStage").value,
-    subjectId: $("#selSubject").value,
-    section: $("#selSection").value,
-    lab: $("#selLab").value,
-    date: $("#selDate").value || todayStr()
-  };
-  if (!p.stage || !p.subjectId || !p.lab) {
-    toast("اختر المرحلة والمادة والمختبر أولاً", "err");
-    return;
-  }
-  sel.stage=p.stage; sel.subjectId=p.subjectId; sel.section=p.section; sel.lab=p.lab; sel.date=p.date; sel.shift="";
-  pendingSession={...p};
+function applySession() {
+  sel.stage     = $("#selStage").value;
+  sel.subjectId = $("#selSubject").value;
+  sel.section   = $("#selSection").value;
+  sel.lab       = $("#selLab").value;
+  sel.shift     = $("#selShift").value || "صباحي";
+  sel.date      = $("#selDate").value || todayStr();
   localStorage.setItem("hadhir.sel", JSON.stringify(sel));
-  rosterStFilter=""; showHosted=false; sessCollapsed=false;
-  renderAttend(); updateSessCard();
-  $("#sessionApplyHint").textContent="تم تطبيق الجلسة. تغيير الفلاتر لا يؤثر حتى تضغط «تطبيق الجلسة» مرة ثانية.";
+  rosterStFilter = "";
+  if (sel.stage && sel.subjectId && sel.lab) { sessCollapsed = true; pushRecent(); }
+  renderAttend();
 }
-$("#btnApplySession").onclick = applySessionFromForm;
+$("#btnApplySession").onclick = applySession;
 
 function subscribeAtt() {
   const key = sel.date + "|" + sel.subjectId;
@@ -1332,13 +1313,6 @@ function rosterStudents() {
   return students.filter(s =>
     isActive(s) && s.stage === sel.stage && (!s.lab || s.lab === sel.lab) &&
     (s.shift || "صباحي") === sel.shift && (!sel.section || s.section === sel.section));
-}
-function hostedStudents() {
-  const other = sel.shift === "مسائي" ? "صباحي" : "مسائي";
-  if (!scopedShifts().includes(other)) return []; /* الأستاذ مقيّد بشفت وحد - ما يشوف استضافة من شفت مو مسؤول عنه */
-  return students.filter(s =>
-    isActive(s) && s.stage === sel.stage && (!s.lab || s.lab === sel.lab) &&
-    (s.shift || "صباحي") === other && (!sel.section || s.section === sel.section));
 }
 
 function renderAttend() {
@@ -1405,9 +1379,6 @@ function renderRoster() {
   const box = $("#roster"); if (!box) return;
   const rosterAll = rosterStudents();
   const rosterIds = new Set(rosterAll.map(s => s.id));
-  const otherShift = sel.shift === "مسائي" ? "صباحي" : "مسائي";
-  const hostedAll = hostedStudents();
-  const hostedIds = new Set(hostedAll.map(s => s.id));
   const guestRecs = [...attRecords.values()].filter(r =>
     r.sessionLab === sel.lab && (!r.sessionShift || r.sessionShift === sel.shift) && !rosterIds.has(r.studentId));
   let c = { present: 0, absent: 0, excused: 0 };
@@ -1446,7 +1417,7 @@ function renderRoster() {
     cell("unmarked", "", unmarked, "بلا تحديد") +
     "</div>";
 
-  if (!rosterAll.length && !guestRecs.length && !hostedAll.length) {
+  if (!rosterAll.length && !guestRecs.length) {
     box.innerHTML = '<div class="empty">' + ICO.users + "<p>لا يوجد طلاب (" + esc(sel.shift) + ") بهذه المرحلة في " + esc(sel.lab) +
       (sel.section ? " - شعبة " + esc(sel.section) : "") + ".<br>أضفهم من تبويب «الطلاب» أو بدّل الدراسة.</p></div>";
     return;
@@ -1455,12 +1426,10 @@ function renderRoster() {
   const passF = id => !F || (F === "unmarked" ? !attRecords.get(id) : ((attRecords.get(id) || {}).status === F));
   const roster = rosterAll.filter(s => (!q || s.name.includes(q)) && passF(s.id));
   const guestsShow = guestRecs.filter(r =>
-    !(showHosted && hostedIds.has(r.studentId)) &&
     (!q || (r.studentName || "").includes(q)) && (!F || (F !== "unmarked" && r.status === F)));
-  const hostedShow = showHosted ? hostedAll.filter(s => (!q || s.name.includes(q)) && passF(s.id)) : [];
 
   let h = "", i = 0;
-  if (!roster.length && !guestsShow.length && !hostedShow.length) {
+  if (!roster.length && !guestsShow.length) {
     h += '<div class="empty"><p>' +
       (q ? "لا نتائج للبحث «" + esc(q) + "»" : "لا أحد ضمن هذا الفلتر") +
       (F ? ' - <a href="#" id="clrF" style="color:var(--prim);font-weight:700;text-decoration:none">إلغاء الفلتر</a>' : "") + "</p></div>";
@@ -1476,19 +1445,6 @@ function renderRoster() {
         "</span></div>" +
         segHTML(r, s.id) + "</div>";
     });
-    if (hostedShow.length) {
-      h += '<p class="sec-title" style="margin:12px 0 8px">استضافة - ال' + esc(otherShift) + " (تُسجَّل على دراستهم الأصلية)</p>";
-      hostedShow.forEach(s => {
-        i++;
-        const r = attRecords.get(s.id);
-        h += '<div class="roster-item hosted" data-sid="' + esc(s.id) + '"' + (r ? ' data-st="' + r.status + '"' : "") +
-          '><span class="num">' + i + '</span><div class="rname"><b>' + esc(s.name) +
-          '</b><span class="meta"><span class="badge-host">استضافة - ' + esc(otherShift) + "</span>" +
-          (s.section ? "<span> شعبة " + esc(s.section) + "</span>" : "") +
-          (!s.lab ? "<span> • متنقّل</span>" : "") + "</span></div>" +
-          segHTML(r, s.id) + "</div>";
-      });
-    }
     guestsShow.forEach(r => {
       i++;
       const gp = [];
@@ -1499,15 +1455,9 @@ function renderRoster() {
         segHTML(r, r.studentId) + "</div>";
     });
   }
-  if (hostedAll.length) {
-    h += '<button class="btn btn-sm btn-soft" id="btnHosted" style="margin:10px auto 2px;display:flex">' +
-      (showHosted ? "إخفاء الاستضافة" : "＋ استضافة من ال" + esc(otherShift) + " (" + hostedAll.length + ")") + "</button>";
-  }
   box.innerHTML = h;
   const cf = box.querySelector("#clrF");
   if (cf) cf.onclick = ev => { ev.preventDefault(); rosterStFilter = ""; renderRoster(); };
-  const hb = box.querySelector("#btnHosted");
-  if (hb) hb.onclick = () => { showHosted = !showHosted; renderRoster(); };
 }
 
 async function clearSession() {
@@ -1540,7 +1490,11 @@ function updateSessCard() {
   tg.style.display = complete ? "" : "none";
   tg.textContent = sessCollapsed ? "تغيير الجلسة" : "طيّ";
 }
-$("#sessToggle").onclick = () => { sessCollapsed = !sessCollapsed; updateSessCard(); };
+$("#sessToggle").onclick = () => {
+  sessCollapsed = !sessCollapsed;
+  if (!sessCollapsed) fillPickers();
+  updateSessCard();
+};
 
 function loadRecents() { try { return JSON.parse(localStorage.getItem("hadhir.recents") || "[]"); } catch { return []; } }
 function pushRecent() {
@@ -1578,26 +1532,8 @@ function openRollCall() {
   guardLock(sel.date, sel.stage).then(ok => {
     if (!ok) return;
     const core = rosterStudents().filter(s => !attRecords.get(s.id));
-    const host = hostedStudents().filter(s => !attRecords.get(s.id));
-    const other = sel.shift === "مسائي" ? "صباحي" : "مسائي";
-    if (!core.length && !host.length) { toast("الكل محدد مسبقاً - ماكو «بلا تحديد» للمناداة"); return; }
-    if (!host.length) { startRollCall(core); return; }
-    if (showHosted) { startRollCall([...core, ...host]); return; }
-    if (!core.length) { showHosted = true; renderRoster(); startRollCall(host); return; }
-    openModal({
-      title: "المناداة على منو؟",
-      body: '<p style="font-size:14px">اكو <b>' + host.length + '</b> طالب استضافة من ال' + esc(other) +
-        ' بلا تحديد بهذا المختبر.</p><p class="hint" style="margin-top:6px">إذا ضمّيتهم، ينسجلون على دراستهم الأصلية (' + esc(other) + ') مثل المعتاد.</p>',
-      actions: [
-        { label: "قائمتي فقط (" + core.length + ")", cls: "btn-g", onClick: () => { closeModal(); startRollCall(core); } },
-        { label: "مع الاستضافة (" + (core.length + host.length) + ")", cls: "btn-p", onClick: () => {
-          closeModal();
-          showHosted = true;
-          renderRoster();
-          startRollCall([...core, ...host]);
-        } }
-      ]
-    });
+    if (!core.length) { toast("الكل محدد مسبقاً - ماكو «بلا تحديد» للمناداة"); return; }
+    startRollCall(core);
   });
 }
 function startRollCall(list) {
@@ -1653,7 +1589,6 @@ function startRollCall(list) {
       '<div style="text-align:center;padding:14px 6px 4px">' +
       '<span class="avatar ' + avCls(s.name) + '" style="width:58px;height:58px;font-size:23px;margin:0 auto;display:grid">' + esc((s.name || "؟").trim()[0] || "؟") + '</span>' +
       '<b style="display:block;font-size:21px;margin:12px 0 3px;line-height:1.5">' + esc(s.name) + '</b>' +
-      (((s.shift || "صباحي") !== sel.shift) ? '<div style="margin:4px 0 6px"><span class="badge-host" style="font-size:12px;padding:3px 12px">استضافة - ' + esc(s.shift || "صباحي") + '</span></div>' : "") +
       '<span class="hint">' + (esc([s.section ? "شعبة " + s.section : "", !s.lab ? "متنقّل" : "", s.acadStatus === "returned" ? "عائد" : ""].filter(Boolean).join(" • ")) || "&nbsp;") + '</span></div>' +
       '<div class="grid g3" style="margin-top:16px">' +
       '<button class="btn" data-rcst="present" style="background:var(--ok);color:#fff;min-height:58px;flex-direction:column;gap:3px">' + ICO.check + 'حاضر</button>' +
@@ -1765,7 +1700,7 @@ function openGuestPicker() {
       '<span class="avatar ' + avCls(s.name) + '">' + esc((s.name || "؟").trim()[0] || "؟") + '</span><span class="smain"><b>' + esc(s.name) +
       '</b><span class="meta"><span class="tag">' + esc(s.stage) + "</span>" +
       (s.lab ? '<span class="tag t-lab">' + esc(s.lab) + "</span>" : '<span class="tag">متنقّل</span>') +
-      ('<span class="tag">' + esc(s.shift || "غير محدد") + '</span>') +
+      ((s.shift || "صباحي") === "مسائي" ? '<span class="tag">مسائي</span>' : "") +
       (s.section ? '<span class="tag">شعبة ' + esc(s.section) + "</span>" : "") + "</span></span>" +
       '<span class="chip" style="color:var(--ok)">' + ICO.check + " حاضر</span></button>").join("")
       : '<div class="empty"><p>ماكو نتائج - تأكد الطالب فعّال وغير مسجَّل بهذه الجلسة أصلاً.</p></div>';
@@ -2091,125 +2026,142 @@ async function exportStyledXLSX(filename, sheets) {
   URL.revokeObjectURL(a.href);
 }
 const stTxt = s => (STATUS[s] || {}).txt || s;
-/* ═══════════════ التصدير الأسبوعي - معاينة ثم تحديد ثم تصدير ═══════════════ */
+/* ═══════════════ التصدير الأسبوعي - كل جلسة ملف Excel منفصل بروحه ═══════════════ */
 const SESS_COLS = [
   { header: "اسم الطالب", key: "name", width: 28, align: "right" },
   { header: "المرحلة", key: "stage", width: 16 },
   { header: "الشعبة", key: "section", width: 9 },
   { header: "الحالة", key: "status", width: 10 }
 ];
-function sessionKey(r) { return r.date + "␟" + r.subjectId + "␟" + (r.lab || "") + "␟" + (r.sessionShift || r.shift || "صباحي"); }
-let weeklyGroups = new Map();
-let weeklySelected = new Set();
-
-function weeklyGroupLabel(rows) {
-  const r = rows[0], subj = subjects.find(s => s.id === r.subjectId);
-  return (subj ? subj.name : r.subjectName || "مادة") + " • " + fmtDate(r.date) +
-    " • " + (r.lab || "بدون مختبر") + " • " + (r.sessionShift || r.shift || "صباحي");
-}
-function renderWeeklyPreview() {
-  const box = $("#wkPreview"), exp = $("#btnWeeklyExport");
-  if (!box) return;
-  if (!weeklyGroups.size) {
-    box.innerHTML = '<div class="empty">' + ICO.calendar + '<p>لا توجد جلسات ضمن المدى المحدد.</p></div>';
-    if (exp) exp.style.display = "none";
-    return;
-  }
-  const all = [...weeklyGroups.keys()];
-  const selectedCount = all.filter(k => weeklySelected.has(k)).length;
-  box.innerHTML =
-    '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:9px">' +
-      '<b style="font-size:13.5px">الجلسات المتاحة: ' + all.length + '</b>' +
-      '<span class="hint">المحدد: ' + selectedCount + '</span><span style="flex:1"></span>' +
-      '<button class="btn btn-sm btn-g" id="wkSelectAll">تحديد الكل</button>' +
-      '<button class="btn btn-sm btn-g" id="wkClearAll">إلغاء الكل</button>' +
-    '</div>' +
-    all.map((k, i) => {
-      const rows = weeklyGroups.get(k), r = rows[0];
-      const c = {present:0, absent:0, excused:0};
-      rows.forEach(x => c[x.status] = (c[x.status] || 0) + 1);
-      return '<label class="rec" style="cursor:pointer;align-items:flex-start">' +
-        '<input type="checkbox" class="wkPick" data-wk-key="' + esc(k) + '" ' + (weeklySelected.has(k) ? 'checked' : '') + ' style="width:18px;height:18px;accent-color:var(--prim);margin-top:3px;flex:none">' +
-        '<span class="rmain"><b>' + esc(weeklyGroupLabel(rows)) + '</b><span class="meta">' +
-          esc((r.stage || "-") + (r.section ? " • شعبة " + r.section : "") + " • " + rows.length + " طالب") +
-          ' • <span style="color:var(--ok)">حاضر ' + c.present + '</span> • <span style="color:var(--no)">غائب ' + c.absent + '</span> • <span style="color:var(--ex)">مجاز ' + c.excused + '</span>' +
-        '</span></span></label>';
-    }).join("");
-  if (exp) exp.style.display = selectedCount ? "" : "none";
-}
-async function loadWeeklyPreview(fromD, toD) {
+function sessionKey(r) { return r.date + "␟" + r.subjectId + "␟" + (r.lab || "") + "␟" + (r.shift || "صباحي"); }
+async function buildWeeklyZip(fromD, toD, groups, keys) {
   const st = $("#wkStatus");
-  st.textContent = "…جاري جلب السجلات";
-  weeklyGroups = new Map(); weeklySelected = new Set();
-  try {
-    const snap = await getDocs(query(collection(db, "attendance"), where("date", ">=", fromD), where("date", "<=", toD)));
-    trackRead("docs", snap.size);
-    snap.docs.map(d => d.data()).forEach(r => {
-      const k = sessionKey(r);
-      if (!weeklyGroups.has(k)) weeklyGroups.set(k, []);
-      weeklyGroups.get(k).push(r);
-    });
-    renderWeeklyPreview();
-    st.textContent = weeklyGroups.size ? "حدد الجلسات التي تريد تصديرها ثم اضغط زر التصدير." : "ماكو سجلات حضور بهذا المدى.";
-  } catch (e) { st.textContent = "تعذّر الجلب: " + (e.code || e.message); }
-}
-async function exportWeeklySessions(fromD, toD, selectedKeys) {
-  const st = $("#wkStatus");
-  const groups = new Map([...weeklyGroups].filter(([k]) => selectedKeys.has(k)));
-  if (!groups.size) { toast("حدد جلسة واحدة على الأقل", "err"); return; }
-  st.textContent = "…جاري بناء " + groups.size + " ملف منفصل";
+  st.textContent = "…جاري بناء " + keys.length + " ملف منفصل";
   await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js");
-  const zip = new JSZip(), usedNames = new Set();
+  const zip = new JSZip();
+  const usedNames = new Set();
   let i = 0;
-  for (const [, rows] of groups) {
+  for (const k of keys) {
+    const rows = groups.get(k);
+    if (!rows) continue;
     i++;
-    const r0 = rows[0], subj = subjects.find(s => s.id === r0.subjectId);
-    const rowsSorted = rows.slice().sort((a,b) => (a.studentName||"").localeCompare(b.studentName||"","ar"));
-    const c = {present:0, absent:0, excused:0};
+    const r0 = rows[0];
+    const subj = subjects.find(s => s.id === r0.subjectId);
+    const rowsSorted = rows.slice().sort((a, b) => (a.studentName || "").localeCompare(b.studentName || "", "ar"));
+    const c = { present: 0, absent: 0, excused: 0 };
     rowsSorted.forEach(r => c[r.status] = (c[r.status] || 0) + 1);
     const blob = await buildXLSXBlob([{
-      name:"الجلسة", title:(subj ? subj.name : r0.subjectName || "مادة") + " - " + fmtDate(r0.date),
-      meta:"المختبر: " + (r0.lab || "-") + " • الدراسة: " + (r0.sessionShift || r0.shift || "صباحي") + " • المرحلة: " + (r0.stage || "-") + " • " + rowsSorted.length + " طالب",
-      summary:[{label:"الطلاب",value:rowsSorted.length},{label:"حاضر",value:c.present||0,fg:XLC.ok,bg:XLC.okBg},{label:"غائب",value:c.absent||0,fg:XLC.no,bg:XLC.noBg},{label:"مجاز",value:c.excused||0,fg:XLC.ex,bg:XLC.exBg}],
-      columns:SESS_COLS,
-      rows:rowsSorted.map(r=>({name:r.studentName||"",stage:r.stage||"",section:r.section||"",status:stTxt(r.status)})), tab:"FF0F766E"
+      name: "الجلسة",
+      title: (subj ? subj.name : r0.subjectName || "مادة") + " - " + fmtDate(r0.date),
+      meta: "المختبر: " + (r0.lab || "-") + "  •  الدراسة: " + (r0.shift || "صباحي") + "  •  المرحلة: " + (r0.stage || "-") + "  •  " + rowsSorted.length + " طالب",
+      summary: [
+        { label: "الجلسات", value: rowsSorted.length },
+        { label: "حاضر", value: c.present || 0, fg: XLC.ok, bg: XLC.okBg },
+        { label: "غائب", value: c.absent || 0, fg: XLC.no, bg: XLC.noBg },
+        { label: "مجاز", value: c.excused || 0, fg: XLC.ex, bg: XLC.exBg }
+      ],
+      columns: SESS_COLS,
+      rows: rowsSorted.map(r => ({ name: r.studentName || "", stage: r.stage || "", section: r.section || "", status: stTxt(r.status) })),
+      tab: "FF0F766E"
     }]);
-    let fname = "حاضر - " + r0.date + " - " + (subj ? subj.name : "مادة") + " - " + (r0.lab || "بدون مختبر") + " - " + (r0.sessionShift || r0.shift || "صباحي") + ".xlsx";
-    fname=fname.replace(/[\\/?*\[\]:]/g,"-"); const base=fname; let n=2;
-    while(usedNames.has(fname)) fname=base.replace(".xlsx","")+" ("+(n++)+").xlsx";
-    usedNames.add(fname); zip.file(fname,blob); st.textContent="…"+i+"/"+groups.size;
+    let fname = "حاضر - " + r0.date + " - " + (subj ? subj.name : "مادة") + " - " + (r0.lab || "بدون مختبر") + " - " + (r0.shift || "صباحي") + ".xlsx";
+    fname = fname.replace(/[\\/?*\[\]:]/g, "-");
+    let base = fname, k2 = 2;
+    while (usedNames.has(fname)) fname = base.replace(".xlsx", "") + " (" + (k2++) + ").xlsx";
+    usedNames.add(fname);
+    zip.file(fname, blob);
+    st.textContent = "…" + i + "/" + keys.length + " (" + fname.slice(0, 40) + "…)";
   }
-  const zipBlob=await zip.generateAsync({type:"blob"}), a=document.createElement("a");
-  a.href=URL.createObjectURL(zipBlob); a.download="حاضر - تصدير محدد "+fromD+" إلى "+toD+".zip"; a.click(); URL.revokeObjectURL(a.href);
-  st.textContent="تم تصدير " + groups.size + " جلسة محددة.";
-  audit("weekly_export","تصدير أسبوعي محدد: "+fromD+" إلى "+toD+" - "+groups.size+" جلسة");
+  st.textContent = "…جاري ضغط الملف النهائي";
+  const zipBlob = await zip.generateAsync({ type: "blob" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(zipBlob);
+  a.download = "حاضر - تصدير أسبوعي " + fromD + " إلى " + toD + ".zip";
+  a.click(); URL.revokeObjectURL(a.href);
+  st.textContent = "تم - " + keys.length + " جلسة منفصلة داخل ملف ZIP واحد";
+  audit("weekly_export", "تصدير أسبوعي: " + fromD + " إلى " + toD + " - " + keys.length + " جلسة");
+}
+async function previewWeeklySessions(fromD, toD) {
+  const st = $("#wkStatus");
+  st.textContent = "…جاري جلب السجلات";
+  let recs;
+  try {
+    const snap = await getDocs(query(collection(db, "attendance"), where("date", ">=", fromD), where("date", "<=", toD))); trackRead("docs", snap.size);
+    recs = snap.docs.map(d => d.data());
+  } catch (e) { st.textContent = "تعذّر الجلب: " + (e.code || e.message); return; }
+  if (!recs.length) { st.textContent = "ماكو سجلات حضور بهذا المدى."; return; }
+
+  const groups = new Map();
+  recs.forEach(r => {
+    const k = sessionKey(r);
+    if (!groups.has(k)) groups.set(k, []);
+    groups.get(k).push(r);
+  });
+  st.textContent = "";
+
+  const entries = [...groups.entries()].sort((a, b) => (a[1][0].date < b[1][0].date ? 1 : -1));
+  const wrap = document.createElement("div");
+  wrap.innerHTML =
+    '<p class="hint" style="margin-bottom:10px">لقيت <b>' + entries.length + '</b> جلسة بهذا المدى - اختر الجلسات اللي تريد تصديرها (كل جلسة تصير ملف Excel منفصل):</p>' +
+    '<div style="display:flex;gap:8px;margin-bottom:10px">' +
+    '<button class="btn btn-sm btn-g" id="wkSelAll" style="flex:1">تحديد الكل</button>' +
+    '<button class="btn btn-sm btn-g" id="wkSelNone" style="flex:1">إلغاء الكل</button></div>' +
+    '<div id="wkList" style="max-height:320px;overflow:auto;display:flex;flex-direction:column;gap:6px">' +
+    entries.map(([k, rows]) => {
+      const r0 = rows[0];
+      const subj = subjects.find(s => s.id === r0.subjectId);
+      return '<label class="st"><input type="checkbox" class="wk-chk" data-key="' + esc(k) + '" checked>' +
+        '<span class="smain"><b>' + esc(subj ? subj.name : r0.subjectName || "مادة") + " - " + esc(fmtDate(r0.date)) + '</b>' +
+        '<span class="meta">' + esc(r0.lab || "بدون مختبر") + " • " + esc(r0.shift || "صباحي") + " • " + rows.length + ' طالب</span></span>' +
+        '</label>';
+    }).join("") + "</div>";
+
+  openModal({
+    title: "معاينة التصدير الأسبوعي",
+    body: wrap,
+    actions: [
+      { label: "إلغاء", cls: "btn-g", onClick: closeModal },
+      { label: "تصدير المحدد", cls: "btn-p", onClick: async btn => {
+        const chosen = [...wrap.querySelectorAll(".wk-chk:checked")].map(c => c.dataset.key);
+        if (!chosen.length) { toast("ما حددت أي جلسة", "err"); return; }
+        btn.disabled = true;
+        closeModal();
+        try { await buildWeeklyZip(fromD, toD, groups, chosen); }
+        catch (e) { $("#wkStatus").textContent = "خطأ: " + (e.message || e); }
+      } }
+    ]
+  });
+  wrap.querySelector("#wkSelAll").onclick = () => wrap.querySelectorAll(".wk-chk").forEach(c => c.checked = true);
+  wrap.querySelector("#wkSelNone").onclick = () => wrap.querySelectorAll(".wk-chk").forEach(c => c.checked = false);
 }
 function weekRange(kind) {
-  const now=new Date(), d=new Date(now);
-  if(kind==="week"||kind==="lastweek"){const dow=d.getDay();d.setDate(d.getDate()-dow-(kind==="lastweek"?7:0));const from=new Date(d),to=new Date(d);to.setDate(to.getDate()+6);return [ymd(from),ymd(to)];}
-  return [ymd(new Date(now.getFullYear(),now.getMonth(),1)),ymd(new Date(now.getFullYear(),now.getMonth()+1,0))];
+  const now = new Date(); const d = new Date(now);
+  if (kind === "week" || kind === "lastweek") {
+    const dow = d.getDay(); // 0=Sun
+    d.setDate(d.getDate() - dow - (kind === "lastweek" ? 7 : 0));
+    const from = new Date(d); const to = new Date(d); to.setDate(to.getDate() + 6);
+    return [ymd(from), ymd(to)];
+  }
+  const from = new Date(now.getFullYear(), now.getMonth(), 1);
+  const to = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  return [ymd(from), ymd(to)];
 }
-function ymd(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
-$("#wkPresets").addEventListener("click",e=>{const c=e.target.closest("[data-wk]");if(!c)return;const [f,t]=weekRange(c.dataset.wk);$("#wkFrom").value=f;$("#wkTo").value=t;});
-(function(){const [f,t]=weekRange("week");$("#wkFrom").value=f;$("#wkTo").value=t;})();
-$("#wkPreview").addEventListener("change",e=>{
-  const cb=e.target.closest(".wkPick"); if(!cb)return;
-  if(cb.checked) weeklySelected.add(cb.dataset.wkKey); else weeklySelected.delete(cb.dataset.wkKey);
-  renderWeeklyPreview();
+function ymd(d) { return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+$("#wkPresets").addEventListener("click", e => {
+  const c = e.target.closest("[data-wk]"); if (!c) return;
+  const [f, t] = weekRange(c.dataset.wk);
+  $("#wkFrom").value = f; $("#wkTo").value = t;
 });
-$("#wkPreview").addEventListener("click",e=>{
-  if(e.target.closest("#wkSelectAll")) { weeklySelected=new Set(weeklyGroups.keys()); renderWeeklyPreview(); }
-  if(e.target.closest("#wkClearAll")) { weeklySelected.clear(); renderWeeklyPreview(); }
-});
-$("#btnWeeklyPreview").onclick=async function(){
-  if(!requireAdmin())return; const f=$("#wkFrom").value,t=$("#wkTo").value;
-  if(!f||!t||f>t){toast("تحقق من المدى الزمني","err");return;}
-  this.disabled=true; await loadWeeklyPreview(f,t); this.disabled=false;
-};
-$("#btnWeeklyExport").onclick=async function(){
-  if(!requireAdmin())return; const f=$("#wkFrom").value,t=$("#wkTo").value;
-  if(!f||!t||f>t){toast("تحقق من المدى الزمني","err");return;}
-  this.disabled=true; try{await exportWeeklySessions(f,t,weeklySelected);}catch(e){$("#wkStatus").textContent="خطأ: "+(e.message||e);} this.disabled=false;
+(function () { const [f, t] = weekRange("week"); $("#wkFrom").value = f; $("#wkTo").value = t; })();
+$("#btnWeeklyExport").onclick = async function () {
+  if (!requireAdmin()) return;
+  const f = $("#wkFrom").value, t = $("#wkTo").value;
+  if (!f || !t) { toast("حدد المدى أولاً", "err"); return; }
+  if (f > t) { toast("تاريخ البداية بعد النهاية؟", "err"); return; }
+  this.disabled = true;
+  try { await previewWeeklySessions(f, t); }
+  catch (e) { $("#wkStatus").textContent = "خطأ: " + (e.message || e); }
+  this.disabled = false;
 };
 const REC_COLS = [
   { header: "التاريخ", key: "date", width: 13 },
